@@ -16,7 +16,7 @@ The backend uses Google Cloud Vertex AI with Gemini.
 
 Current configured model:
 
-- `google/gemini-2.5-flash-lite@default`
+- `gemini-2.5-flash-lite`
 
 
 Required environment variables:
@@ -34,10 +34,12 @@ Example using a local service account file:
 export GOOGLE_APPLICATION_CREDENTIALS='/absolute/path/to/service-account.json'
 ```
 
-The server is configured to bind only to localhost for safety:
+The server uses environment-based binding:
 
-- host: `127.0.0.1`
-- port: `8081`
+- local default host: `127.0.0.1`
+- local default port: `8081`
+- Cloud Run host override: `0.0.0.0`
+- Cloud Run port override: `8080`
 
 See [`application.properties`](src/main/resources/application.properties).
 
@@ -74,9 +76,47 @@ Response body:
 { "content": "{\"pt\":\"O gato dorme no sofá.\",\"en\":\"The cat sleeps on the sofa.\",\"mainEmoji\":\"🐱\",\"bgLeft\":\"🛋️\",\"bgRight\":\"😴\"}" }
 ```
 
+## Deploy to Cloud Run
+
+Build the jar locally:
+
+```bash
+export JAVA_HOME=$(/usr/libexec/java_home -v 17)
+./mvnw clean package
+```
+
+Build and push the container with Google Cloud Build:
+
+```bash
+gcloud builds submit --tag gcr.io/$GOOGLE_CLOUD_PROJECT/portugese-for-kids-backend
+```
+
+Create a runtime service account with Vertex AI access if you do not already have one:
+
+```bash
+gcloud iam service-accounts create portugese-for-kids-backend
+
+gcloud projects add-iam-policy-binding $GOOGLE_CLOUD_PROJECT \
+  --member="serviceAccount:portugese-for-kids-backend@$GOOGLE_CLOUD_PROJECT.iam.gserviceaccount.com" \
+  --role="roles/aiplatform.user"
+```
+
+Deploy to Cloud Run:
+
+```bash
+gcloud run deploy portugese-for-kids-backend \
+  --image gcr.io/$GOOGLE_CLOUD_PROJECT/portugese-for-kids-backend \
+  --platform managed \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --service-account portugese-for-kids-backend@$GOOGLE_CLOUD_PROJECT.iam.gserviceaccount.com \
+  --set-env-vars GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT,GOOGLE_CLOUD_LOCATION=us-central1,SERVER_ADDRESS=0.0.0.0,PORT=8080
+```
+
 ## Notes
 
 - Do not hardcode credentials in code or commit them to git.
 - For deployed environments, prefer managed Google Cloud service identities instead of local credential files.
 - The frontend is expected to call this backend at `http://127.0.0.1:8081` during local development.
+- Update CORS before production so the deployed frontend origin is allowed.
 - Vertex AI usage may incur Google Cloud charges depending on your account and usage.
