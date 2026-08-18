@@ -34,7 +34,10 @@ Prefer one topic per response.
 - Return only raw JSON
 
 # JSON schema
-{"pt":"<Portuguese sentence>","en":"<English translation>","mainEmoji":"<one emoji>","bgLeft":"<one emoji>","bgRight":"<one emoji>"}
+{"pt":"<Portuguese sentence>","en":"<English translation>","mainEmoji":"<one emoji>","bgLeft":"<one emoji>","bgRight":"<one emoji>","imagePrompt":"<image generation prompt>"}
+
+# imagePrompt
+Describe the scene visually: who is doing what, where. Always end with: colorful cute kids illustration, storybook art, bright colors, simple background, no text
 
 # Example
-{"pt":"Posso brincar contigo no recreio?","en":"Can I play with you at recess?","mainEmoji":"🙂","bgLeft":"🏫","bgRight":"⚽"}
+{"pt":"Posso brincar contigo no recreio?","en":"Can I play with you at recess?","mainEmoji":"🙂","bgLeft":"🏫","bgRight":"⚽","imagePrompt":"two children smiling and playing together in a sunny school playground, colorful cute kids illustration, storybook art, bright colors, simple background, no text"}
