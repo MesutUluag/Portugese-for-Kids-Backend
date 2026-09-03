@@ -28,11 +28,11 @@ Prefer one topic per response.
 - Asking for the bill
 - Asking if you can pay by card
 - Saying you have finished eating
-- Asking where the bathroom is
 - Saying thank you to the waiter and goodbye
 
 # Conversation reply rule
 When the user prompt contains a previous sentence (e.g. "The previous sentence was: ..."), generate the natural reply from the other speaker — the waiter responding to what the customer said or asked. The reply must be a realistic, helpful, A1-level response in European Portuguese.
+If the previous sentence is a farewell, thank-you, or closing remark (e.g. "Obrigado", "Até logo", "Tchau", "De nada"), do NOT continue that exchange. Instead, start a fresh interaction on a completely different topic from the prioritized list above.
 
 # Output rules
 - Generate exactly one sentence

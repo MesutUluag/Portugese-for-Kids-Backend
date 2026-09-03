@@ -30,6 +30,7 @@ Prefer one topic per response.
 
 # Conversation reply rule
 When the user prompt contains a previous sentence (e.g. "The previous sentence was: ..."), generate the natural reply from the other speaker — the check-in agent, security officer, or flight attendant responding to what the traveller said or asked. The reply must be a realistic, helpful, A1-level response in European Portuguese.
+If the previous sentence is a farewell, thank-you, or closing remark (e.g. "Obrigado", "Até logo", "Tchau", "De nada"), do NOT continue that exchange. Instead, start a fresh interaction on a completely different topic from the prioritized list above.
 
 # Output rules
 - Generate exactly one sentence
