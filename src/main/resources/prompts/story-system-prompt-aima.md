@@ -15,33 +15,63 @@ Use natural, everyday European Portuguese — not textbook Portuguese or Brazili
 - People say "Preciso de renovar a minha autorização" or "Venho entregar documentos"
 - Officers may say "Falta este documento" or "Tem de trazer o original"
 
+# Universal requirements (both D7 and D9)
+Every AIMA residency applicant must bring all of the following:
+- Valid passport ("passaporte válido") — must be valid for at least 3 months beyond the intended stay duration
+- Proof of legal entry ("prova de entrada legal") — boarding pass, flight ticket, or passport stamp showing legal Schengen entry
+- NIF (Número de Identificação Fiscal) — Portuguese tax identification number document
+- Portuguese bank account statement ("extrato bancário") showing an active, funded account
+- Proof of accommodation ("prova de alojamento") — a registered 12-month rental lease ("contrato de arrendamento registado") or property purchase deed ("escritura")
+- Criminal record certificate ("registo criminal") from the country of origin, issued within the last 90 days, translated and apostilled
+- Signed authorization for AIMA to consult the Portuguese criminal registry ("autorização de consulta ao registo criminal português")
+- Valid health insurance ("seguro de saúde") — private coverage, or a PB4 certificate / SNS registration if already in the public system
+
 # Context: D7 Passive Income Visa
-D7 is a Portuguese residence visa for people with stable passive income (pension, remote work, rental income, investments).
-Relevant topics for D7:
-- Saying you are applying for a D7 visa
-- Saying you have passive income such as a pension, remote work income, or rental income
-- Asking what proof of income documents are required
-- Asking about the minimum income threshold
-- Asking about the required health insurance
-- Asking how to prove you have accommodation in Portugal
-- Asking about the validity period of the D7 visa
-- Asking how to renew the D7 residency permit
-- Saying you already have an NHR (Non-Habitual Resident) tax status
-- Asking how to register with the local parish council (junta de freguesia)
+The D7 visa is for people with stable, recurring passive income (pension, rental income, dividends, investments) who wish to live in Portugal.
+
+## Minimum income requirement
+- Single applicant: €920/month (€11,040/year)
+- Per accompanying spouse or adult: +€5,520/year
+- Per child: +€3,312/year
+- Bank account must show a deposited balance covering at least 12 months of the required minimum income
+
+## Category-specific documents for D7
+- Proof of passive income ("prova de rendimentos passivos"): tax returns, pension statements ("declaração de reforma"), dividend reports, or property rental contracts showing at least €920/month
+- Bank statement confirming a balance equivalent to at least 12 months of the required income threshold
+
+## Useful phrases at AIMA for D7
+- "Estou a candidatar-me ao visto D7." (I am applying for the D7 visa.)
+- "Tenho rendimentos de reforma / arrendamento / dividendos." (I have income from pension / rent / dividends.)
+- "O meu rendimento mensal é de novecentos e vinte euros." (My monthly income is nine hundred and twenty euros.)
+- "Preciso de converter o meu visto de entrada em autorização de residência." (I need to convert my entry visa into a residence permit.)
+- "Trouxe o extrato bancário e o contrato de arrendamento registado." (I brought the bank statement and the registered rental contract.)
+- "O meu extrato mostra saldo para doze meses." (My statement shows a balance for twelve months.)
+- "Qual é o valor da taxa a pagar?" (What is the amount of the fee to pay?)
+- "Quando fica pronto o cartão de residência?" (When will the residence card be ready?)
+- "Preciso de renovar a minha autorização de residência." (I need to renew my residence permit.)
 
 # Context: D9 Digital Nomad Visa
-D9 is a Portuguese residence visa for remote workers and freelancers who work for clients or employers based outside Portugal.
-Relevant topics for D9:
-- Saying you are applying for a D9 visa
-- Saying you work remotely for a company based in another country
-- Asking what employment contract or proof of remote work is required
-- Asking about the minimum monthly income requirement
-- Asking how to open a Portuguese bank account as part of the application
-- Asking about the NIF (tax identification number) and how to get one
-- Asking about the required health insurance
-- Asking how to prove accommodation in Portugal
-- Asking how long the visa processing takes
-- Asking about the difference between D9 and D8 visas
+The D9 visa is for remote workers and freelancers whose employment or service contracts originate entirely outside Portugal.
+
+## Minimum income requirement
+- Minimum €3,680/month from remote work, verified across the last 3 months of payslips, invoices, and bank statements
+
+## Category-specific documents for D9
+- Employment contract ("contrato de trabalho") from a foreign employer confirming remote work authorization from Portugal, OR freelance agreements / service contracts ("contratos de prestação de serviços") with foreign clients
+- Payslips ("recibos de vencimento") or invoices ("faturas") from the last 3 months proving income of at least €3,680/month
+- Bank statements ("extratos bancários") for the last 3 months confirming income deposits
+- Employer declaration ("declaração da entidade patronal") authorizing remote work from Portugal — required for salaried employees
+- Tax residency document ("prova de residência fiscal") from the country of origin prior to relocating to Portugal
+
+## Useful phrases at AIMA for D9
+- "Estou a candidatar-me ao visto D9." (I am applying for the D9 visa.)
+- "Trabalho remotamente para uma empresa sediada no estrangeiro." (I work remotely for a company based abroad.)
+- "O meu contrato de trabalho autoriza trabalho remoto a partir de Portugal." (My work contract authorises remote work from Portugal.)
+- "Ganho mais de três mil e seiscentos euros por mês." (I earn more than three thousand six hundred euros a month.)
+- "Trouxe os recibos de vencimento dos últimos três meses." (I brought the payslips from the last three months.)
+- "Tenho uma declaração da empresa a autorizar o trabalho remoto." (I have a declaration from the company authorising remote work.)
+- "Qual é a diferença entre o D9 e o D8?" (What is the difference between the D9 and the D8?)
+- "Quando vou receber o cartão de residência?" (When will I receive the residence card?)
 
 # Shared AIMA office topics
 - Greeting the officer at the counter

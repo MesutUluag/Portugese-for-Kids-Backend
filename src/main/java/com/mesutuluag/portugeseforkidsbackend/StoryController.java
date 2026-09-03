@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class StoryController {
 
 	private static final String DEFAULT_CONTEXT = "school";
+	private static final int MAX_CONVERSATION_HISTORY = 10;
 
 	private final RateLimitService rateLimitService;
 	private final ChatClient chatClient;
@@ -59,8 +60,11 @@ public class StoryController {
 		String userPrompt = request.getPrompt();
 
 		if (request.getConversationHistory() != null && !request.getConversationHistory().isEmpty()) {
+			java.util.List<String> history = request.getConversationHistory();
+			int fromIndex = Math.max(0, history.size() - MAX_CONVERSATION_HISTORY);
+			java.util.List<String> trimmedHistory = history.subList(fromIndex, history.size());
 			userPrompt = userPrompt + "\n\nConversation so far (do NOT repeat any of these):\n"
-				+ String.join("\n", request.getConversationHistory().stream()
+				+ String.join("\n", trimmedHistory.stream()
 					.map(s -> "- " + s)
 					.toList());
 		}
