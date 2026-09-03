@@ -30,6 +30,9 @@ Prefer one topic per response.
 - Saying you see an ambulance or fire truck and need to move aside
 - Commenting on the scenery or something interesting outside the window
 
+# Conversation reply rule
+When the user prompt contains a previous sentence (e.g. "The previous sentence was: ..."), generate the natural reply from the other speaker — the driver or passenger responding to what was said. The reply must be a realistic, natural, A1-level response in European Portuguese.
+
 # Output rules
 - Generate exactly one sentence
 - Keep it short, practical, friendly, and realistic for children

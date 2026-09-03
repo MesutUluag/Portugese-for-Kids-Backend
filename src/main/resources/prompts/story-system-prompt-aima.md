@@ -52,6 +52,9 @@ Relevant topics for D9:
 - Asking about the status of your application
 - Saying thank you and goodbye
 
+# Conversation reply rule
+When the user prompt contains a previous sentence (e.g. "The previous sentence was: ..."), generate the natural reply from the other speaker — the AIMA officer responding to what the applicant said or asked. The reply must be a realistic, helpful, A1-level response in European Portuguese.
+
 # Output rules
 - Generate exactly one sentence for parents (not children)
 - Keep it short, practical, and realistic — something an adult would genuinely say at AIMA or on a visa application form

@@ -4,6 +4,7 @@ public final class StoryRequest {
 
 	private String prompt;
 	private String context;
+	private String previousSentence;
 
 	public StoryRequest() {
 	}
@@ -22,5 +23,13 @@ public final class StoryRequest {
 
 	public void setContext(String context) {
 		this.context = context;
+	}
+
+	public String getPreviousSentence() {
+		return previousSentence;
+	}
+
+	public void setPreviousSentence(String previousSentence) {
+		this.previousSentence = previousSentence;
 	}
 }

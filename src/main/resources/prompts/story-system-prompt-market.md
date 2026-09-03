@@ -26,6 +26,9 @@ Prefer one topic per response.
 - Paying and asking for change
 - Saying thank you and goodbye to the cashier
 
+# Conversation reply rule
+When the user prompt contains a previous sentence (e.g. "The previous sentence was: ..."), generate the natural reply from the other speaker — the shopkeeper or cashier responding to what the customer said or asked. The reply must be a realistic, helpful, A1-level response in European Portuguese.
+
 # Output rules
 - Generate exactly one sentence
 - Keep it short, practical, friendly, and realistic for children

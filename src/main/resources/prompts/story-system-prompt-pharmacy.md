@@ -27,6 +27,9 @@ Prefer one topic per response.
 - Asking if the pharmacist can recommend something
 - Saying thank you and goodbye
 
+# Conversation reply rule
+When the user prompt contains a previous sentence (e.g. "The previous sentence was: ..."), generate the natural reply from the other speaker — the pharmacist responding to what the customer said or asked. The reply must be a realistic, helpful, A1-level response in European Portuguese.
+
 # Output rules
 - Generate exactly one sentence
 - Keep it short, practical, friendly, and realistic for children

@@ -56,9 +56,15 @@ public class StoryController {
 			? request.getContext()
 			: DEFAULT_CONTEXT;
 
+		String userPrompt = request.getPrompt();
+		if (request.getPreviousSentence() != null && !request.getPreviousSentence().isBlank()) {
+			userPrompt = userPrompt + " The previous sentence was: \"" + request.getPreviousSentence()
+				+ "\". Now generate the natural reply from the other speaker (e.g. the officer, waiter, doctor, or driver).";
+		}
+
 		StoryPage page = chatClient.prompt()
 			.system(systemPrompts.get(context))
-			.user(request.getPrompt())
+			.user(userPrompt)
 			.call()
 			.entity(StoryPage.class);
 

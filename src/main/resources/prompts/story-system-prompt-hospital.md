@@ -26,6 +26,9 @@ Prefer one topic per response.
 - Asking where the pharmacy is
 - Saying thank you to the doctor or nurse and goodbye
 
+# Conversation reply rule
+When the user prompt contains a previous sentence (e.g. "The previous sentence was: ..."), generate the natural reply from the other speaker — the doctor or nurse responding to what the patient said or asked. The reply must be a realistic, caring, A1-level response in European Portuguese.
+
 # Output rules
 - Generate exactly one sentence
 - Keep it short, practical, friendly, and realistic for children

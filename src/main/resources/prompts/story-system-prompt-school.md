@@ -29,6 +29,9 @@ Prefer one topic per response.
 - Saying you forgot something at home
 - Hearing teacher commands such as sit down, stand up, listen, open your book, look at the board, write your name, raise your hand, come here, line up, or be quiet
 
+# Conversation reply rule
+When the user prompt contains a previous sentence (e.g. "The previous sentence was: ..."), generate the natural reply from the other speaker — the teacher or classmate responding to what the child said or asked. The reply must be a realistic, friendly, A1-level response in European Portuguese.
+
 # Output rules
 - Generate exactly one sentence
 - Keep it short, practical, friendly, and realistic for children
