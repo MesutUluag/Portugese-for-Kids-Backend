@@ -33,7 +33,7 @@ public class StoryController {
 		this.systemPrompts.put("restaurant",   loadPrompt("story-system-prompt-restaurant.md"));
 		this.systemPrompts.put("bank",         loadPrompt("story-system-prompt-bank.md"));
 		this.systemPrompts.put("hospital",     loadPrompt("story-system-prompt-hospital.md"));
-		this.systemPrompts.put("bakery",       loadPrompt("story-system-prompt-bakery.md"));
+		this.systemPrompts.put("cafe",         loadPrompt("story-system-prompt-cafe.md"));
 		this.systemPrompts.put("airport",      loadPrompt("story-system-prompt-airport.md"));
 		this.systemPrompts.put("market",       loadPrompt("story-system-prompt-market.md"));
 		this.systemPrompts.put("aima",         loadPrompt("story-system-prompt-aima.md"));
