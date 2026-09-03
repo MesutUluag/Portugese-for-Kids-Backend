@@ -182,10 +182,14 @@ docker run -p 8081:8080 \
 ## Deploy to Google Cloud Run
 
 ```bash
+# 0. Make sure your project ID is set
+export GOOGLE_CLOUD_PROJECT=$(gcloud config get-value project)
+echo $GOOGLE_CLOUD_PROJECT   # must not be blank
+
 # 1. Build and push the container image
 gcloud builds submit --tag gcr.io/$GOOGLE_CLOUD_PROJECT/portugese-for-kids-backend
 
-# 2. Create a service account with Vertex AI permissions
+# 2. Create a service account with Vertex AI permissions (first deploy only)
 gcloud iam service-accounts create portugese-for-kids-backend
 gcloud projects add-iam-policy-binding $GOOGLE_CLOUD_PROJECT \
   --member="serviceAccount:portugese-for-kids-backend@$GOOGLE_CLOUD_PROJECT.iam.gserviceaccount.com" \
@@ -198,10 +202,11 @@ gcloud run deploy portugese-for-kids-backend \
   --region us-central1 \
   --allow-unauthenticated \
   --service-account portugese-for-kids-backend@$GOOGLE_CLOUD_PROJECT.iam.gserviceaccount.com \
-  --set-env-vars GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT,GOOGLE_CLOUD_LOCATION=us-central1,SERVER_ADDRESS=0.0.0.0,PORT=8080
+  --set-env-vars GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT,GOOGLE_CLOUD_LOCATION=us-central1,SERVER_ADDRESS=0.0.0.0
 ```
 
-> **Note:** Hugging Face token and GCP credentials must be supplied as Cloud Run secrets, not plain environment variables, in production.
+> **Note:** `PORT` is reserved by Cloud Run and set automatically — do not include it in `--set-env-vars`.
+> Hugging Face token and GCP credentials must be supplied as Cloud Run secrets, not plain environment variables, in production.
 
 ---
 
