@@ -1,10 +1,13 @@
 package com.mesutuluag.portugeseforkidsbackend;
 
+import java.util.List;
+
 public final class StoryRequest {
 
 	private String prompt;
 	private String context;
 	private String previousSentence;
+	private List<String> conversationHistory;
 
 	public StoryRequest() {
 	}
@@ -31,5 +34,13 @@ public final class StoryRequest {
 
 	public void setPreviousSentence(String previousSentence) {
 		this.previousSentence = previousSentence;
+	}
+
+	public List<String> getConversationHistory() {
+		return conversationHistory;
+	}
+
+	public void setConversationHistory(List<String> conversationHistory) {
+		this.conversationHistory = conversationHistory;
 	}
 }

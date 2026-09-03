@@ -57,8 +57,16 @@ public class StoryController {
 			: DEFAULT_CONTEXT;
 
 		String userPrompt = request.getPrompt();
+
+		if (request.getConversationHistory() != null && !request.getConversationHistory().isEmpty()) {
+			userPrompt = userPrompt + "\n\nConversation so far (do NOT repeat any of these):\n"
+				+ String.join("\n", request.getConversationHistory().stream()
+					.map(s -> "- " + s)
+					.toList());
+		}
+
 		if (request.getPreviousSentence() != null && !request.getPreviousSentence().isBlank()) {
-			userPrompt = userPrompt + " The previous sentence was: \"" + request.getPreviousSentence()
+			userPrompt = userPrompt + "\n\nThe previous sentence was: \"" + request.getPreviousSentence()
 				+ "\". Now generate the natural reply from the other speaker (e.g. the officer, waiter, doctor, or driver).";
 		}
 
