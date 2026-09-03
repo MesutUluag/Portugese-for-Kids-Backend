@@ -18,15 +18,34 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/story")
 public class StoryController {
 
+	private static final String DEFAULT_CONTEXT = "school";
+	private static final int MAX_CONVERSATION_HISTORY = 10;
+
 	private final RateLimitService rateLimitService;
 	private final ChatClient chatClient;
-	private final String systemPrompt;
+	private final java.util.Map<String, String> systemPrompts;
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
 	public StoryController(RateLimitService rateLimitService, ChatClient.Builder chatClientBuilder) throws IOException {
 		this.rateLimitService = rateLimitService;
 		this.chatClient = chatClientBuilder.build();
-		this.systemPrompt = new ClassPathResource("prompts/story-system-prompt.md")
+		this.systemPrompts = new java.util.HashMap<>();
+		this.systemPrompts.put("school",       loadPrompt("story-system-prompt-school.md"));
+		this.systemPrompts.put("restaurant",   loadPrompt("story-system-prompt-restaurant.md"));
+		this.systemPrompts.put("bank",         loadPrompt("story-system-prompt-bank.md"));
+		this.systemPrompts.put("hospital",     loadPrompt("story-system-prompt-hospital.md"));
+		this.systemPrompts.put("cafe",         loadPrompt("story-system-prompt-cafe.md"));
+		this.systemPrompts.put("airport",      loadPrompt("story-system-prompt-airport.md"));
+		this.systemPrompts.put("market",       loadPrompt("story-system-prompt-market.md"));
+		this.systemPrompts.put("aima",         loadPrompt("story-system-prompt-aima.md"));
+		this.systemPrompts.put("bus",          loadPrompt("story-system-prompt-bus.md"));
+		this.systemPrompts.put("pharmacy",     loadPrompt("story-system-prompt-pharmacy.md"));
+		this.systemPrompts.put("gas_station",  loadPrompt("story-system-prompt-gas_station.md"));
+		this.systemPrompts.put("traffic",      loadPrompt("story-system-prompt-traffic.md"));
+	}
+
+	private String loadPrompt(String filename) throws IOException {
+		return new ClassPathResource("prompts/" + filename)
 			.getContentAsString(StandardCharsets.UTF_8);
 	}
 
@@ -34,9 +53,30 @@ public class StoryController {
 	public StoryResponse createStory(@RequestBody StoryRequest request, HttpServletRequest httpServletRequest) throws Exception {
 		rateLimitService.checkAndIncrement(httpServletRequest.getRemoteAddr());
 
+		String context = (request.getContext() != null && systemPrompts.containsKey(request.getContext()))
+			? request.getContext()
+			: DEFAULT_CONTEXT;
+
+		String userPrompt = request.getPrompt();
+
+		if (request.getConversationHistory() != null && !request.getConversationHistory().isEmpty()) {
+			java.util.List<String> history = request.getConversationHistory();
+			int fromIndex = Math.max(0, history.size() - MAX_CONVERSATION_HISTORY);
+			java.util.List<String> trimmedHistory = history.subList(fromIndex, history.size());
+			userPrompt = userPrompt + "\n\nConversation so far (do NOT repeat any of these):\n"
+				+ String.join("\n", trimmedHistory.stream()
+					.map(s -> "- " + s)
+					.toList());
+		}
+
+		if (request.getPreviousSentence() != null && !request.getPreviousSentence().isBlank()) {
+			userPrompt = userPrompt + "\n\nThe previous sentence was: \"" + request.getPreviousSentence()
+				+ "\". Now generate the natural reply from the other speaker (e.g. the officer, waiter, doctor, or driver).";
+		}
+
 		StoryPage page = chatClient.prompt()
-			.system(systemPrompt)
-			.user(request.getPrompt())
+			.system(systemPrompts.get(context))
+			.user(userPrompt)
 			.call()
 			.entity(StoryPage.class);
 
