@@ -74,6 +74,66 @@ class StoryControllerTest {
     }
 
     // -------------------------------------------------------------------------
+    // Context routing: restaurant context uses its own system prompt
+    // -------------------------------------------------------------------------
+    @Test
+    void createStory_restaurantContext_usesRestaurantPrompt() throws Exception {
+        StoryPage page = new StoryPage(
+                "A conta, por favor.",
+                "The bill, please.",
+                "🍽️",
+                "🍷",
+                "👨‍🍳",
+                "a child asking for the bill at a restaurant table, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
+        );
+        when(chatClient.prompt()).thenReturn(requestSpec);
+        when(requestSpec.system(anyString())).thenReturn(requestSpec);
+        when(requestSpec.user(anyString())).thenReturn(requestSpec);
+        when(requestSpec.call()).thenReturn(callResponseSpec);
+        when(callResponseSpec.entity(StoryPage.class)).thenReturn(page);
+
+        StoryRequest request = new StoryRequest();
+        request.setPrompt("ask for the bill");
+        request.setContext("restaurant");
+
+        StoryResponse response = controller.createStory(request, new MockHttpServletRequest());
+
+        assertThat(response.getContent()).isNotBlank();
+        StoryPage parsed = objectMapper.readValue(response.getContent(), StoryPage.class);
+        assertThat(parsed.pt()).isEqualTo("A conta, por favor.");
+    }
+
+    // -------------------------------------------------------------------------
+    // Context routing: unknown context falls back to school prompt
+    // -------------------------------------------------------------------------
+    @Test
+    void createStory_unknownContext_defaultsToSchool() throws Exception {
+        StoryPage page = new StoryPage(
+                "Bom dia!",
+                "Good morning!",
+                "☀️",
+                "🏫",
+                "📚",
+                "a child saying good morning, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
+        );
+        when(chatClient.prompt()).thenReturn(requestSpec);
+        when(requestSpec.system(anyString())).thenReturn(requestSpec);
+        when(requestSpec.user(anyString())).thenReturn(requestSpec);
+        when(requestSpec.call()).thenReturn(callResponseSpec);
+        when(callResponseSpec.entity(StoryPage.class)).thenReturn(page);
+
+        StoryRequest request = new StoryRequest();
+        request.setPrompt("say good morning");
+        request.setContext("spaceship"); // unknown context
+
+        StoryResponse response = controller.createStory(request, new MockHttpServletRequest());
+
+        assertThat(response.getContent()).isNotBlank();
+        StoryPage parsed = objectMapper.readValue(response.getContent(), StoryPage.class);
+        assertThat(parsed.pt()).isEqualTo("Bom dia!");
+    }
+
+    // -------------------------------------------------------------------------
     // Rate limit exceeded: DailyLimitExceededException is thrown before LLM call
     // -------------------------------------------------------------------------
     @Test
