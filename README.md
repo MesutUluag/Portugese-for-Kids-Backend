@@ -183,32 +183,62 @@ docker run -p 8081:8080 \
 
 ## Deploy to Google Cloud Run
 
+Deployments are **automated via GitHub Actions** — every push to `main` builds the Docker image, pushes it to GCR, and deploys to Cloud Run. See [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
+
+### Required GitHub secret
+
+| Secret | Description |
+|---|---|
+| `GCP_WORKLOAD_IDENTITY_PROVIDER` | Workload Identity Federation provider resource name (keyless auth — no JSON key stored) |
+
+### One-time GCP setup
+
+Run these once to wire up the CI/CD pipeline:
+
 ```bash
-# 0. Make sure your project ID is set
-export GOOGLE_CLOUD_PROJECT=$(gcloud config get-value project)
-echo $GOOGLE_CLOUD_PROJECT   # must not be blank
+PROJECT=project-b933c218-2521-4f77-a37
+SA=portugese-for-kids-backend@$PROJECT.iam.gserviceaccount.com
 
-# 1. Build and push the container image
-gcloud builds submit --tag gcr.io/$GOOGLE_CLOUD_PROJECT/portugese-for-kids-backend
+# 1. Create Workload Identity Pool
+gcloud iam workload-identity-pools create "github-pool" \
+  --project=$PROJECT --location=global \
+  --display-name="GitHub Actions Pool"
 
-# 2. Create a service account with Vertex AI permissions (first deploy only)
-gcloud iam service-accounts create portugese-for-kids-backend
-gcloud projects add-iam-policy-binding $GOOGLE_CLOUD_PROJECT \
-  --member="serviceAccount:portugese-for-kids-backend@$GOOGLE_CLOUD_PROJECT.iam.gserviceaccount.com" \
-  --role="roles/aiplatform.user"
+# 2. Create OIDC provider (scoped to your GitHub account)
+gcloud iam workload-identity-pools providers create-oidc "github-provider" \
+  --project=$PROJECT --location=global \
+  --workload-identity-pool="github-pool" \
+  --display-name="GitHub Provider" \
+  --attribute-mapping="google.subject=assertion.sub,attribute.repository=assertion.repository" \
+  --attribute-condition="assertion.repository_owner == 'MesutUluag'" \
+  --issuer-uri="https://token.actions.githubusercontent.com"
 
-# 3. Deploy
-gcloud run deploy portugese-for-kids-backend \
-  --image gcr.io/$GOOGLE_CLOUD_PROJECT/portugese-for-kids-backend \
-  --platform managed \
-  --region us-central1 \
-  --allow-unauthenticated \
-  --service-account portugese-for-kids-backend@$GOOGLE_CLOUD_PROJECT.iam.gserviceaccount.com \
-  --set-env-vars GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT,GOOGLE_CLOUD_LOCATION=us,GOOGLE_CLOUD_API_ENDPOINT=aiplatform.us.rep.googleapis.com,SERVER_ADDRESS=0.0.0.0
+# 3. Allow the GitHub repo to impersonate the service account
+gcloud iam service-accounts add-iam-policy-binding $SA \
+  --project=$PROJECT \
+  --role=roles/iam.workloadIdentityUser \
+  --member="principalSet://iam.googleapis.com/projects/$(gcloud projects describe $PROJECT --format='value(projectNumber)')/locations/global/workloadIdentityPools/github-pool/attribute.repository/MesutUluag/Portugese-for-Kids-Backend"
+
+# 4. Grant the service account the roles needed to deploy
+gcloud projects add-iam-policy-binding $PROJECT \
+  --member="serviceAccount:$SA" --role="roles/artifactregistry.writer"
+
+gcloud projects add-iam-policy-binding $PROJECT \
+  --member="serviceAccount:$SA" --role="roles/run.developer"
+
+gcloud iam service-accounts add-iam-policy-binding $SA \
+  --project=$PROJECT \
+  --role=roles/iam.serviceAccountUser \
+  --member="serviceAccount:$SA"
+
+# 5. Get the provider name — paste this as the GCP_WORKLOAD_IDENTITY_PROVIDER secret
+gcloud iam workload-identity-pools providers describe github-provider \
+  --project=$PROJECT --location=global \
+  --workload-identity-pool=github-pool \
+  --format="value(name)"
 ```
 
 > **Note:** `PORT` is reserved by Cloud Run and set automatically — do not include it in `--set-env-vars`.
-> Hugging Face token and GCP credentials must be supplied as Cloud Run secrets, not plain environment variables, in production.
 
 ---
 
