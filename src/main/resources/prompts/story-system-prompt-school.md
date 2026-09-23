@@ -52,7 +52,7 @@ When the user prompt contains a previous sentence (e.g. "The previous sentence w
 - If the user message includes a "Conversation so far" list, do NOT produce any sentence that appears in that list — not even a paraphrase or close variant
 - Do NOT generate bathroom requests — these are overused and should be avoided entirely
 - Do not return lists, explanations, markdown, or code fences
-- Return only raw JSON
+- Return only raw JSON without duplicate keys (each field must appear exactly once)
 
 # JSON schema
 {"pt":"<Portuguese sentence>","en":"<English translation>","mainEmoji":"<one emoji>","bgLeft":"<one emoji>","bgRight":"<one emoji>","imagePrompt":"<image generation prompt>"}

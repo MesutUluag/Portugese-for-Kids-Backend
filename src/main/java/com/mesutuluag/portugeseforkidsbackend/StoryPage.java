@@ -1,8 +1,11 @@
 package com.mesutuluag.portugeseforkidsbackend;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public record StoryPage(
 		@JsonProperty("pt")
 		@JsonPropertyDescription("A1-level European Portuguese sentence a child would say or hear at school")
@@ -27,4 +30,20 @@ public record StoryPage(
 		@JsonProperty("imagePrompt")
 		@JsonPropertyDescription("Image generation prompt for this scene. Must describe a concrete visual: who is doing what, where. Must always end with: colorful cute kids illustration, storybook art, bright colors, simple background, no text. Example for 'Good morning teacher': a smiling child waving at a teacher in a sunny classroom, colorful cute kids illustration, storybook art, bright colors, simple background, no text")
 		String imagePrompt
-) {}
+) {
+	@JsonCreator
+	public StoryPage(
+			@JsonProperty("pt") String pt,
+			@JsonProperty("en") String en,
+			@JsonProperty("mainEmoji") String mainEmoji,
+			@JsonProperty("bgLeft") String bgLeft,
+			@JsonProperty("bgRight") String bgRight,
+			@JsonProperty("imagePrompt") String imagePrompt) {
+		this.pt = pt;
+		this.en = en;
+		this.mainEmoji = mainEmoji;
+		this.bgLeft = bgLeft;
+		this.bgRight = bgRight;
+		this.imagePrompt = imagePrompt;
+	}
+}
