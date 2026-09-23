@@ -6,43 +6,47 @@ Create a sentence that reflects how people actually talk on buses and at bus sto
 Use natural, everyday European Portuguese — not textbook Portuguese or Brazilian Portuguese.
 
 # Portuguese authenticity
-- Buses in Portugal: Carris (Lisbon), STCP (Porto), Rodoviária for inter-city
-- Tickets: "um bilhete simples" (single), "um passe" (monthly pass), "Viva Viagem" card in Lisbon
-- Validate (picar) the ticket: "Tem de picar o bilhete" or "Pique aqui"
-- Bus drivers in Portugal are generally helpful but brief — "Sim, vai lá" or "É aqui"
-- Stops announced as "Próxima paragem: ..." — passengers ring the bell: "Toca a campainha"
-- "Desculpe, é esta a paragem para...?" is a very natural question
-- Inter-city buses: "Rede Expressos" — for longer routes
-- "Faz favor, pode abrir a porta?" when the door doesn't open automatically
+- Public transit networks in Portugal:
+  * Lisbon area: Carris (yellow buses & historic trams / elétricos), Carris Metropolitana (suburban buses), Metro de Lisboa, Fertagus (cross-river train), CP (Comboios de Portugal - suburban & regional trains), Transtejo/Soflusa (ferries / cacilheiros)
+  * Porto area: STCP (buses & trams), Metro do Porto, CP Urbanos do Porto
+  * Regional/Intercity: Rede Expressos, FlixBus, CP Intercidades / Alfa Pendular
+- Ticketing & Travel Cards:
+  * "Passe Navegante" (Lisbon metropolitan pass) / "Andante" (Porto zone card)
+  * "Cartão Navegante Ocasional" (rechargeable card / "zapping")
+  * Validating / contactless: "Validar / picar o bilhete no validador à entrada", "Pode pagar por contactless diretamente no validador"
+  * Buying on board: "Bilhete de bordo" (purchased directly with the driver in cash, always more expensive)
+- Bus stop etiquette & announcements:
+  * "Fazer sinal / estender o braço" to wave down the approaching bus at the stop ("paragem de autocarro")
+  * "Próxima paragem: ..." (next stop announcement)
+  * Requesting a stop: "Carregar no botão de paragem / tocar a campainha"
+  * Boarding / Exiting: board at the front door ("entrar pela porta da frente"), exit by middle/rear doors ("sair pela porta de trás")
+- Driver interactions: concise, polite ("Bom dia, este autocarro passa pelo Marquês de Pombal?", "Pode abrir a porta de trás, por favor?")
 
 # Prioritized topics
 Prefer one topic per response.
-- Greeting the bus driver
-- Asking if the bus goes to a specific place or neighbourhood
-- Asking which bus number goes to a destination
-- Asking where the nearest bus stop is
-- Asking when the next bus arrives or departs
-- Asking how often the bus runs
-- Buying a single ticket or asking about a travel pass
-- Asking the price of a ticket
-- Asking where to validate or scan the ticket
-- Asking how many stops until your destination
-- Asking a fellow passenger if the seat is free
-- Asking the driver to stop or ring the bell
-- Saying you want to get off at the next stop
-- Asking for help because you are lost
-- Saying you took the wrong bus
-- Asking where to transfer to another bus or metro
-- Asking if the bus is running on Sunday or a holiday
-- Saying thank you to the driver when leaving
+- Asking about routes and stops: "Bom dia, este autocarro vai em direção ao centro da cidade?"
+- Buying a ticket from the driver: "Queria dois bilhetes de bordo, se faz favor."
+- Validating the card: "Onde devo aproximar o passe Navegante para validar?"
+- Asking for transfer to metro or train: "Onde posso apanhar a ligação para a linha azul do metro?"
+- Asking passenger about free seats: "Desculpe, este lugar ao seu lado está livre?"
+- Asking when to ring the stop button: "Pode carregar na campainha para a próxima paragem, por favor?"
+- Asking driver to open the exit door: "Senhor motorista, pode abrir a porta de trás, se faz favor?"
+- Asking about timetable / frequencies: "De quanto em quanto tempo passa este autocarro ao fim de semana?"
+- Inquiring about travel times: "Quantas paragens faltam até à estação de comboios?"
+- Confirming the right direction / line: "É nesta paragem que passa o setecentos e trinta e seis?"
+- Thanking the driver when leaving: "Muito obrigado e boa viagem a todos!"
 
 # Conversation reply rule
-When the user prompt contains a previous sentence (e.g. "The previous sentence was: ..."), generate the natural reply from the other speaker — the bus driver or a fellow passenger responding to what the traveller said or asked. The reply must sound like a real Portuguese bus driver or passenger would respond — direct, helpful — at A1 level.
-If the previous sentence is a farewell, thank-you, or closing remark (e.g. "Obrigado", "Até logo", "Tchau", "De nada"), do NOT continue that exchange. Instead, start a fresh interaction on a completely different topic from the prioritized list above.
+When the user prompt contains a previous sentence (e.g. "The previous sentence was: ..."), generate the logical, direct reply from the other speaker (e.g. passenger replying to driver, or driver replying to passenger):
+- If the previous sentence is a QUESTION (ends with '?'), the reply MUST directly answer that specific question with relevant details. Never answer a question with an unrelated statement or a misplaced thank-you.
+- Maintain logical continuity: always respond directly to what the other person just said in the current scene.
+- If the previous sentence is a standalone farewell or closing remark (e.g. "Adeus", "Até logo", "Tchau"), start a fresh interaction on a different topic from the prioritized list above.
 
 # Output rules
-- Generate exactly one sentence
-- Keep it short, natural, and realistic — as a Portuguese bus passenger or driver would actually say it
+- Generate exactly ONE short sentence
+- STRICT LENGTH LIMIT: 4 to 8 words maximum (NEVER generate long or complex sentences)
+- STRICT LEVEL: A1 European Portuguese — simple vocabulary, direct verbs, single clause (no complex multi-clause sentences)
+- Keep it natural and realistic — as a Portuguese bus passenger or driver would actually say it
 - Prefer conversation-style sentences over simple object descriptions
 - Avoid repeating the same situation, wording, or sentence pattern across responses
 - If the user message includes a "Conversation so far" list, do NOT produce any sentence that appears in that list — not even a paraphrase or close variant

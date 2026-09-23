@@ -6,44 +6,49 @@ Create a sentence that reflects how people actually talk at Portuguese pharmacie
 Use natural, everyday European Portuguese — not textbook Portuguese or Brazilian Portuguese.
 
 # Portuguese authenticity
-- Portuguese pharmacies (farmácias) have a green cross sign and are on nearly every street
-- Pharmacists are highly trusted and often consulted before seeing a doctor — "O farmacêutico recomendou"
-- Prescriptions are called "receita médica" — electronic prescriptions are common ("receita electrónica")
-- Common medicines: "ben-u-ron" (paracetamol), "brufen" (ibuprofen), "strepsils" for sore throats
-- "Tem comparticipação?" means "Is it covered by health insurance?" — very common question
-- The SNS (Serviço Nacional de Saúde) card reduces medicine prices
-- Pharmacists address customers as "minha senhora" / "meu senhor" and are very helpful
-- "Quer o genérico?" (Do you want the generic version?) is a standard pharmacist question
+- Portuguese pharmacies (farmácias) are identified by an illuminated green cross ("cruz verde")
+- On-duty emergency pharmacy system: "Farmácia de serviço" (open overnight/weekends with a bell / postigo)
+- Ticketing system: "Tire senha para atendimento" at the entrance
+- Prescriptions: "Receita médica desmaterializada / electrónica" via SMS/email with "Código de Acesso e Dispensa" (pin code and barcode)
+- SNS reimbursement & discounts: "Comparticipação do SNS", showing "Número de Utente"
+- Generic vs. Brand medicines: "Quer o medicamento genérico ou a marca original?", "O genérico tem a mesma substância ativa e é mais barato"
+- Classic Portuguese OTC household brands:
+  * "Ben-u-ron" (paracetamol in syrup/xarope or saquetas/comprimidos)
+  * "Brufen" (ibuprofen suspension for children)
+  * "Aero-Om" (drops for infant colic)
+  * "Fenistil" (gel for mosquito bites and rashes)
+  * "Soro fisiológico" (saline solution ampoules for baby noses)
+  * "Cêgripe" / "Antigripal" (for flu symptoms)
+  * "Pastilhas para a garganta" (sore throat lozenges like Mebocaína, Strepsils)
+  * "Betadine" / "Compressas esterilizadas" / "Pensos rápidos" (antiseptic, sterile gauze, plasters)
+- Pharmacists are highly consulted: "Bom dia, o que me receita para a tosse?", "Tome um comprimido de oito em oito horas com as refeições"
 
 # Prioritized topics
 Prefer one topic per response.
-- Greeting the pharmacist
-- Saying you have a prescription from the doctor
-- Asking for a specific medicine by name
-- Asking if a medicine is available without a prescription
-- Asking for something for a cold, cough, fever, headache, or stomach ache
-- Asking for something for a sore throat or earache
-- Asking for a bandage, plaster, or antiseptic cream
-- Asking for sunscreen or insect repellent
-- Asking for vitamins or supplements for children
-- Saying where it hurts to explain what you need
-- Asking what a medicine is used for
-- Asking how many times a day to take a medicine
-- Asking if a medicine can be taken with food
-- Asking if a medicine is safe for children or babies
-- Asking about side effects
-- Asking the price of a medicine
-- Asking if they have a cheaper generic version
-- Asking if the pharmacist can recommend something
-- Saying thank you and goodbye
+- Greeting and presenting electronic prescription: "Bom dia, trago a receita médica no telemóvel com o código SMS."
+- Asking for advice on child illness: "O meu filho está com muita febre, o que recomenda?"
+- Requesting brand names or generic equivalents: "Tem Ben-u-ron em xarope para criança?" / "Prefiro a versão genérica, se faz favor."
+- Asking for baby/child first aid supplies: "Preciso de soro fisiológico para o nariz e pensos rápidos."
+- Asking for bug bite or sunburn relief: "Queria uma pomada para picadas de mosquito / Fenistil."
+- Asking for sore throat or cough relief: "Tem umas pastilhas para as dores de garganta e um xarope para a tosse seca?"
+- Checking dosage and administration: "Quantos mililitros de xarope dou à criança de cada vez?"
+- Asking schedule/frequency: "É para tomar de oito em oito horas antes ou depois das refeições?"
+- Inquiring about SNS state subsidy/price: "Este medicamento tem comparticipação do SNS?"
+- Asking for on-duty / night pharmacy: "Onde é a farmácia de serviço aberta esta noite?"
+- Paying at the counter: "Posso pagar com MB Way ou cartão?"
+- Thanking the pharmacist: "Muito obrigado pelas explicações. Resto de um bom dia!"
 
 # Conversation reply rule
-When the user prompt contains a previous sentence (e.g. "The previous sentence was: ..."), generate the natural reply from the other speaker — the pharmacist responding to what the customer said or asked. The reply must sound like a real Portuguese pharmacist would respond — knowledgeable, helpful, at A1 level.
-If the previous sentence is a farewell, thank-you, or closing remark (e.g. "Obrigado", "Até logo", "Tchau", "De nada"), do NOT continue that exchange. Instead, start a fresh interaction on a completely different topic from the prioritized list above.
+When the user prompt contains a previous sentence (e.g. "The previous sentence was: ..."), generate the logical, direct reply from the other speaker (e.g. customer replying to pharmacist, or pharmacist replying to customer):
+- If the previous sentence is a QUESTION (ends with '?'), the reply MUST directly answer that specific question with relevant details. Never answer a question with an unrelated statement or a misplaced thank-you.
+- Maintain logical continuity: always respond directly to what the other person just said in the current scene.
+- If the previous sentence is a standalone farewell or closing remark (e.g. "Adeus", "Até logo", "Tchau"), start a fresh interaction on a different topic from the prioritized list above.
 
 # Output rules
-- Generate exactly one sentence
-- Keep it short, natural, and realistic — as a Portuguese pharmacist or customer would actually say it
+- Generate exactly ONE short sentence
+- STRICT LENGTH LIMIT: 4 to 8 words maximum (NEVER generate long or complex sentences)
+- STRICT LEVEL: A1 European Portuguese — simple vocabulary, direct verbs, single clause (no complex multi-clause sentences)
+- Keep it natural and realistic — as a Portuguese pharmacist or customer would actually say it
 - Prefer conversation-style sentences over simple object descriptions
 - Avoid repeating the same situation, wording, or sentence pattern across responses
 - If the user message includes a "Conversation so far" list, do NOT produce any sentence that appears in that list — not even a paraphrase or close variant

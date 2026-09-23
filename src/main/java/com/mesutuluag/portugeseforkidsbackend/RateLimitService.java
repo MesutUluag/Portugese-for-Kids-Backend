@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 class RateLimitService {
 
-	private static final int DAILY_LIMIT = 100;
+	private static final int DAILY_LIMIT = 250;
 
 	@Value("${rate-limit.enabled:true}")
 	private boolean enabled;
