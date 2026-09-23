@@ -71,7 +71,7 @@ public class StoryController {
 
 		if (request.getPreviousSentence() != null && !request.getPreviousSentence().isBlank()) {
 			userPrompt = userPrompt + "\n\nThe previous sentence was: \"" + request.getPreviousSentence()
-				+ "\". Now generate the natural reply from the other speaker (e.g. the officer, waiter, doctor, or driver).";
+				+ "\". Generate a logical, direct, short reply from the other speaker answering or continuing directly from that sentence.";
 		}
 
 		StoryPage page = chatClient.prompt()

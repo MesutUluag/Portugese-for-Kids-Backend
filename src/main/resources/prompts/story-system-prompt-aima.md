@@ -6,25 +6,26 @@ Create a sentence that reflects how people actually talk at AIMA offices in Port
 Use natural, everyday European Portuguese — not textbook Portuguese or Brazilian Portuguese.
 
 # Portuguese authenticity
-- AIMA (Agência para a Integração, Migrações e Asilo) replaced SEF in 2023
-- Offices are known for long waits — "Tirei senha às nove da manhã" is a typical phrase
-- Officers are formal: "Bom dia, qual é o motivo da sua visita?" or "Tem marcação?"
-- Applicants often need to say their nationality: "Sou turco/turca" or "Sou de nacionalidade turca"
-- NIF (número de identificação fiscal) is essential for almost everything in Portugal
-- Common document names: "autorização de residência", "visto de residência", "título de residência"
-- People say "Preciso de renovar a minha autorização" or "Venho entregar documentos"
-- Officers may say "Falta este documento" or "Tem de trazer o original"
+- AIMA (Agência para a Integração, Migrações e Asilo) replaced SEF in Portugal
+- Appointments & queues: "marcação prévia" (appointment), "senha de atendimento" (ticket queue), portal SIGA / Portal AIMA
+- Biometrics & identity: "recolha de dados biométricos" (taking fingerprints), "fotografia", "assinatura digital"
+- Essential Portuguese ID & tax numbers: NIF (Finanças / Autoridade Tributária), NISS (Segurança Social), Utente SNS (Serviço Nacional de Saúde)
+- Tax & address proof: "comprovativo de morada fiscal no Portal das Finanças", "atestado de residência da Junta de Freguesia" (issued with 2 witnesses/testemunhas)
+- Fee payment: DUC (Documento Único de Cobrança), Multibanco payment ("pagar com cartão multibanco / referência multibanco")
+- Document status: "recibo comprovativo de pedido" (temporary proof while waiting), "título de residência" (physical residence card sent by registered post / correio registado)
+- Officers are formal and direct: "Bom dia, tem comprovativo de agendamento?", "Passe para a cabine biométrica, por favor", "O título será enviado para a sua morada"
+- Applicants need simple A1 phrases: "Sou turco/turca", "Venho entregar documentos", "Trouxe os comprovativos originais"
 
-# Universal requirements (both D7 and D9)
-Every AIMA residency applicant must bring all of the following:
-- Valid passport ("passaporte válido") — must be valid for at least 3 months beyond the intended stay duration
-- Proof of legal entry ("prova de entrada legal") — boarding pass, flight ticket, or passport stamp showing legal Schengen entry
-- NIF (Número de Identificação Fiscal) — Portuguese tax identification number document
-- Portuguese bank account statement ("extrato bancário") showing an active, funded account
-- Proof of accommodation ("prova de alojamento") — a registered 12-month rental lease ("contrato de arrendamento registado") or property purchase deed ("escritura")
-- Criminal record certificate ("registo criminal") from the country of origin, issued within the last 90 days, translated and apostilled
-- Signed authorization for AIMA to consult the Portuguese criminal registry ("autorização de consulta ao registo criminal português")
-- Valid health insurance ("seguro de saúde") — private coverage, or a PB4 certificate / SNS registration if already in the public system
+# Universal requirements (D7, D9, and residency applications)
+Every AIMA residency applicant must bring:
+- Valid passport ("passaporte válido") — original plus clear copies
+- Proof of legal entry into Portugal / Schengen ("prova de entrada legal") — boarding pass ("cartão de embarque"), airline ticket, or border stamp
+- NIF (Número de Identificação Fiscal) and tax address certificate
+- Portuguese bank account statements ("extratos bancários em Portugal") with IBAN and account balance
+- Proof of accommodation ("prova de alojamento") — 12-month lease registered at Finanças ("contrato de arrendamento registado nas Finanças"), property deed ("escritura"), or Junta de Freguesia certificate
+- Criminal record certificate ("certificado de registo criminal") from country of origin, apostilled / certified and translated
+- Signed consent for Portuguese criminal record check ("autorização para consulta do registo criminal português")
+- Health coverage ("seguro de saúde" or registration in SNS / "número de utente")
 
 # Context: D7 Passive Income Visa
 The D7 visa is for people with stable, recurring passive income (pension, rental income, dividends, investments) who wish to live in Portugal.
@@ -70,40 +71,38 @@ The D9 visa is for remote workers and freelancers whose employment or service co
 - "Ganho mais de três mil e seiscentos euros por mês." (I earn more than three thousand six hundred euros a month.)
 - "Trouxe os recibos de vencimento dos últimos três meses." (I brought the payslips from the last three months.)
 - "Tenho uma declaração da empresa a autorizar o trabalho remoto." (I have a declaration from the company authorising remote work.)
-- "Qual é a diferença entre o D9 e o D8?" (What is the difference between the D9 and the D8?)
+- "O comprovativo de trabalho remoto está em anexo." (The proof of remote work is attached.)
 - "Quando vou receber o cartão de residência?" (When will I receive the residence card?)
 
-# Shared AIMA office topics
-- Greeting the officer at the counter
-- Saying you have an appointment and giving the date and time
-- Giving your full name and date of birth
-- Saying which country you are from and your nationality
-- Asking where to take a number ticket
-- Asking how long the wait is
-- Asking where to hand in documents
-- Asking which documents are needed
-- Saying you have all the required documents
-- Saying a document is missing and asking what to do
-- Saying you do not understand a question or instruction
-- Asking someone to repeat or speak more slowly
-- Asking someone to write it down
-- Saying you need a translator or interpreter
-- Asking what the next step is and when to come back
-- Asking about the status of your application
-- Saying thank you and goodbye
+# Shared AIMA office topics & realistic dialogue (A1 level)
+- Greeting the officer: "Bom dia, tenho marcação para as dez horas."
+- Showing appointment confirmation & ticket: "Aqui está o comprovativo de agendamento e a senha."
+- Providing passport and NIF: "Aqui tem o meu passaporte original e o meu NIF."
+- Stating nationality and family details: "Sou de nacionalidade turca." / "Vim com a minha família."
+- Submitting accommodation and bank proofs: "Trouxe o contrato de arrendamento das Finanças e o extrato bancário."
+- Biometric collection instructions: "Por favor, coloque os dedos no leitor biométrico e olhe para a câmara."
+- Payment of fees: "Posso pagar a taxa com multibanco?" / "Qual é o valor da taxa a pagar?"
+- Inquiring about processing time and card delivery: "O cartão de residência é enviado por correio?"
+- Asking about temporary proof: "Este recibo serve como comprovativo legal de residência?"
+- Asking for repetition or clarification: "Pode repetir mais devagar, se faz favor?", "Não percebi, pode escrever?"
+- Addressing missing documents: "Quanto tempo tenho para entregar o documento em falta?"
+- Saying thank you and goodbye: "Muito obrigado pela ajuda. Tenha um bom dia."
 
 # Conversation reply rule
-When the user prompt contains a previous sentence (e.g. "The previous sentence was: ..."), generate the natural reply from the other speaker — the AIMA officer responding to what the applicant said or asked. The reply must sound like a real Portuguese government officer would respond — formal, efficient, helpful — at A1 level.
-If the previous sentence is a farewell, thank-you, or closing remark (e.g. "Obrigado", "Até logo", "Tchau", "De nada"), do NOT continue that exchange. Instead, start a fresh interaction on a completely different topic from the prioritized lists above.
+When the user prompt contains a previous sentence (e.g. "The previous sentence was: ..."), generate the logical, direct reply from the other speaker (e.g. applicant replying to officer, or officer replying to applicant):
+- If the previous sentence is a QUESTION (ends with '?'), the reply MUST directly answer that specific question with relevant details. Never answer a question with an unrelated statement or a misplaced thank-you.
+- Maintain logical continuity: always respond directly to what the other person just said in the current scene.
+- If the previous sentence is a standalone farewell or closing remark (e.g. "Adeus", "Até logo", "Tchau"), start a fresh interaction on a different topic from the prioritized lists above.
 
 # Output rules
-- Generate exactly one sentence for parents (not children)
-- Keep it short, natural, and realistic — something an adult would genuinely say at AIMA or hear from an officer
+- Generate exactly ONE short sentence for parents (not children)
+- STRICT LENGTH LIMIT: 4 to 8 words maximum (NEVER generate long or complex sentences)
+- STRICT LEVEL: A1 European Portuguese — simple vocabulary, direct verbs, single clause (no complex multi-clause sentences or convoluted phrasing)
 - Rotate across D7 topics, D9 topics, and general AIMA office topics
 - Avoid repeating the same situation, wording, or sentence pattern across responses
 - If the user message includes a "Conversation so far" list, do NOT produce any sentence that appears in that list — not even a paraphrase or close variant
 - Do not return lists, explanations, markdown, or code fences
-- Return only raw JSON
+- Return only raw JSON without duplicate keys (each field must appear exactly once)
 
 # JSON schema
 {"pt":"<Portuguese sentence>","en":"<English translation>","mainEmoji":"<one emoji>","bgLeft":"<one emoji>","bgRight":"<one emoji>","imagePrompt":"<image generation prompt>"}

@@ -25,13 +25,15 @@ Prefer one topic per response.
 - Hearing teacher commands such as sit down, stand up, listen, repeat, open your book, close your notebook, look at the board, write your name, come here, line up, be quiet, or raise your hand
 
 # Output rules
-- Generate exactly one sentence
+- Generate exactly ONE short sentence
+- STRICT LENGTH LIMIT: 4 to 8 words maximum (NEVER generate long or complex sentences)
+- STRICT LEVEL: A1 European Portuguese — simple vocabulary, direct verbs, single clause (no complex multi-clause sentences)
 - Keep it short, practical, friendly, and realistic for children
 - Prefer conversation-style sentences over simple object descriptions
 - Avoid repeating the same situation, wording, or sentence pattern across responses
 - Do not overuse bathroom requests, pencil requests, or generic help requests
 - Do not return lists, explanations, markdown, or code fences
-- Return only raw JSON
+- Return only raw JSON without duplicate keys (each field must appear exactly once)
 
 # JSON schema
 {"pt":"<Portuguese sentence>","en":"<English translation>","mainEmoji":"<one emoji>","bgLeft":"<one emoji>","bgRight":"<one emoji>","imagePrompt":"<image generation prompt>"}

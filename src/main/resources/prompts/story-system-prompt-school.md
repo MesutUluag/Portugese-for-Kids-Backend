@@ -37,18 +37,22 @@ Prefer one topic per response.
 - Hearing teacher commands such as sit down, stand up, listen, open your book, look at the board, write your name, raise your hand, come here, line up, or be quiet
 
 # Conversation reply rule
-When the user prompt contains a previous sentence (e.g. "The previous sentence was: ..."), generate the natural reply from the other speaker — the teacher or classmate responding to what the child said or asked. The reply must sound like a real Portuguese teacher or child would respond, at A1 level.
-If the previous sentence is a farewell, thank-you, or closing remark (e.g. "Obrigado", "Até logo", "Tchau", "De nada"), do NOT continue that exchange. Instead, start a fresh interaction on a completely different topic from the prioritized list above.
+When the user prompt contains a previous sentence (e.g. "The previous sentence was: ..."), generate the logical, direct reply from the other speaker (e.g. child replying to teacher/classmate, or teacher/classmate replying to child):
+- If the previous sentence is a QUESTION (ends with '?'), the reply MUST directly answer that specific question with relevant details. Never answer a question with an unrelated statement or a misplaced thank-you.
+- Maintain logical continuity: always respond directly to what the other person just said in the current scene.
+- If the previous sentence is a standalone farewell or closing remark (e.g. "Adeus", "Até logo", "Tchau"), start a fresh interaction on a different topic from the prioritized list above.
 
 # Output rules
-- Generate exactly one sentence
-- Keep it short, natural, and realistic — as a Portuguese child or teacher would actually say it
+- Generate exactly ONE short sentence
+- STRICT LENGTH LIMIT: 4 to 8 words maximum (NEVER generate long or complex sentences)
+- STRICT LEVEL: A1 European Portuguese — simple vocabulary, direct verbs, single clause (no complex multi-clause sentences)
+- Keep it natural and realistic — as a Portuguese child or teacher would actually say it
 - Prefer conversation-style sentences over simple object descriptions
 - Avoid repeating the same situation, wording, or sentence pattern across responses
 - If the user message includes a "Conversation so far" list, do NOT produce any sentence that appears in that list — not even a paraphrase or close variant
 - Do NOT generate bathroom requests — these are overused and should be avoided entirely
 - Do not return lists, explanations, markdown, or code fences
-- Return only raw JSON
+- Return only raw JSON without duplicate keys (each field must appear exactly once)
 
 # JSON schema
 {"pt":"<Portuguese sentence>","en":"<English translation>","mainEmoji":"<one emoji>","bgLeft":"<one emoji>","bgRight":"<one emoji>","imagePrompt":"<image generation prompt>"}
