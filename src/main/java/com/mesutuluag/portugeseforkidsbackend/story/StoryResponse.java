@@ -1,4 +1,4 @@
-package com.mesutuluag.portugeseforkidsbackend;
+package com.mesutuluag.portugeseforkidsbackend.story;
 
 public final class StoryResponse {
 

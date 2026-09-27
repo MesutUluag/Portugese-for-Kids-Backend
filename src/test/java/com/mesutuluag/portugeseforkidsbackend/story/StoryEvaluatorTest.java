@@ -1,4 +1,4 @@
-package com.mesutuluag.portugeseforkidsbackend;
+package com.mesutuluag.portugeseforkidsbackend.story;
 
 import java.util.List;
 
@@ -69,12 +69,11 @@ class StoryEvaluatorTest {
      * Focused compliance rules extracted from the system prompt.
      * Distilled to the three most objectively checkable constraints.
      */
-    private static final String COMPLIANCE_RULES = """
-            1. The sentence must be A1-level European Portuguese — short, simple vocabulary, suitable for a child.
-            2. The sentence must be something a child would realistically say or hear at a school setting \
-            (greetings, classroom questions, playground talk, teacher commands, etc.).
-            3. The sentence must be a single sentence, not a list or paragraph.
-            """;
+    private static final String COMPLIANCE_RULES =
+            "1. The sentence must be A1-level European Portuguese - short, simple vocabulary, suitable for a child.\n"
+            + "2. The sentence must be something a child would realistically say or hear at a school setting "
+            + "(greetings, classroom questions, playground talk, teacher commands, etc.).\n"
+            + "3. The sentence must be a single sentence, not a list or paragraph.\n";
 
     @Autowired
     private ChatClient.Builder chatClientBuilder;

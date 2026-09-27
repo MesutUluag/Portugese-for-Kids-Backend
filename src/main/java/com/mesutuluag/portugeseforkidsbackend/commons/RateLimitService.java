@@ -1,14 +1,15 @@
-package com.mesutuluag.portugeseforkidsbackend;
+package com.mesutuluag.portugeseforkidsbackend.commons;
 
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.mesutuluag.portugeseforkidsbackend.exception.DailyLimitExceededException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-class RateLimitService {
+public class RateLimitService {
 
 	private static final int DAILY_LIMIT = 250;
 
@@ -17,7 +18,7 @@ class RateLimitService {
 
 	private final Map<String, Integer> requestCounts = new ConcurrentHashMap<>();
 
-	void checkAndIncrement(String ipAddress) {
+	public void checkAndIncrement(String ipAddress) {
 		if (!enabled) {
 			return;
 		}

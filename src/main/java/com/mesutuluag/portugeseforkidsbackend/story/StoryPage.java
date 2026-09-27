@@ -1,4 +1,4 @@
-package com.mesutuluag.portugeseforkidsbackend;
+package com.mesutuluag.portugeseforkidsbackend.story;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
