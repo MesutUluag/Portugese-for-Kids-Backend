@@ -1,6 +1,8 @@
-package com.mesutuluag.portugeseforkidsbackend;
+package com.mesutuluag.portugeseforkidsbackend.story;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mesutuluag.portugeseforkidsbackend.commons.RateLimitService;
+import com.mesutuluag.portugeseforkidsbackend.exception.DailyLimitExceededException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +14,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -54,7 +57,7 @@ class StoryControllerTest {
         when(requestSpec.system(anyString())).thenReturn(requestSpec);
         when(requestSpec.user(anyString())).thenReturn(requestSpec);
         when(requestSpec.call()).thenReturn(callResponseSpec);
-        when(callResponseSpec.entity(StoryPage.class)).thenReturn(page);
+        when(callResponseSpec.content()).thenReturn(objectMapper.writeValueAsString(page));
 
         StoryRequest request = new StoryRequest();
         request.setPrompt("greet a teacher");
@@ -90,7 +93,7 @@ class StoryControllerTest {
         when(requestSpec.system(anyString())).thenReturn(requestSpec);
         when(requestSpec.user(anyString())).thenReturn(requestSpec);
         when(requestSpec.call()).thenReturn(callResponseSpec);
-        when(callResponseSpec.entity(StoryPage.class)).thenReturn(page);
+        when(callResponseSpec.content()).thenReturn(objectMapper.writeValueAsString(page));
 
         StoryRequest request = new StoryRequest();
         request.setPrompt("ask for the bill");
@@ -120,7 +123,7 @@ class StoryControllerTest {
         when(requestSpec.system(anyString())).thenReturn(requestSpec);
         when(requestSpec.user(anyString())).thenReturn(requestSpec);
         when(requestSpec.call()).thenReturn(callResponseSpec);
-        when(callResponseSpec.entity(StoryPage.class)).thenReturn(page);
+        when(callResponseSpec.content()).thenReturn(objectMapper.writeValueAsString(page));
 
         StoryRequest request = new StoryRequest();
         request.setPrompt("say good morning");
@@ -163,16 +166,16 @@ class StoryControllerTest {
         );
         when(chatClient.prompt()).thenReturn(requestSpec);
         when(requestSpec.system(anyString())).thenReturn(requestSpec);
-        when(requestSpec.user((String) null)).thenReturn(requestSpec);
+        when(requestSpec.user((String) isNull())).thenReturn(requestSpec);
         when(requestSpec.call()).thenReturn(callResponseSpec);
-        when(callResponseSpec.entity(StoryPage.class)).thenReturn(page);
+        when(callResponseSpec.content()).thenReturn(objectMapper.writeValueAsString(page));
 
         StoryRequest request = new StoryRequest();
         // prompt is null by default
 
         StoryResponse response = controller.createStory(request, new MockHttpServletRequest());
 
-        verify(requestSpec).user((String) null);
+        verify(requestSpec).user((String) isNull());
         assertThat(response.getContent()).isNotBlank();
     }
 }

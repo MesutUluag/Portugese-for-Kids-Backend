@@ -1,9 +1,15 @@
-package com.mesutuluag.portugeseforkidsbackend;
+package com.mesutuluag.portugeseforkidsbackend.story;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mesutuluag.portugeseforkidsbackend.commons.RateLimitService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.core.io.ClassPathResource;
@@ -14,7 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin(origins = {"http://127.0.0.1:8080", "http://localhost:8080", "http://127.0.0.1:5173", "http://localhost:5173", "https://mesutuluag.github.io"})
+@CrossOrigin(origins = {
+		"http://127.0.0.1:8080", "http://localhost:8080",
+		"http://127.0.0.1:5173", "http://localhost:5173",
+		"https://mesutuluag.github.io"
+})
 @RequestMapping("/api/story")
 public class StoryController {
 
@@ -23,13 +33,17 @@ public class StoryController {
 
 	private final RateLimitService rateLimitService;
 	private final ChatClient chatClient;
-	private final java.util.Map<String, String> systemPrompts;
-	private final ObjectMapper objectMapper = new ObjectMapper();
+	private final Map<String, String> systemPrompts;
+	// Lenient mapper: duplicate JSON keys (LLM hallucination) use last-value-wins
+	// instead of throwing, and unknown fields are silently ignored.
+	private final ObjectMapper objectMapper = new ObjectMapper()
+			.configure(JsonParser.Feature.STRICT_DUPLICATE_DETECTION, false)
+			.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
 	public StoryController(RateLimitService rateLimitService, ChatClient.Builder chatClientBuilder) throws IOException {
 		this.rateLimitService = rateLimitService;
 		this.chatClient = chatClientBuilder.build();
-		this.systemPrompts = new java.util.HashMap<>();
+		this.systemPrompts = new HashMap<>();
 		this.systemPrompts.put("school",       loadPrompt("story-system-prompt-school.md"));
 		this.systemPrompts.put("restaurant",   loadPrompt("story-system-prompt-restaurant.md"));
 		this.systemPrompts.put("bank",         loadPrompt("story-system-prompt-bank.md"));
@@ -46,7 +60,7 @@ public class StoryController {
 
 	private String loadPrompt(String filename) throws IOException {
 		return new ClassPathResource("prompts/" + filename)
-			.getContentAsString(StandardCharsets.UTF_8);
+				.getContentAsString(StandardCharsets.UTF_8);
 	}
 
 	@PostMapping
@@ -54,31 +68,43 @@ public class StoryController {
 		rateLimitService.checkAndIncrement(httpServletRequest.getRemoteAddr());
 
 		String context = (request.getContext() != null && systemPrompts.containsKey(request.getContext()))
-			? request.getContext()
-			: DEFAULT_CONTEXT;
+				? request.getContext()
+				: DEFAULT_CONTEXT;
 
 		String userPrompt = request.getPrompt();
 
 		if (request.getConversationHistory() != null && !request.getConversationHistory().isEmpty()) {
-			java.util.List<String> history = request.getConversationHistory();
+			List<String> history = request.getConversationHistory();
 			int fromIndex = Math.max(0, history.size() - MAX_CONVERSATION_HISTORY);
-			java.util.List<String> trimmedHistory = history.subList(fromIndex, history.size());
+			List<String> trimmedHistory = history.subList(fromIndex, history.size());
 			userPrompt = userPrompt + "\n\nConversation so far (do NOT repeat any of these):\n"
-				+ String.join("\n", trimmedHistory.stream()
-					.map(s -> "- " + s)
-					.toList());
+					+ String.join("\n", trimmedHistory.stream()
+							.map(s -> "- " + s)
+							.toList());
 		}
 
 		if (request.getPreviousSentence() != null && !request.getPreviousSentence().isBlank()) {
 			userPrompt = userPrompt + "\n\nThe previous sentence was: \"" + request.getPreviousSentence()
-				+ "\". Generate a logical, direct, short reply from the other speaker answering or continuing directly from that sentence.";
+					+ "\". Generate a logical, direct, short reply from the other speaker answering or continuing directly from that sentence.";
 		}
 
-		StoryPage page = chatClient.prompt()
-			.system(systemPrompts.get(context))
-			.user(userPrompt)
-			.call()
-			.entity(StoryPage.class);
+		String raw = chatClient.prompt()
+				.system(systemPrompts.get(context))
+				.user(userPrompt)
+				.call()
+				.content();
+
+		// Strip markdown code fences the LLM sometimes wraps around JSON
+		String json = raw.replaceAll("(?s)```json\\s*|```", "").trim();
+		// Extract the first {...} block in case there is leading/trailing text
+		int start = json.indexOf('{');
+		int end   = json.lastIndexOf('}');
+		if (start >= 0 && end > start) {
+			json = json.substring(start, end + 1);
+		}
+
+		// Parse with the lenient mapper — duplicate keys use last-value-wins
+		StoryPage page = objectMapper.readValue(json, StoryPage.class);
 
 		return new StoryResponse(objectMapper.writeValueAsString(page));
 	}
