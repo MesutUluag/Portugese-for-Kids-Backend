@@ -1,48 +1,48 @@
 package com.mesutuluag.portugeseforkidsbackend.image;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.Base64;
-import java.util.List;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.auth.oauth2.GoogleCredentials;
+import com.google.genai.Client;
+import com.google.genai.types.GenerateContentConfig;
+import com.google.genai.types.GenerateContentResponse;
+import com.google.genai.types.Part;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * HTTP client for Google's Gemini image-generation endpoint.
+ * Gemini image-generation client using the standard Gemini API (generativelanguage.googleapis.com).
  *
- * <p>Obtains a short-lived access token via Google Application Default Credentials (ADC)
- * and calls the Vertex AI generateContent API.
- *
- * <p>Returns the raw image bytes (PNG/WebP as returned by the API), or
- * {@code null} when Gemini is unavailable or returns no image part.
+ * <p>Authenticates with a Gemini API key, which gives access to the full model catalogue
+ * including {@code gemini-3.1-flash-lite-image}. Falls back gracefully to null when
+ * the API key is not configured.
  */
 @Component
 public class GeminiImageClient {
 
     private static final Logger log = LoggerFactory.getLogger(GeminiImageClient.class);
 
-    private static final String GEMINI_IMAGE_URL =
-            "https://aiplatform.googleapis.com/v1/projects/%s/locations/%s/publishers/google/models/gemini-2.5-flash-image:generateContent";
+    private static final String MODEL = "gemini-3.1-flash-lite-image";
 
-    private final String projectId;
-    private final String location;
-    private final HttpClient httpClient;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private static final GenerateContentConfig CONFIG = GenerateContentConfig.builder()
+            .responseModalities("IMAGE", "TEXT")
+            .build();
 
-    public GeminiImageClient(
-            @Value("${GOOGLE_CLOUD_PROJECT:}") String projectId,
-            @Value("${spring.ai.vertex.ai.gemini.location:us-central1}") String location) {
-        this.projectId  = projectId;
-        this.location   = location;
-        this.httpClient = HttpClient.newHttpClient();
+    private final Client client;
+
+    public GeminiImageClient(@Value("${gemini.image.api-key:}") String apiKey) {
+        Client built = null;
+        if (apiKey != null && !apiKey.isBlank()) {
+            try {
+                built = Client.builder()
+                        .apiKey(apiKey)
+                        .build();
+            } catch (Exception e) {
+                log.warn("[gemini-client] Could not initialise GenAI client: {}", e.getMessage());
+            }
+        } else {
+            log.warn("[gemini-client] GEMINI_API_KEY not set, Gemini image generation disabled");
+        }
+        this.client = built;
     }
 
     /**
@@ -51,68 +51,20 @@ public class GeminiImageClient {
      * @return raw image bytes from Gemini, or {@code null} if unavailable
      */
     public byte[] generate(String prompt) {
-        String accessToken = getAccessToken();
-        if (accessToken == null || accessToken.isBlank()) {
-            log.warn("[gemini-client] No access token available, skipping Gemini");
+        if (client == null) {
             return null;
         }
-
-        String requestBody = """
-                {
-                  "contents": {
-                    "role": "user",
-                    "parts": {"text": "%s"}
-                  },
-                  "generationConfig": {"responseModalities": ["IMAGE", "TEXT"]}
-                }
-                """.formatted(prompt.replace("\"", "\\\"").replace("\n", " "));
-
         try {
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(GEMINI_IMAGE_URL.formatted(projectId, location)))
-                    .header("Authorization", "Bearer " + accessToken)
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                    .build();
-
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-            if (response.statusCode() != 200) {
-                log.warn("[gemini-client] Error body: {}",
-                        response.body().substring(0, Math.min(300, response.body().length())));
-                return null;
-            }
-
-            JsonNode root  = objectMapper.readTree(response.body());
-            JsonNode parts = root.path("candidates").path(0).path("content").path("parts");
-
-            for (JsonNode part : parts) {
-                JsonNode inlineData = part.path("inlineData");
-                if (!inlineData.isMissingNode()) {
-                    String mimeType   = inlineData.path("mimeType").asText();
-                    String base64Data = inlineData.path("data").asText();
-                    return Base64.getDecoder().decode(base64Data);
+            GenerateContentResponse response = client.models.generateContent(MODEL, prompt, CONFIG);
+            for (Part part : response.parts()) {
+                if (part.inlineData().isPresent()) {
+                    return part.inlineData().get().data().orElse(null);
                 }
             }
-            log.warn("[gemini-client] No image part in response. Body snippet: {}",
-                    response.body().substring(0, Math.min(300, response.body().length())));
-
+            log.warn("[gemini-client] No image part in response");
         } catch (Exception e) {
-            log.error("[gemini-client] Request threw: {}", e.getMessage(), e);
+            log.error("[gemini-client] Request failed: {}", e.getMessage(), e);
         }
         return null;
-    }
-
-    private String getAccessToken() {
-        try {
-            GoogleCredentials credentials = GoogleCredentials
-                    .getApplicationDefault()
-                    .createScoped(List.of("https://www.googleapis.com/auth/cloud-platform"));
-            credentials.refreshIfExpired();
-            return credentials.getAccessToken().getTokenValue();
-        } catch (Exception e) {
-            log.warn("[gemini-client] Could not obtain ADC access token: {}", e.getMessage());
-            return null;
-        }
     }
 }

@@ -54,5 +54,5 @@ jobs:
             --region ${{ env.REGION }} \
             --allow-unauthenticated \
             --service-account portugese-for-kids-backend@${{ env.PROJECT_ID }}.iam.gserviceaccount.com \
-            --set-env-vars GOOGLE_CLOUD_PROJECT=${{ env.PROJECT_ID }},GOOGLE_CLOUD_LOCATION=${{ env.REGION }},SERVER_ADDRESS=0.0.0.0 \
+            --set-env-vars GOOGLE_CLOUD_PROJECT=${{ env.PROJECT_ID }},GOOGLE_CLOUD_LOCATION=${{ env.REGION }},SERVER_ADDRESS=0.0.0.0,GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }} \
             --project ${{ env.PROJECT_ID }}

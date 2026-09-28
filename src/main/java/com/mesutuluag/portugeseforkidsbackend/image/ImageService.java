@@ -35,7 +35,7 @@ public class ImageService {
     private static final Logger log = LoggerFactory.getLogger(ImageService.class);
 
     /** JPEG compression quality applied to Gemini output (0.0–1.0). */
-    private static final float JPEG_QUALITY = 0.75f;
+    private static final float JPEG_QUALITY = 0.60f;
 
     private final SemanticImageCache semanticImageCache;
     private final GeminiImageClient geminiImageClient;
