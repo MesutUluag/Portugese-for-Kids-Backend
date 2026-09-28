@@ -4,11 +4,12 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.auth.oauth2.GoogleCredentials;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,8 +18,8 @@ import org.springframework.stereotype.Component;
 /**
  * HTTP client for Google's Gemini image-generation endpoint.
  *
- * <p>Obtains a short-lived access token via {@code gcloud auth application-default
- * print-access-token} and calls the Vertex AI generateContent API.
+ * <p>Obtains a short-lived access token via Google Application Default Credentials (ADC)
+ * and calls the Vertex AI generateContent API.
  *
  * <p>Returns the raw image bytes (PNG/WebP as returned by the API), or
  * {@code null} when Gemini is unavailable or returns no image part.
@@ -104,13 +105,13 @@ public class GeminiImageClient {
 
     private String getAccessToken() {
         try {
-            ProcessBuilder pb = new ProcessBuilder("gcloud", "auth", "application-default", "print-access-token");
-            pb.redirectErrorStream(true);
-            Process process = pb.start();
-            String token = new String(process.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
-            return token.isBlank() ? null : token;
+            GoogleCredentials credentials = GoogleCredentials
+                    .getApplicationDefault()
+                    .createScoped(List.of("https://www.googleapis.com/auth/cloud-platform"));
+            credentials.refreshIfExpired();
+            return credentials.getAccessToken().getTokenValue();
         } catch (Exception e) {
-            log.warn("[gemini-client] gcloud not available: {}", e.getMessage());
+            log.warn("[gemini-client] Could not obtain ADC access token: {}", e.getMessage());
             return null;
         }
     }
