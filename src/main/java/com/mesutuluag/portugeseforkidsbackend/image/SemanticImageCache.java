@@ -41,10 +41,12 @@ public class SemanticImageCache {
 
     /**
      * Cosine similarity threshold above which a cache hit is declared.
-     * Lowered from 0.82 to 0.72 to capture paraphrased / synonym-rich prompts
+     * Lowered from 0.82 to 0.65 to capture paraphrased / synonym-rich prompts
      * that describe the same scene without sharing every surface token.
+     * Scene-dressing words (wall, sunny, standing, first, etc.) are stripped
+     * as extended boilerplate so the remaining tokens focus on core activity.
      */
-    static final double SIMILARITY_THRESHOLD = 0.72;
+    static final double SIMILARITY_THRESHOLD = 0.65;
 
     /** Maximum number of cached entries before LRU eviction kicks in. */
     private static final int MAX_ENTRIES = 500;
@@ -60,12 +62,27 @@ public class SemanticImageCache {
      * Fixed style-template terms appended to every prompt.
      * Stripped before vectorisation so similarity is computed on the scene
      * subject only — not on the shared boilerplate that all prompts share.
+     *
+     * <p>Also includes common scene-dressing positional/spatial/colour words
+     * that add visual flavour but do not identify the core activity
+     * (e.g. "sunny", "wall", "against", "standing", "first", "smiling").
      */
     private static final Set<String> BOILERPLATE_WORDS = Set.of(
+            // Style boilerplate
             "colorful", "cute", "kids", "illustration", "storybook", "art",
             "bright", "colors", "simple", "background", "no", "text",
             "friendly", "style", "cartoon", "digital", "painting", "render",
-            "scene", "image", "photo", "picture"
+            "scene", "image", "photo", "picture",
+            // Scene-dressing: spatial / positional
+            "against", "behind", "beside", "front", "side", "corner",
+            "wall", "door", "tree", "outside", "inside", "nearby",
+            // Scene-dressing: descriptive adjectives
+            "sunny", "happy", "smiling", "laughing", "excited", "cheerful",
+            "young", "little", "small", "big", "tall", "short",
+            // Scene-dressing: ordinal / sequence words
+            "first", "second", "next", "last", "together", "alone",
+            // Scene-dressing: common filler verbs already covered by synonyms
+            "going", "starting", "beginning", "trying"
     );
 
     /**
