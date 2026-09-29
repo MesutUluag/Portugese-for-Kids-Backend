@@ -1,6 +1,6 @@
 # 🇵🇹 Portuguese for Kids — Backend
 
-Spring Boot REST API powering AI-generated story sentences and illustrations for the [Portuguese for Kids](https://mesutuluag.github.io/Portugese-for-Kids) frontend app.
+Spring Boot REST API powering AI-generated story sentences and illustrations for the [Portuguese for Kids](https://github.com/MesutUluag/Portugese-for-Kids) frontend app.
 
 ---
 
