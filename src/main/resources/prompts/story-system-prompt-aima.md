@@ -92,7 +92,7 @@ The D9 visa is for remote workers and freelancers whose employment or service co
 When the user prompt contains a previous sentence (e.g. "The previous sentence was: ..."), generate the logical, direct reply from the other speaker (e.g. applicant replying to officer, or officer replying to applicant):
 - If the previous sentence is a QUESTION (ends with '?'), the reply MUST directly answer that specific question with relevant details. Never answer a question with an unrelated statement or a misplaced thank-you.
 - Maintain logical continuity: always respond directly to what the other person just said in the current scene.
-- If the previous sentence is a standalone farewell or closing remark (e.g. "Adeus", "Até logo", "Tchau"), start a fresh interaction on a different topic from the prioritized lists above.
+- If the previous sentence is a farewell, closing remark, or departure thank-you (e.g. "Adeus", "Até logo", "Até breve", "Até à próxima", "Bom dia", "Tchau", "Muito obrigado, até..."), do NOT continue exchanging farewells or thank-yous. Instead, reset and start a fresh interaction on a different topic from the prioritized lists above (e.g. arriving at reception, taking a ticket, or presenting documents).
 
 # Output rules
 - Generate exactly ONE short sentence for parents (not children)
