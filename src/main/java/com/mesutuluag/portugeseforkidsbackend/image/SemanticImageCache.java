@@ -4,7 +4,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -220,8 +222,31 @@ public class SemanticImageCache {
     /** Bounded LRU map: prompt → CacheEntry. */
     private final Map<String, CacheEntry> cache;
 
-    public SemanticImageCache() {
-        this.cache = new LruMap(MAX_ENTRIES);
+    /** GCS store — absent when {@code image.cache.gcs.enabled} is not {@code true}. */
+    private final Optional<GcsImageStore> gcsStore;
+
+    public SemanticImageCache(Optional<GcsImageStore> gcsStore) {
+        this.gcsStore = gcsStore;
+        this.cache    = new LruMap(MAX_ENTRIES);
+        loadFromGcs();
+    }
+
+    /**
+     * Warm the in-memory cache from GCS at startup.
+     * Called once from the constructor — runs synchronously so the cache is
+     * fully populated before the first request is served.
+     */
+    private void loadFromGcs() {
+        gcsStore.ifPresent(store -> {
+            List<GcsImageStore.Entry> entries = store.loadAll();
+            synchronized (lock) {
+                for (GcsImageStore.Entry e : entries) {
+                    Map<String, Double> vector = toVectorLocked(e.prompt());
+                    cache.put(e.prompt(), new CacheEntry(e.jpeg(), vector));
+                }
+            }
+            log.info("[semantic-cache] warmed {} entries from GCS", entries.size());
+        });
     }
 
     private static final class LruMap extends LinkedHashMap<String, CacheEntry> {
@@ -286,7 +311,8 @@ public class SemanticImageCache {
     }
 
     /**
-     * Store a prompt and its generated JPEG bytes in the cache.
+     * Store a prompt and its generated JPEG bytes in the cache,
+     * and persist to GCS asynchronously when the store is configured.
      */
     public void put(String prompt, byte[] jpeg) {
         if (prompt == null || jpeg == null || jpeg.length == 0) return;
@@ -300,6 +326,8 @@ public class SemanticImageCache {
 
         log.debug("[semantic-cache] stored prompt='{}' size={}KB",
                 truncate(prompt), jpeg.length / 1024);
+
+        gcsStore.ifPresent(store -> store.saveAsync(prompt, jpeg));
     }
 
     /** Current number of entries in the cache. */
@@ -431,10 +459,8 @@ public class SemanticImageCache {
             return base;
         }
 
-        // -es / -s  (buses → bus, tables → tabl — acceptable, keeps key noun stems)
-        if (len > 4 && word.endsWith("es")) {
-            return word.substring(0, len - 2);
-        }
+        // -s  (tables → table, buses → buse→ acceptable, keeps key noun stems)
+        // Strip only the trailing "s" so "tables"→"table" and "table"→"table" share a token.
         if (len > 3 && word.endsWith("s") && !word.endsWith("ss")) {
             return word.substring(0, len - 1);
         }

@@ -63,8 +63,18 @@ public class GeminiImageClient {
             }
             log.warn("[gemini-client] No image part in response");
         } catch (Exception e) {
-            log.error("[gemini-client] Request failed: {}", e.getMessage(), e);
+            String msg = e.getMessage();
+            if (msg != null && msg.contains("Spend cap breached")) {
+                log.error("[gemini-client] Spend cap breached: {}", msg);
+                throw new SpendCapException(msg);
+            }
+            log.error("[gemini-client] Request failed: {}", msg, e);
         }
         return null;
+    }
+
+    /** Thrown when the Gemini API key has hit its spend cap. */
+    static class SpendCapException extends RuntimeException {
+        SpendCapException(String message) { super(message); }
     }
 }
