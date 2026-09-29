@@ -49,7 +49,7 @@ public class SemanticImageCache {
     static final double SIMILARITY_THRESHOLD = 0.65;
 
     /** Maximum number of cached entries before LRU eviction kicks in. */
-    private static final int MAX_ENTRIES = 500;
+    private static final int MAX_ENTRIES = 1000;
 
     /** Stop-words that carry no semantic weight for image prompts. */
     private static final Set<String> STOP_WORDS = Set.of(
