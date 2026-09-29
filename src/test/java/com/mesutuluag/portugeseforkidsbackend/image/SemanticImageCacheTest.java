@@ -406,7 +406,7 @@ class SemanticImageCacheTest {
 
     @Test
     void lruEviction_oldestEntryEvictedWhenCapacityExceeded() {
-        int maxEntries = 500;
+        int maxEntries = 1000;
         for (int i = 0; i < maxEntries + 5; i++) {
             cache.put("unique prompt describing scene number " + i + " with distinct words", new byte[]{(byte) i});
         }
