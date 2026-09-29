@@ -1,5 +1,6 @@
 package com.mesutuluag.portugeseforkidsbackend.image;
 
+import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -29,7 +30,7 @@ class SemanticImageCacheTest {
 
     @BeforeEach
     void setUp() {
-        cache = new SemanticImageCache();
+        cache = new SemanticImageCache(Optional.empty());
     }
 
     // -------------------------------------------------------------------------

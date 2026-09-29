@@ -1,5 +1,7 @@
 package com.mesutuluag.portugeseforkidsbackend.image;
 
+import java.util.Map;
+
 import com.mesutuluag.portugeseforkidsbackend.commons.RateLimitService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -31,8 +33,8 @@ public class ImageController {
         this.imageService     = imageService;
     }
 
-    @GetMapping(produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<byte[]> generateImage(
+    @GetMapping
+    public ResponseEntity<?> generateImage(
             @RequestParam String imagePrompt,
             @RequestParam(defaultValue = "10") int steps,
             @RequestParam(defaultValue = "768") int width,
@@ -46,7 +48,12 @@ public class ImageController {
         if (jpeg == null) {
             log.error("[image] All providers failed for prompt='{}'",
                     imagePrompt.substring(0, Math.min(60, imagePrompt.length())));
-            return ResponseEntity.status(502).build();
+            return ResponseEntity.status(503)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Map.of(
+                            "error", "image_unavailable",
+                            "message", "Image generation is temporarily unavailable. Please try again later."
+                    ));
         }
 
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(jpeg);
