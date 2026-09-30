@@ -40,6 +40,14 @@ The D7 visa is for people with stable, recurring passive income (pension, rental
 - Proof of passive income ("prova de rendimentos passivos"): tax returns, pension statements ("declaração de reforma"), dividend reports, or property rental contracts showing at least €920/month
 - Bank statement confirming a balance equivalent to at least 12 months of the required income threshold
 
+## AIMA appointment (after visa approval)
+- The AIMA appointment date is usually printed on the visa sticker ("a marcação está impressa no visto"); dates are typically 10–12 months after visa issuance
+- If not printed on the visa, the applicant must request a date after arriving in Portugal via contactenos.aima.gov.pt/contact-form (only accessible through a Portugal-based VPN); payment link arrives by e-mail and can only be paid via Multibanco
+- Submit the rescheduling request as soon as the visa is approved — earlier slots are not guaranteed and responses can take up to 3 months
+- At the AIMA appointment the officer checks: lump-sum savings held in a Portuguese bank account ("poupança em conta portuguesa"), last 3 months of Portuguese bank statements ("extratos dos últimos três meses"), and the applicant's signature matching the passport
+- The physical residence card ("cartão de residência") arrives 1.5–2 months after the appointment by registered post ("correio registado")
+- AIMA announced a 60% capacity increase in H1 2026; wait times are expected to improve
+
 ## Useful phrases at AIMA for D7
 - "Estou a candidatar-me ao visto D7." (I am applying for the D7 visa.)
 - "Tenho rendimentos de reforma / arrendamento / dividendos." (I have income from pension / rent / dividends.)
@@ -50,6 +58,10 @@ The D7 visa is for people with stable, recurring passive income (pension, rental
 - "Qual é o valor da taxa a pagar?" (What is the amount of the fee to pay?)
 - "Quando fica pronto o cartão de residência?" (When will the residence card be ready?)
 - "Preciso de renovar a minha autorização de residência." (I need to renew my residence permit.)
+- "A minha marcação está impressa no visto." (My appointment is printed on the visa.)
+- "Trouxe os extratos dos últimos três meses." (I brought the last three months of bank statements.)
+- "O dinheiro está numa conta portuguesa." (The money is in a Portuguese account.)
+- "Quando recebo o cartão de residência?" (When do I receive the residence card?)
 
 # Context: D9 Digital Nomad Visa
 The D9 visa is for remote workers and freelancers whose employment or service contracts originate entirely outside Portugal.
@@ -82,7 +94,10 @@ The D9 visa is for remote workers and freelancers whose employment or service co
 - Submitting accommodation and bank proofs: "Trouxe o contrato de arrendamento das Finanças e o extrato bancário."
 - Biometric collection instructions: "Por favor, coloque os dedos no leitor biométrico e olhe para a câmara."
 - Payment of fees: "Posso pagar a taxa com multibanco?" / "Qual é o valor da taxa a pagar?"
-- Inquiring about processing time and card delivery: "O cartão de residência é enviado por correio?"
+- Inquiring about processing time and card delivery: "O cartão de residência é enviado por correio?" / "Quando chega o cartão de residência?"
+- Confirming appointment printed on visa: "A minha marcação está impressa no visto."
+- Presenting Portuguese bank statements at AIMA: "Trouxe os extratos dos últimos três meses da conta portuguesa."
+- Confirming savings are in a Portuguese account: "O dinheiro está depositado numa conta em Portugal."
 - Asking about temporary proof: "Este recibo serve como comprovativo legal de residência?"
 - Asking for repetition or clarification: "Pode repetir mais devagar, se faz favor?", "Não percebi, pode escrever?"
 - Addressing missing documents: "Quanto tempo tenho para entregar o documento em falta?"
@@ -114,3 +129,5 @@ Describe the scene visually: who is doing what, where. Always end with: colorful
 {"pt":"Estou a candidatar-me ao visto D7.","en":"I am applying for the D7 visa.","mainEmoji":"📄","bgLeft":"🏛️","bgRight":"✈️","imagePrompt":"an adult at an immigration office counter handing over a visa application form, colorful friendly illustration, storybook art, bright colors, simple background, no text"}
 {"pt":"Trabalho remotamente para uma empresa no estrangeiro.","en":"I work remotely for a company abroad.","mainEmoji":"💻","bgLeft":"🌍","bgRight":"📋","imagePrompt":"an adult at a desk with a laptop and documents at a government office, colorful friendly illustration, storybook art, bright colors, simple background, no text"}
 {"pt":"Tenho uma marcação para hoje às dez horas.","en":"I have an appointment today at ten o'clock.","mainEmoji":"📋","bgLeft":"🏛️","bgRight":"👨‍💼","imagePrompt":"a parent at an official government service counter checking their appointment on their phone, colorful friendly illustration, storybook art, bright colors, simple background, no text"}
+{"pt":"Trouxe os extratos dos últimos três meses.","en":"I brought the last three months of bank statements.","mainEmoji":"🏦","bgLeft":"📄","bgRight":"💶","imagePrompt":"an adult handing a stack of bank statement papers over a counter at an immigration office, colorful friendly illustration, storybook art, bright colors, simple background, no text"}
+{"pt":"O dinheiro está numa conta portuguesa.","en":"The money is in a Portuguese account.","mainEmoji":"💰","bgLeft":"🏦","bgRight":"🇵🇹","imagePrompt":"an adult pointing to a bank statement showing a Portuguese bank account balance at an immigration office counter, colorful friendly illustration, storybook art, bright colors, simple background, no text"}
