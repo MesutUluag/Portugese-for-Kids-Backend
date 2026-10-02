@@ -41,12 +41,11 @@ public class SemanticImageCache {
 
     /**
      * Cosine similarity threshold above which a cache hit is declared.
-     * Lowered from 0.82 to 0.65 to capture paraphrased / synonym-rich prompts
-     * that describe the same scene without sharing every surface token.
-     * Scene-dressing words (wall, sunny, standing, first, etc.) are stripped
-     * as extended boilerplate so the remaining tokens focus on core activity.
+     * Lowered to 0.55 — with imagePrompts now anchored to general scene settings,
+     * prompts for the same location share most tokens. Small surface variations
+     * (e.g. "wooden table" vs "round table") still score above this threshold.
      */
-    static final double SIMILARITY_THRESHOLD = 0.65;
+    static final double SIMILARITY_THRESHOLD = 0.55;
 
     /** Maximum number of cached entries before LRU eviction kicks in. */
     private static final int MAX_ENTRIES = 1000;
@@ -229,9 +228,13 @@ public class SemanticImageCache {
     }
 
     /**
-     * Immutable value object holding image bytes and pre-computed vector.
+     * Immutable value object holding image bytes and a raw TF vector.
+     *
+     * <p>Stores term frequency only (not TF-IDF) so that IDF weights are
+     * always applied fresh from the current corpus state at query time,
+     * preventing stale weights as the cache grows.
      */
-    private record CacheEntry(byte[] jpeg, Map<String, Double> vector) {}
+    private record CacheEntry(byte[] jpeg, Map<String, Double> tf) {}
 
     /** Lock guarding access to the LRU cache. */
     private final Object lock = new Object();
@@ -258,8 +261,8 @@ public class SemanticImageCache {
             List<GcsImageStore.Entry> entries = store.loadAll();
             synchronized (lock) {
                 for (GcsImageStore.Entry e : entries) {
-                    Map<String, Double> vector = toVectorLocked(e.prompt());
-                    cache.put(e.prompt(), new CacheEntry(e.jpeg(), vector));
+                    Map<String, Double> tf = toTfLocked(e.prompt());
+                    cache.put(e.prompt(), new CacheEntry(e.jpeg(), tf));
                 }
             }
             log.info("[semantic-cache] warmed {} entries from GCS", entries.size());
@@ -298,16 +301,19 @@ public class SemanticImageCache {
 
             if (cache.isEmpty()) return null;
 
-            // 2. O(N) Semantic search — toVector is called with the cache already locked
-            Map<String, Double> queryVec = toVectorLocked(prompt);
-            if (queryVec.isEmpty()) return null;
+            // 2. O(N) Semantic search — IDF applied fresh at query time so weights
+            //    are always consistent with the current corpus state.
+            Map<String, Double> queryTf = toTfLocked(prompt);
+            if (queryTf.isEmpty()) return null;
+            Map<String, Double> queryVec = applyIdfAndNormaliseLocked(queryTf);
 
             double bestScore = 0.0;
             String bestKey   = null;
             byte[] bestJpeg  = null;
 
             for (Map.Entry<String, CacheEntry> entry : cache.entrySet()) {
-                double score = cosineSimilarity(queryVec, entry.getValue().vector());
+                Map<String, Double> entryVec = applyIdfAndNormaliseLocked(entry.getValue().tf());
+                double score = cosineSimilarity(queryVec, entryVec);
                 if (score > bestScore) {
                     bestScore = score;
                     bestKey   = entry.getKey();
@@ -335,10 +341,9 @@ public class SemanticImageCache {
         if (prompt == null || jpeg == null || jpeg.length == 0) return;
 
         synchronized (lock) {
-            // Compute vector inside the lock so IDF counts are consistent with
-            // the corpus state at insertion time — no separate lock acquisition needed.
-            Map<String, Double> vector = toVectorLocked(prompt);
-            cache.put(prompt, new CacheEntry(jpeg, vector));
+            // Store raw TF only — IDF will be applied fresh at query time.
+            Map<String, Double> tf = toTfLocked(prompt);
+            cache.put(prompt, new CacheEntry(jpeg, tf));
         }
 
         log.debug("[semantic-cache] stored prompt='{}' size={}KB",
@@ -359,30 +364,44 @@ public class SemanticImageCache {
     // -----------------------------------------------------------------------
 
     /**
-     * Build a TF-IDF weighted term vector for {@code prompt}.
-     * Must be called with {@link #lock} held — reads {@link #cache} directly
-     * for IDF counts without acquiring the lock again.
+     * Build a raw term-frequency map for {@code prompt} (no IDF, no normalisation).
+     * Stored in {@link CacheEntry} so IDF can be applied fresh at query time.
+     * Must be called with {@link #lock} held.
      */
-    private Map<String, Double> toVectorLocked(String prompt) {
+    private static Map<String, Double> toTfLocked(String prompt) {
         String[] tokens = tokenise(prompt);
         if (tokens.length == 0) return Collections.emptyMap();
 
-        Map<String, Integer> tf = new HashMap<>();
+        Map<String, Integer> counts = new HashMap<>();
         for (String t : tokens) {
-            tf.merge(t, 1, Integer::sum);
+            counts.merge(t, 1, Integer::sum);
         }
 
-        int totalDocs = cache.size() + 1; // +1 for the document being vectorised
+        Map<String, Double> tf = new HashMap<>();
+        for (Map.Entry<String, Integer> e : counts.entrySet()) {
+            tf.put(e.getKey(), (double) e.getValue() / tokens.length);
+        }
+        return tf;
+    }
+
+    /**
+     * Apply current-corpus IDF weights to a raw TF map and L2-normalise the result.
+     * Because IDF is computed from the live cache, all vectors — stored and query —
+     * always use the same weight scale regardless of when they were inserted.
+     * Must be called with {@link #lock} held.
+     */
+    private Map<String, Double> applyIdfAndNormaliseLocked(Map<String, Double> tf) {
+        if (tf.isEmpty()) return Collections.emptyMap();
+
+        int totalDocs = cache.size() + 1; // +1 for the query document
 
         Map<String, Double> vec = new HashMap<>();
-        for (Map.Entry<String, Integer> e : tf.entrySet()) {
+        for (Map.Entry<String, Double> e : tf.entrySet()) {
             String term      = e.getKey();
-            double termTf    = (double) e.getValue() / tokens.length;
             int docsWithTerm = countDocsContainingLocked(term);
             double idf       = Math.log(1.0 + (double) totalDocs / (1.0 + docsWithTerm));
-            vec.put(term, termTf * idf);
+            vec.put(term, e.getValue() * idf);
         }
-
         return l2Normalise(vec);
     }
 
@@ -390,7 +409,7 @@ public class SemanticImageCache {
     private int countDocsContainingLocked(String term) {
         int count = 0;
         for (CacheEntry entry : cache.values()) {
-            if (entry.vector().containsKey(term)) count++;
+            if (entry.tf().containsKey(term)) count++;
         }
         return count;
     }

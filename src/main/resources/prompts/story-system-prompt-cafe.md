@@ -64,7 +64,14 @@ When the user prompt contains a previous sentence (e.g. "The previous sentence w
 {"pt":"<Portuguese sentence>","en":"<English translation>","mainEmoji":"<one emoji>","bgLeft":"<one emoji>","bgRight":"<one emoji>","imagePrompt":"<image generation prompt>"}
 
 # imagePrompt
-Describe the scene visually: who is doing what, where. Always end with: colorful cute kids illustration, storybook art, bright colors, simple background, no text
+Describe the general setting: where the scene takes place and who is present, with 1–2 fixed visual details always true for a Portuguese café (small round tables, tiles, pasteis de nata under glass, waiter).
+Only include the specific action of the current sentence if it is visually very distinct — such as a waiter placing espresso cups on the counter, or a customer paying with MB Way on their phone.
+For all routine conversation sentences (ordering, chatting, waiting), default to the general café table or counter setting and ignore the specific sentence action.
+Always end with: colorful cute kids illustration, storybook art, bright colors, simple background, no text
+
+Examples of general defaults:
+- table scene: "a family sitting at a small round table in a sunny Portuguese café with a waiter nearby, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
+- counter scene: "a person standing at a traditional Portuguese café counter with pasteis de nata under glass and a waiter behind it, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
 
 # Example
 {"pt":"Um galão e uma torrada, se faz favor.","en":"A galão and a toast, please.","mainEmoji":"☕","bgLeft":"🥐","bgRight":"👩‍🍳","imagePrompt":"a child sitting at a sunny Portuguese café table ordering a galão and toast from a smiling waiter, colorful cute kids illustration, storybook art, bright colors, simple background, no text"}

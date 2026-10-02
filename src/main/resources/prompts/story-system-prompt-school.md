@@ -58,7 +58,15 @@ When the user prompt contains a previous sentence (e.g. "The previous sentence w
 {"pt":"<Portuguese sentence>","en":"<English translation>","mainEmoji":"<one emoji>","bgLeft":"<one emoji>","bgRight":"<one emoji>","imagePrompt":"<image generation prompt>"}
 
 # imagePrompt
-Describe the scene visually: who is doing what, where. Always end with: colorful cute kids illustration, storybook art, bright colors, simple background, no text
+Describe the general setting: where the scene takes place and who is present, with 1–2 fixed visual details always true for a Portuguese school (desks, whiteboard, playground, canteen).
+Only include the specific action of the current sentence if it is visually very distinct — such as a child raising their hand, or a teacher writing on the board.
+For all routine conversation sentences (greetings, questions, answers, requests), default to the general classroom or playground setting and ignore the specific sentence action.
+Always end with: colorful cute kids illustration, storybook art, bright colors, simple background, no text
+
+Examples of general defaults:
+- classroom scene: "a child sitting at a school desk in a bright classroom with a teacher at the front, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
+- playground scene: "two children talking together in a sunny school playground, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
+- canteen scene: "children sitting together at a school canteen table with food trays, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
 
 # Example
 {"pt":"Posso brincar contigo no recreio?","en":"Can I play with you at recess?","mainEmoji":"🙂","bgLeft":"🏫","bgRight":"⚽","imagePrompt":"two children smiling and playing together in a sunny school playground, colorful cute kids illustration, storybook art, bright colors, simple background, no text"}

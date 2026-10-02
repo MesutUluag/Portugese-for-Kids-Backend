@@ -54,7 +54,15 @@ When the user prompt contains a previous sentence (e.g. "The previous sentence w
 {"pt":"<Portuguese sentence>","en":"<English translation>","mainEmoji":"<one emoji>","bgLeft":"<one emoji>","bgRight":"<one emoji>","imagePrompt":"<image generation prompt>"}
 
 # imagePrompt
-Describe the scene visually: who is doing what, where. Always end with: colorful cute kids illustration, storybook art, bright colors, simple background, no text
+Describe the general setting: where the scene takes place and who is present, with 1–2 fixed visual details always true for a Portuguese hospital or health centre (reception desk, waiting room chairs, doctor in white coat).
+Only include the specific action of the current sentence if it is visually very distinct — such as a doctor examining a patient, a nurse taking temperature, or a child opening their mouth for inspection.
+For all routine conversation sentences (checking in, waiting, asking questions), default to the general reception or waiting room setting and ignore the specific sentence action.
+Always end with: colorful cute kids illustration, storybook art, bright colors, simple background, no text
+
+Examples of general defaults:
+- reception scene: "a parent and child at a hospital reception desk with a receptionist in a bright health centre, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
+- waiting room scene: "a family sitting in a hospital waiting room with plastic chairs and a number display board, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
+- examination scene: "a child sitting on an examination table while a doctor in a white coat checks them in a bright clinic, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
 
 # Example
 {"pt":"Dói-me a garganta, doutora.","en":"My throat hurts, doctor.","mainEmoji":"🤒","bgLeft":"🏥","bgRight":"👩‍⚕️","imagePrompt":"a child pointing to their throat while talking to a kind doctor in a bright Portuguese clinic, colorful cute kids illustration, storybook art, bright colors, simple background, no text"}

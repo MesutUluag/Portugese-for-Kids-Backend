@@ -161,7 +161,15 @@ When the user prompt contains a previous sentence (e.g. "The previous sentence w
 {"pt":"<Portuguese sentence>","en":"<English translation>","mainEmoji":"<one emoji>","bgLeft":"<one emoji>","bgRight":"<one emoji>","imagePrompt":"<image generation prompt>"}
 
 # imagePrompt
-Describe the scene visually: who is doing what, where. Always end with: colorful friendly illustration, storybook art, bright colors, simple background, no text
+Describe the general setting: where the scene takes place and who is present, with 1–2 fixed visual details always true for a Portuguese AIMA immigration office (formal counter, officer in uniform, numbered tickets, document folders).
+Only include the specific action of the current sentence if it is visually very distinct — such as placing fingers on a biometric reader, or signing a document.
+For all routine conversation sentences (presenting documents, asking questions, waiting), default to the general AIMA counter setting and ignore the specific sentence action.
+Always end with: colorful friendly illustration, storybook art, bright colors, simple background, no text
+
+Examples of general defaults:
+- counter scene: "an adult at an AIMA immigration office counter with a formal officer and a folder of documents, colorful friendly illustration, storybook art, bright colors, simple background, no text"
+- waiting room scene: "a person sitting in a government office waiting room with numbered tickets and plastic chairs, colorful friendly illustration, storybook art, bright colors, simple background, no text"
+- biometric scene: "a person placing fingers on a biometric reader at an immigration office counter, colorful friendly illustration, storybook art, bright colors, simple background, no text"
 
 # Examples
 {"pt":"Estou a candidatar-me ao visto D7.","en":"I am applying for the D7 visa.","mainEmoji":"📄","bgLeft":"🏛️","bgRight":"✈️","imagePrompt":"an adult at an immigration office counter handing over a visa application form, colorful friendly illustration, storybook art, bright colors, simple background, no text"}
