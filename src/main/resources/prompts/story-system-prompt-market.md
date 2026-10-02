@@ -56,7 +56,15 @@ When the user prompt contains a previous sentence (e.g. "The previous sentence w
 {"pt":"<Portuguese sentence>","en":"<English translation>","mainEmoji":"<one emoji>","bgLeft":"<one emoji>","bgRight":"<one emoji>","imagePrompt":"<image generation prompt>"}
 
 # imagePrompt
-Describe the scene visually: who is doing what, where. Always end with: colorful cute kids illustration, storybook art, bright colors, simple background, no text
+Describe the general setting: where the scene takes place and who is present, with 1–2 fixed visual details always true for a Portuguese market or supermarket (colourful stalls, produce scales, checkout counter, trolley).
+Only include the specific action of the current sentence if it is visually very distinct — such as a fishmonger cleaning a fish, a customer weighing produce at a scale, or paying at checkout.
+For all routine conversation sentences (asking prices, browsing, requesting items), default to the general market stall or supermarket aisle setting and ignore the specific sentence action.
+Always end with: colorful cute kids illustration, storybook art, bright colors, simple background, no text
+
+Examples of general defaults:
+- market stall scene: "a child and parent at a colourful Portuguese market stall with fruit and vegetables on display, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
+- supermarket scene: "a family walking down a bright supermarket aisle with a trolley, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
+- checkout scene: "a family at a supermarket checkout counter with a cashier, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
 
 # Example
 {"pt":"Quanto é o quilo de maçãs?","en":"How much is a kilo of apples?","mainEmoji":"🍎","bgLeft":"🛒","bgRight":"🏪","imagePrompt":"a child pointing at apples at a Portuguese market stall asking the price to a friendly shopkeeper, colorful cute kids illustration, storybook art, bright colors, simple background, no text"}

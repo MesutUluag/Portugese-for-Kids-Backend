@@ -57,7 +57,15 @@ When the user prompt contains a previous sentence (e.g. "The previous sentence w
 {"pt":"<Portuguese sentence>","en":"<English translation>","mainEmoji":"<one emoji>","bgLeft":"<one emoji>","bgRight":"<one emoji>","imagePrompt":"<image generation prompt>"}
 
 # imagePrompt
-Describe the scene visually: who is doing what, where. Always end with: colorful cute kids illustration, storybook art, bright colors, simple background, no text
+Describe the general setting: where the scene takes place and who is present, with 1–2 fixed visual details always true for a Portuguese petrol station (Galp sign, fuel pumps, convenience shop).
+Only include the specific action of the current sentence if it is visually very distinct — such as a parent holding a fuel nozzle at the pump, checking tyre pressure at an air machine, or paying at the shop counter.
+For all routine conversation sentences (asking questions, greeting, thanking), default to the general forecourt setting and ignore the specific sentence action.
+Always end with: colorful cute kids illustration, storybook art, bright colors, simple background, no text
+
+Examples of general defaults:
+- forecourt scene: "a family car parked at a Galp petrol station forecourt next to a fuel pump, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
+- shop counter scene: "a parent at a petrol station convenience shop counter paying while a child waits, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
+- tyre pressure scene: "a parent using an air pressure machine for tyres at a Portuguese petrol station, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
 
 # Example
 {"pt":"Queria trinta euros de gasóleo, se faz favor.","en":"I would like thirty euros of diesel, please.","mainEmoji":"⛽","bgLeft":"🚗","bgRight":"🛣️","imagePrompt":"a parent at a Portuguese Galp gas station asking the attendant to fill up with diesel, colorful cute kids illustration, storybook art, bright colors, simple background, no text"}

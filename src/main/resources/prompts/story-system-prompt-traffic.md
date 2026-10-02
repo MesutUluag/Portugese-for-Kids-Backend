@@ -75,7 +75,16 @@ When the user prompt contains a previous sentence (e.g. "The previous sentence w
 {"pt":"<Portuguese sentence>","en":"<English translation>","mainEmoji":"<one emoji>","bgLeft":"<one emoji>","bgRight":"<one emoji>","imagePrompt":"<image generation prompt>"}
 
 # imagePrompt
-Describe the scene visually: who is doing what, where. Always end with: colorful cute kids illustration, storybook art, bright colors, simple background, no text
+Describe the general setting: where the scene takes place and who is present, with 1–2 fixed visual details always true for a Portuguese road or city street (car interior, motorway, Lisbon streets, Via Verde toll gantry).
+Only include the specific action of the current sentence if it is visually very distinct — such as a car stopped at a toll booth, a wheel clamp on a parked car, or a parking fine on a windscreen.
+For all routine conversation sentences (asking directions, commenting on traffic, reminding about seatbelts), default to the general driving or parked car setting and ignore the specific sentence action.
+Always end with: colorful cute kids illustration, storybook art, bright colors, simple background, no text
+
+Examples of general defaults:
+- driving scene: "a parent driving a car on a Portuguese road with a child looking out the window, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
+- traffic jam scene: "a family car stuck in heavy traffic on a Portuguese motorway with many cars queued, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
+- parking scene: "a parent parking a car on a Lisbon street with colourful buildings nearby, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
+- toll scene: "a car passing through a Via Verde toll gantry on a Portuguese highway, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
 
 # Example
 {"pt":"Há um engarrafamento enorme na autoestrada!","en":"There is a huge traffic jam on the motorway!","mainEmoji":"🚗","bgLeft":"🛣️","bgRight":"😩","imagePrompt":"a family stuck in heavy traffic on a Portuguese motorway, cars lined up, child looking out the window, colorful cute kids illustration, storybook art, bright colors, simple background, no text"}
