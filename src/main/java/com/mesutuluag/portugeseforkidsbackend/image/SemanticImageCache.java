@@ -1,5 +1,6 @@
 package com.mesutuluag.portugeseforkidsbackend.image;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -7,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -239,6 +241,9 @@ public class SemanticImageCache {
     /** Lock guarding access to the LRU cache. */
     private final Object lock = new Object();
 
+    /** Shared RNG used to pick randomly among qualifying cache candidates. */
+    private static final Random RANDOM = new Random();
+
     /** Bounded LRU map: prompt → CacheEntry. */
     private final Map<String, CacheEntry> cache;
 
@@ -286,6 +291,10 @@ public class SemanticImageCache {
     /**
      * Look up the cache for an exact or semantically similar prompt.
      *
+     * <p>When multiple cached entries exceed {@link #SIMILARITY_THRESHOLD} the method
+     * picks one at random, so repeated calls with similar prompts return a variety of
+     * images instead of always reusing the single best-matching one.
+     *
      * @return cached JPEG bytes if a similar prompt was found, otherwise {@code null}
      */
     public byte[] get(String prompt) {
@@ -307,25 +316,27 @@ public class SemanticImageCache {
             if (queryTf.isEmpty()) return null;
             Map<String, Double> queryVec = applyIdfAndNormaliseLocked(queryTf);
 
+            // Collect all entries that exceed the similarity threshold so we can
+            // randomly select one of them — avoids showing the same photo repeatedly.
+            record Candidate(String key, byte[] jpeg, double score) {}
+            List<Candidate> candidates = new ArrayList<>();
             double bestScore = 0.0;
-            String bestKey   = null;
-            byte[] bestJpeg  = null;
 
             for (Map.Entry<String, CacheEntry> entry : cache.entrySet()) {
                 Map<String, Double> entryVec = applyIdfAndNormaliseLocked(entry.getValue().tf());
                 double score = cosineSimilarity(queryVec, entryVec);
-                if (score > bestScore) {
-                    bestScore = score;
-                    bestKey   = entry.getKey();
-                    bestJpeg  = entry.getValue().jpeg();
+                if (score > bestScore) bestScore = score;
+                if (score >= SIMILARITY_THRESHOLD) {
+                    candidates.add(new Candidate(entry.getKey(), entry.getValue().jpeg(), score));
                 }
             }
 
-            if (bestKey != null && bestScore >= SIMILARITY_THRESHOLD) {
-                log.info("[semantic-cache] SEMANTIC HIT score={} key='{}'",
-                        String.format("%.3f", bestScore), truncate(bestKey));
-                cache.get(bestKey); // touch to update LRU order for the matched key
-                return bestJpeg;
+            if (!candidates.isEmpty()) {
+                Candidate chosen = candidates.get(RANDOM.nextInt(candidates.size()));
+                log.info("[semantic-cache] SEMANTIC HIT score={} key='{}' (picked 1 of {})",
+                        String.format("%.3f", chosen.score()), truncate(chosen.key()), candidates.size());
+                cache.get(chosen.key()); // touch to update LRU order for the matched key
+                return chosen.jpeg();
             }
 
             log.debug("[semantic-cache] MISS best-score={}", String.format("%.3f", bestScore));

@@ -5,8 +5,10 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HexFormat;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.StreamSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,29 +75,43 @@ public class GcsImageStore {
      * @return list of (prompt, jpeg) pairs; never null
      */
     public List<Entry> loadAll() {
-        List<Entry> results = new ArrayList<>();
         try {
-            storage.list(bucket, Storage.BlobListOption.prefix(prefix + "/"),
-                            Storage.BlobListOption.fields(Storage.BlobField.NAME))
-                    .iterateAll()
-                    .forEach(blob -> {
-                        String name = blob.getName();
-                        if (!name.endsWith("/" + JPEG_NAME)) return;
+            // Collect the directory paths first (fast listing — name field only).
+            List<String> dirs = StreamSupport.stream(
+                            storage.list(bucket,
+                                    Storage.BlobListOption.prefix(prefix + "/"),
+                                    Storage.BlobListOption.fields(Storage.BlobField.NAME))
+                                    .iterateAll().spliterator(), false)
+                    .map(Blob::getName)
+                    .filter(name -> name.endsWith("/" + JPEG_NAME))
+                    .map(name -> name.substring(0, name.lastIndexOf('/')))
+                    .toList();
 
-                        String dir = name.substring(0, name.lastIndexOf('/'));
+            // Read each entry's jpeg + prompt in parallel using virtual threads.
+            List<CompletableFuture<Entry>> futures = dirs.stream()
+                    .map(dir -> CompletableFuture.supplyAsync(() -> {
                         try {
                             byte[] jpeg   = storage.readAllBytes(BlobId.of(bucket, dir + "/" + JPEG_NAME));
                             byte[] prompt = storage.readAllBytes(BlobId.of(bucket, dir + "/" + PROMPT_NAME));
-                            results.add(new Entry(new String(prompt, StandardCharsets.UTF_8), jpeg));
+                            return new Entry(new String(prompt, StandardCharsets.UTF_8), jpeg);
                         } catch (Exception e) {
                             log.warn("[gcs-store] skipping malformed entry dir='{}': {}", dir, e.getMessage());
+                            return null;
                         }
-                    });
+                    }, writeExecutor))
+                    .toList();
+
+            List<Entry> results = futures.stream()
+                    .map(CompletableFuture::join)
+                    .filter(e -> e != null)
+                    .collect(java.util.stream.Collectors.toCollection(ArrayList::new));
+
+            log.info("[gcs-store] loaded {} entries from GCS", results.size());
+            return results;
         } catch (Exception e) {
             log.error("[gcs-store] loadAll failed — cache will start empty: {}", e.getMessage());
+            return List.of();
         }
-        log.info("[gcs-store] loaded {} entries from GCS", results.size());
-        return results;
     }
 
     /**
