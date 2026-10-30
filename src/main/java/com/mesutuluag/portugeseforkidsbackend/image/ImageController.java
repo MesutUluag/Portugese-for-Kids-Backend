@@ -40,7 +40,7 @@ public class ImageController {
             @RequestParam(defaultValue = "368") int height,
             HttpServletRequest httpServletRequest) throws Exception {
 
-        rateLimitService.checkAndIncrement(httpServletRequest.getRemoteAddr());
+        rateLimitService.checkAndIncrement(RateLimitService.resolveClientIp(httpServletRequest));
 
         byte[] jpeg = imageService.generateJpeg(imagePrompt, width, height);
 

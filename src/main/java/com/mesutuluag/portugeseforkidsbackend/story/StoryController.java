@@ -65,7 +65,7 @@ public class StoryController {
 
 	@PostMapping
 	public StoryResponse createStory(@RequestBody StoryRequest request, HttpServletRequest httpServletRequest) throws Exception {
-		rateLimitService.checkAndIncrement(httpServletRequest.getRemoteAddr());
+		rateLimitService.checkAndIncrement(RateLimitService.resolveClientIp(httpServletRequest));
 
 		String context = (request.getContext() != null && systemPrompts.containsKey(request.getContext()))
 				? request.getContext()

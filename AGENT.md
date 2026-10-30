@@ -77,7 +77,7 @@ Resolution order: **semantic cache → Gemini (when enabled via `gemini.image.en
 TF-IDF cosine similarity with a threshold of **0.85**. Backed by a `LinkedHashMap` with LRU eviction. A `ReentrantReadWriteLock` guards all access. When `image.cache.gcs.enabled=true`, `GcsImageStore` is injected as an `Optional<GcsImageStore>` and loaded synchronously at startup; writes are fire-and-forget on a virtual-thread executor. `GcsImageStore` is a conditional bean — absent when the property is not `true`.
 
 ### Rate limiting (RateLimitService)
-Key = `LocalDate.now() + ":" + ipAddress`. Limit = **250 per IP per calendar day**. Shared across both endpoints. Disable for local testing with `rate-limit.enabled=false` in `application-local.properties`.
+Key = `LocalDate.now() + ":" + ipAddress`. Limit = **250 per IP per calendar day**. Shared across both endpoints. Behind Cloud Run reverse proxies (GFE), `server.forward-headers-strategy=native` (Tomcat `RemoteIpValve`) and `RateLimitService.resolveClientIp(HttpServletRequest)` ensure the real client IP from `X-Forwarded-For` is extracted without allowing client-spoofed `X-Forwarded-For` prefixes to bypass the limit. Disable for local testing with `rate-limit.enabled=false` in `application-local.properties`.
 
 ---
 

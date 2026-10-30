@@ -1,0 +1,148 @@
+package com.mesutuluag.portugeseforkidsbackend.commons;
+
+import com.mesutuluag.portugeseforkidsbackend.exception.DailyLimitExceededException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+class RateLimitServiceTest {
+
+    private RateLimitService service;
+
+    @BeforeEach
+    void setUp() {
+        service = new RateLimitService();
+        ReflectionTestUtils.setField(service, "enabled", true);
+    }
+
+    // -------------------------------------------------------------------------
+    // resolveClientIp tests
+    // -------------------------------------------------------------------------
+
+    @Test
+    void resolveClientIp_withNullRequest_returnsUnknown() {
+        assertThat(RateLimitService.resolveClientIp(null)).isEqualTo("unknown");
+    }
+
+    @Test
+    void resolveClientIp_withRemoteAddrOnly_returnsRemoteAddr() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setRemoteAddr("192.168.1.50");
+
+        assertThat(RateLimitService.resolveClientIp(request)).isEqualTo("192.168.1.50");
+    }
+
+    @Test
+    void resolveClientIp_withXForwardedForSingleIp_returnsClientIp() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setRemoteAddr("10.0.0.1"); // proxy address
+        request.addHeader("X-Forwarded-For", "203.0.113.195");
+
+        assertThat(RateLimitService.resolveClientIp(request)).isEqualTo("203.0.113.195");
+    }
+
+    @Test
+    void resolveClientIp_withXForwardedForMultipleIps_returnsFirstClientIp() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setRemoteAddr("10.0.0.1"); // proxy address
+        request.addHeader("X-Forwarded-For", "203.0.113.195, 70.41.3.18, 150.172.238.178");
+
+        assertThat(RateLimitService.resolveClientIp(request)).isEqualTo("203.0.113.195");
+    }
+
+    @Test
+    void resolveClientIp_withBlankRemoteAddrAndBlankHeader_returnsUnknown() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setRemoteAddr("");
+        request.addHeader("X-Forwarded-For", "   ");
+
+        assertThat(RateLimitService.resolveClientIp(request)).isEqualTo("unknown");
+    }
+
+    @Test
+    void resolveClientIp_whenRemoteAddrAlreadyResolvedToPublicIp_ignoresLeftoverSpoofedXForwardedFor() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        // Simulates Tomcat RemoteIpValve having resolved remoteAddr to the real client IP
+        // while leaving the client's spoofed prefix in X-Forwarded-For.
+        request.setRemoteAddr("203.0.113.195");
+        request.addHeader("X-Forwarded-For", "1.2.3.4");
+
+        assertThat(RateLimitService.resolveClientIp(request)).isEqualTo("203.0.113.195");
+    }
+
+    @Test
+    void resolveClientIp_withLeadingCommaInXForwardedFor_skipsEmptySegment() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setRemoteAddr("10.0.0.1");
+        request.addHeader("X-Forwarded-For", " , 203.0.113.195");
+
+        assertThat(RateLimitService.resolveClientIp(request)).isEqualTo("203.0.113.195");
+    }
+
+    // -------------------------------------------------------------------------
+    // checkAndIncrement tests
+    // -------------------------------------------------------------------------
+
+    @Test
+    void checkAndIncrement_withinLimit_doesNotThrow() {
+        assertThatCode(() -> {
+            for (int i = 0; i < 250; i++) {
+                service.checkAndIncrement("198.51.100.1");
+            }
+        }).doesNotThrowAnyException();
+    }
+
+    @Test
+    void checkAndIncrement_exceedsLimit_throwsDailyLimitExceededException() {
+        for (int i = 0; i < 250; i++) {
+            service.checkAndIncrement("198.51.100.2");
+        }
+
+        assertThatThrownBy(() -> service.checkAndIncrement("198.51.100.2"))
+                .isInstanceOf(DailyLimitExceededException.class);
+    }
+
+    @Test
+    void checkAndIncrement_differentIpsHaveIndependentLimits() {
+        for (int i = 0; i < 250; i++) {
+            service.checkAndIncrement("198.51.100.3");
+        }
+
+        // Another IP has not exceeded the limit
+        assertThatCode(() -> service.checkAndIncrement("198.51.100.4"))
+                .doesNotThrowAnyException();
+    }
+
+    @Test
+    void checkAndIncrement_whenDisabled_allowsUnlimitedRequests() {
+        ReflectionTestUtils.setField(service, "enabled", false);
+
+        assertThatCode(() -> {
+            for (int i = 0; i < 300; i++) {
+                service.checkAndIncrement("198.51.100.5");
+            }
+        }).doesNotThrowAnyException();
+    }
+
+    @Test
+    void checkAndIncrement_withHttpServletRequest_extractsIpAndIncrements() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("X-Forwarded-For", "198.51.100.6");
+
+        assertThatCode(() -> service.checkAndIncrement(request))
+                .doesNotThrowAnyException();
+    }
+
+    @Test
+    void checkAndIncrement_withNullOrBlankIp_safelyUsesUnknown() {
+        assertThatCode(() -> service.checkAndIncrement((String) null))
+                .doesNotThrowAnyException();
+        assertThatCode(() -> service.checkAndIncrement("   "))
+                .doesNotThrowAnyException();
+    }
+}
