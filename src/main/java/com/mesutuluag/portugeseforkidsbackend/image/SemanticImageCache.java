@@ -51,10 +51,10 @@ public class SemanticImageCache {
      * prompts for the same location share most tokens. Small surface variations
      * (e.g. "wooden table" vs "round table") still score above this threshold.
      */
-    static final double SIMILARITY_THRESHOLD = 0.55;
-
-    /** Maximum number of cached entries before LRU eviction kicks in. */
-    static final int MAX_ENTRIES = 1000;
+    static final double DEFAULT_SIMILARITY_THRESHOLD = 0.55;
+    static final int DEFAULT_MAX_ENTRIES = 1000;
+    static final double SIMILARITY_THRESHOLD = DEFAULT_SIMILARITY_THRESHOLD;
+    static final int MAX_ENTRIES = DEFAULT_MAX_ENTRIES;
 
     /** Stop-words that carry no semantic weight for image prompts. */
     private static final Set<String> STOP_WORDS = Set.of(
@@ -262,17 +262,27 @@ public class SemanticImageCache {
 
     /** GCS store — absent when {@code image.cache.gcs.enabled} is not {@code true}. */
     private final Optional<GcsImageStore> gcsStore;
+    private final double similarityThreshold;
+    private final int maxEntries;
 
     public SemanticImageCache(Optional<GcsImageStore> gcsStore) {
-        this(gcsStore, false);
+        this(gcsStore, false, DEFAULT_SIMILARITY_THRESHOLD, DEFAULT_MAX_ENTRIES);
+    }
+
+    public SemanticImageCache(Optional<GcsImageStore> gcsStore, boolean asyncWarmup) {
+        this(gcsStore, asyncWarmup, DEFAULT_SIMILARITY_THRESHOLD, DEFAULT_MAX_ENTRIES);
     }
 
     @Autowired
     public SemanticImageCache(
             Optional<GcsImageStore> gcsStore,
-            @Value("${image.cache.gcs.async-warmup:true}") boolean asyncWarmup) {
+            @Value("${image.cache.gcs.async-warmup:true}") boolean asyncWarmup,
+            @Value("${image.cache.similarity-threshold:0.55}") double similarityThreshold,
+            @Value("${image.cache.max-entries:1000}") int maxEntries) {
         this.gcsStore = gcsStore;
-        this.cache    = new LruMap(MAX_ENTRIES);
+        this.similarityThreshold = similarityThreshold;
+        this.maxEntries = maxEntries;
+        this.cache = new LruMap(maxEntries);
         if (asyncWarmup && gcsStore.isPresent()) {
             CompletableFuture.runAsync(this::loadFromGcs);
         } else {
@@ -287,7 +297,7 @@ public class SemanticImageCache {
      */
     private void loadFromGcs() {
         gcsStore.ifPresent(store -> {
-            List<GcsImageStore.Entry> entries = store.loadAll(MAX_ENTRIES);
+            List<GcsImageStore.Entry> entries = store.loadAll(maxEntries);
             List<Map.Entry<String, CacheEntry>> prepared = new ArrayList<>(entries.size());
             for (GcsImageStore.Entry e : entries) {
                 if (e.prompt() != null && e.jpeg() != null && e.jpeg().length > 0) {
@@ -369,7 +379,7 @@ public class SemanticImageCache {
                 Map<String, Double> entryVec = applyIdfAndNormaliseLocked(entry.getValue().tf());
                 double score = cosineSimilarity(queryVec, entryVec);
                 if (score > bestScore) bestScore = score;
-                if (score >= SIMILARITY_THRESHOLD) {
+                if (score >= similarityThreshold) {
                     candidates.add(new Candidate(entry.getKey(), entry.getValue().jpeg(), score));
                 }
             }

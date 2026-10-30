@@ -14,23 +14,29 @@ Spring Boot REST API that serves AI-generated European Portuguese sentences and 
 
 ```
 src/main/java/com/mesutuluag/portugeseforkidsbackend/
-├── commons/RateLimitService.java         # Shared per-IP daily rate limiter
-├── exception/DailyLimitExceededException.java
+├── commons/RateLimitService.java         # Shared per-IP daily rate limiter (UTC rollover)
+├── config/CorsConfig.java                # Centralised CORS WebMvcConfigurer
+├── exception/
+│   ├── DailyLimitExceededException.java  # 429 exception
+│   ├── StoryGenerationException.java     # 502 exception on LLM failure/malformed output
+│   └── GlobalExceptionHandler.java       # @RestControllerAdvice for 400, 429, 502
 ├── story/
-│   ├── StoryController.java              # POST /api/story — context routing + LLM call
+│   ├── StoryController.java              # POST /api/story — rate limiting + delegates to StoryService
+│   ├── StoryService.java                 # Context routing, validation, prompt assembly, LLM call & parsing
 │   ├── StoryRequest.java                 # Request DTO (prompt, context, previousSentence, conversationHistory)
 │   ├── StoryResponse.java                # Response DTO (single "content" string field)
 │   └── StoryPage.java                    # JSON record (pt, en, mainEmoji, bgLeft, bgRight, imagePrompt)
 └── image/
-    ├── ImageController.java              # GET /api/image — delegates to ImageService
+    ├── ImageController.java              # GET /api/image — validation + delegates to ImageService
     ├── ImageService.java                 # Provider chain: cache → Gemini → Pollinations
-    ├── GeminiImageClient.java            # Gemini GenAI image provider
+    ├── GeminiImageClient.java            # Gemini GenAI image provider (with spend-cap cooldown)
     ├── PollinationsImageClient.java      # Pollinations fallback (no auth)
     ├── SemanticImageCache.java           # In-memory LRU + TF-IDF cosine similarity
     └── GcsImageStore.java                # GCS persistence (optional, conditional bean)
 
 src/main/resources/
 ├── application.properties
+├── application-local.properties
 └── prompts/                              # One .md system prompt per context key
     ├── story-system-prompt-school.md
     ├── story-system-prompt-restaurant.md
@@ -46,8 +52,15 @@ src/main/resources/
     └── story-system-prompt-traffic.md
 
 src/test/
+├── commons/RateLimitServiceTest.java     # Unit (IP resolution, limits, UTC rollover)
+├── exception/GlobalExceptionHandlerTest.java # Unit (400, 429, 502 responses)
 ├── story/StoryControllerTest.java        # Unit (Mockito, no network)
+├── story/StoryServiceTest.java           # Unit (Mockito, prompt assembly, validation, JSON parsing)
 ├── story/StoryEvaluatorTest.java         # @Tag("ai-eval") — needs live GCP credentials
+├── image/ImageControllerTest.java        # Unit (validation, clamping, 200/429/503)
+├── image/ImageServiceTest.java           # Unit (provider fallback chain)
+├── image/GeminiImageClientTest.java      # Unit (toggle & cooldown)
+├── image/PollinationsImageClientTest.java # Unit (mocked HttpClient)
 └── image/SemanticImageCacheTest.java     # Unit (no network)
 ```
 
@@ -55,12 +68,12 @@ src/test/
 
 ## Key Design Decisions
 
-### Context routing in `StoryController`
-All system prompts are loaded from classpath at startup into a `Map<String, String>`. The `context` field in the request body selects the right prompt. Unknown values fall back to `school`. **Do not add inline prompt strings** — always add a new `.md` file under `prompts/` and register it in the constructor map.
+### Context routing in `StoryService`
+All system prompts are loaded from classpath at startup into a `Map<String, String>` inside `StoryService`. The `context` field in the request body selects the right prompt. Unknown values fall back to `school`. **Do not add inline prompt strings** — always add a new `.md` file under `prompts/` and register it in `StoryService.loadAllPrompts()`.
 
 ### Conversation continuation
-`StoryController.createStory` appends two optional blocks to the user prompt before calling the LLM:
-1. `conversationHistory` (last 10 entries) — prevents sentence repetition.
+`StoryService.buildUserPrompt` appends two optional blocks to the user prompt before calling the LLM:
+1. `conversationHistory` (last 10 entries, configurable via `story.history.max-items`) — prevents sentence repetition.
 2. `previousSentence` — instructs the model to reply logically to the previous turn.
 
 ### LLM response cleaning
@@ -71,13 +84,18 @@ The raw string from the chat client is passed through two cleanup steps before J
 A lenient `ObjectMapper` (duplicate-key last-value-wins, unknown fields ignored) is then used to parse the JSON into `StoryPage`.
 
 ### Image provider chain (ImageService)
-Resolution order: **semantic cache → Gemini (when enabled via `gemini.image.enabled`) → Pollinations → null (503)**. Gemini image generation is disabled by default (`gemini.image.enabled=false`) to prevent costs and is parametric via `GEMINI_IMAGE_ENABLED` (set to `true` to enable). When disabled, it falls through directly to Pollinations without network calls to Gemini. Only Gemini results are JPEG-compressed and cached. Pollinations results are returned as-is and not cached.
+Resolution order: **semantic cache → Gemini (when enabled via `gemini.image.enabled`) → Pollinations → null (503)**. Gemini image generation is disabled by default (`gemini.image.enabled=false`) to prevent costs and is parametric via `GEMINI_IMAGE_ENABLED` (set to `true` to enable). When `GeminiImageClient` encounters a spend-cap breach, `RESOURCE_EXHAUSTED`, or HTTP 429 quota error, it enters a configurable cooldown (`gemini.image.cooldown-minutes=15`) during which `isEnabled()` returns `false` and requests fall through directly to Pollinations (`PollinationsImageClient` with configurable connect/request timeouts). Only Gemini results are JPEG-compressed and cached. Pollinations results are returned as-is and not cached.
 
 ### Semantic cache (SemanticImageCache)
-TF-IDF cosine similarity with a threshold of **0.55** and an incremental $O(1)$ document-frequency (`docFreq`) index. Backed by an access-ordered `LinkedHashMap` with LRU eviction (`MAX_ENTRIES = 1000`). A `synchronized` lock guards map mutations and lookups while pure tokenisation/TF calculation runs outside the lock. When `image.cache.gcs.enabled=true`, `GcsImageStore` is injected as an `Optional<GcsImageStore>` and warmed up asynchronously at startup (capped at `MAX_ENTRIES` with bounded concurrency); writes are fire-and-forget on a virtual-thread executor (shut down via `@PreDestroy`), storing the prompt in `BlobInfo` custom metadata on `image.jpg`. `GcsImageStore` is a conditional bean — absent when the property is not `true`.
+TF-IDF cosine similarity with a threshold of **0.55** (`image.cache.similarity-threshold`) and an incremental $O(1)$ document-frequency (`docFreq`) index. Backed by an access-ordered `LinkedHashMap` with LRU eviction (`MAX_ENTRIES = 1000`, `image.cache.max-entries`). A `synchronized` lock guards map mutations and lookups while pure tokenisation/TF calculation runs outside the lock. When `image.cache.gcs.enabled=true`, `GcsImageStore` is injected as an `Optional<GcsImageStore>` and warmed up asynchronously at startup (`image.cache.gcs.async-warmup=true`, capped at `MAX_ENTRIES` with `image.cache.gcs.max-concurrent-reads=32`); writes are fire-and-forget on a virtual-thread executor (shut down via `@PreDestroy`), storing the prompt in `BlobInfo` custom metadata on `image.jpg`. `GcsImageStore` is a conditional bean — absent when the property is not `true`.
 
 ### Rate limiting (RateLimitService)
-Key = `LocalDate.now() + ":" + ipAddress`. Limit = **250 per IP per calendar day**. Shared across both endpoints. Behind Cloud Run reverse proxies (GFE), `server.forward-headers-strategy=native` (Tomcat `RemoteIpValve`) and `RateLimitService.resolveClientIp(HttpServletRequest)` ensure the real client IP from `X-Forwarded-For` is extracted without allowing client-spoofed `X-Forwarded-For` prefixes to bypass the limit. Disable for local testing with `rate-limit.enabled=false` in `application-local.properties`.
+Key = `LocalDate.now(ZoneOffset.UTC) + ":" + ipAddress`. Limit = **250 per IP per UTC calendar day** (`rate-limit.daily-limit`), with automatic key eviction on UTC date rollover and counter clamping at `dailyLimit + 1`. Shared across both endpoints. Behind Cloud Run reverse proxies (GFE), `server.forward-headers-strategy=native` (Tomcat `RemoteIpValve`) and `RateLimitService.resolveClientIp(HttpServletRequest)` ensure the real client IP from `X-Forwarded-For` is extracted without allowing client-spoofed `X-Forwarded-For` prefixes to bypass the limit. When exceeded, `GlobalExceptionHandler` returns HTTP `429` with a `Retry-After` header (seconds until midnight UTC). Disable for local testing with `rate-limit.enabled=false` in `application-local.properties`.
+
+### Input validation & error handling
+- `StoryService` enforces length limits on `prompt` (`story.validation.max-prompt-length=300`), `previousSentence` (`story.validation.max-previous-sentence-length=300`), and `conversationHistory` items (`story.validation.max-history-item-length=200`).
+- `ImageController` requires a non-blank `imagePrompt` up to `image.validation.max-prompt-length=500` chars and clamps `width`/`height` to `[64, 1024]`.
+- `GlobalExceptionHandler` returns structured JSON (`{"error": "...", "message": "..."}`) for `400 Bad Request`, `429 Too Many Requests`, and `502 Bad Gateway` (`StoryGenerationException`).
 
 ---
 
@@ -85,13 +103,13 @@ Key = `LocalDate.now() + ":" + ipAddress`. Limit = **250 per IP per calendar day
 
 | Area | Rule |
 |---|---|
-| **Package structure** | One sub-package per feature (`story`, `image`). Shared infrastructure lives in `commons` or `exception`. Do not place classes directly in the root package. |
+| **Package structure** | One sub-package per feature (`story`, `image`). Shared infrastructure lives in `commons`, `config`, or `exception`. Do not place classes directly in the root package. |
 | **DTOs** | Use plain Java classes with getters/setters for request DTOs (`StoryRequest`). Use records for immutable data (`StoryPage`, `GcsImageStore.Entry`). |
-| **Spring beans** | Controllers and Services are Spring-managed (`@RestController`, `@Service`). Image clients are `@Component`. Inject via constructor — no field injection. |
+| **Spring beans** | Controllers and Services are Spring-managed (`@RestController`, `@Service`). Image clients are `@Component`. Inject via constructor — no field injection. When a bean has multiple constructors, annotate the Spring-injected constructor with `@Autowired`. |
 | **Configuration** | All tunable values must be bound via `@Value` or `application.properties`. No magic literals inside business logic. |
 | **Logging** | Use SLF4J (`LoggerFactory.getLogger`). Log at `WARN` for non-fatal provider failures and `ERROR` only for total failures. Never log secrets or full request bodies. |
-| **Error handling** | `DailyLimitExceededException` is `@ResponseStatus(429)` and propagates from the controller. Image provider failures return `503` with a JSON body — do not throw exceptions to the client. |
-| **CORS** | Both controllers declare identical `@CrossOrigin` origins. If you add a new controller, copy the same annotation. |
+| **Error handling** | `GlobalExceptionHandler` maps `DailyLimitExceededException` to `429` (with `Retry-After` header), `IllegalArgumentException` to `400`, and `StoryGenerationException` to `502`. Image provider failures return `503` with a JSON body. |
+| **CORS** | Centralised in `CorsConfig` (`cors.allowed-origins`). Do not add duplicate `@CrossOrigin` annotations on controllers. |
 | **Tests** | Unit tests must not make network calls. AI evaluator tests must be tagged `@Tag("ai-eval")`. New image cache behaviour goes in `SemanticImageCacheTest`. |
 
 ---
@@ -99,9 +117,9 @@ Key = `LocalDate.now() + ":" + ipAddress`. Limit = **250 per IP per calendar day
 ## Adding a New Context
 
 1. Create `src/main/resources/prompts/story-system-prompt-<key>.md` following the schema of an existing prompt (role, goal, prioritized topics, conversation reply rule, output rules, JSON schema, example).
-2. Register the key in `StoryController` constructor: `this.systemPrompts.put("<key>", loadPrompt("story-system-prompt-<key>.md"));`
+2. Register `<key>` in `StoryService.loadAllPrompts()`.
 3. Add `<key>` to the **Supported `context` values** table in `README.md`.
-4. Add at least one unit test in `StoryControllerTest` verifying the new context is routed correctly.
+4. Add at least one unit test in `StoryServiceTest` verifying the new context is routed correctly.
 
 ---
 

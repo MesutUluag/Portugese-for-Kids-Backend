@@ -26,26 +26,31 @@ Spring Boot REST API powering AI-generated story sentences and illustrations for
 src/main/java/com/mesutuluag/portugeseforkidsbackend/
 ├── PortugeseForKidsBackendApplication.java   # Spring Boot entry point
 ├── commons/
-│   └── RateLimitService.java                 # Per-IP daily rate limiting (shared)
+│   └── RateLimitService.java                 # Per-IP daily rate limiting (UTC rollover)
+├── config/
+│   └── CorsConfig.java                       # Centralised CORS configuration
 ├── exception/
-│   └── DailyLimitExceededException.java      # Custom 429 exception
+│   ├── DailyLimitExceededException.java      # Custom 429 exception
+│   ├── StoryGenerationException.java         # Custom 502 exception for LLM failures
+│   └── GlobalExceptionHandler.java           # @RestControllerAdvice error responses
 ├── story/
 │   ├── StoryController.java                  # POST /api/story
+│   ├── StoryService.java                     # Prompt management, validation & LLM call
 │   ├── StoryRequest.java                     # Request DTO
 │   ├── StoryResponse.java                    # Response DTO
 │   └── StoryPage.java                        # Story data record
 └── image/
     ├── ImageController.java                  # GET /api/image
     ├── ImageService.java                     # Provider orchestration + fallback chain
-    ├── GeminiImageClient.java                # Primary provider (Gemini GenAI API)
-    ├── PollinationsImageClient.java           # Fallback (free, no auth)
+    ├── GeminiImageClient.java                # Primary provider (Gemini GenAI API + cooldown)
+    ├── PollinationsImageClient.java          # Fallback (free, no auth)
     ├── SemanticImageCache.java               # In-memory LRU cache with cosine similarity
     └── GcsImageStore.java                    # GCS persistence for the semantic cache
 
 src/main/resources/
 ├── application.properties                   # Spring & AI configuration
+├── application-local.properties             # Local dev overrides (rate-limit & GCS disabled)
 └── prompts/
-    ├── story-system-prompt.md               # Legacy generic system prompt
     ├── story-system-prompt-school.md        # School context
     ├── story-system-prompt-restaurant.md    # Restaurant context
     ├── story-system-prompt-bank.md          # Bank context
@@ -60,10 +65,19 @@ src/main/resources/
     └── story-system-prompt-traffic.md       # Traffic context
 
 src/test/java/com/mesutuluag/portugeseforkidsbackend/
+├── commons/
+│   └── RateLimitServiceTest.java            # Unit tests for IP resolution & rate limiting
+├── exception/
+│   └── GlobalExceptionHandlerTest.java      # Unit tests for 400, 429, 502 error handling
 ├── story/
-│   ├── StoryControllerTest.java             # Unit tests (mocked, no network)
+│   ├── StoryControllerTest.java             # Unit tests for StoryController
+│   ├── StoryServiceTest.java                # Unit tests for StoryService (mocked ChatClient)
 │   └── StoryEvaluatorTest.java              # AI evaluator tests (@Tag("ai-eval"))
 └── image/
+    ├── ImageControllerTest.java             # Unit tests for ImageController
+    ├── ImageServiceTest.java                # Unit tests for ImageService fallback chain
+    ├── GeminiImageClientTest.java           # Unit tests for GeminiImageClient toggle & cooldown
+    ├── PollinationsImageClientTest.java     # Unit tests for PollinationsImageClient
     └── SemanticImageCacheTest.java          # Unit tests for semantic cache logic
 ```
 

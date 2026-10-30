@@ -30,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *   {@code ./mvnw test -Dgroups="ai-eval"}
  */
 @Tag("ai-eval")
-@SpringBootTest
+@SpringBootTest(properties = {"image.cache.gcs.enabled=false"})
 class StoryEvaluatorTest {
 
     /** Minimum acceptable relevancy score (0.0–1.0). */

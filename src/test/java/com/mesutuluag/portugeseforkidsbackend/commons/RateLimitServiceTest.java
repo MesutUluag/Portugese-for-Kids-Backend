@@ -1,5 +1,9 @@
 package com.mesutuluag.portugeseforkidsbackend.commons;
 
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.util.concurrent.atomic.AtomicReference;
+
 import com.mesutuluag.portugeseforkidsbackend.exception.DailyLimitExceededException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,8 +20,7 @@ class RateLimitServiceTest {
 
     @BeforeEach
     void setUp() {
-        service = new RateLimitService();
-        ReflectionTestUtils.setField(service, "enabled", true);
+        service = new RateLimitService(250, true);
     }
 
     // -------------------------------------------------------------------------
@@ -144,5 +147,28 @@ class RateLimitServiceTest {
                 .doesNotThrowAnyException();
         assertThatCode(() -> service.checkAndIncrement("   "))
                 .doesNotThrowAnyException();
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void checkAndIncrement_dateRollover_purgesPreviousDayKeys() {
+        RateLimitService customService = new RateLimitService(2, true);
+        customService.checkAndIncrement("198.51.100.10");
+        customService.checkAndIncrement("198.51.100.10");
+        assertThatThrownBy(() -> customService.checkAndIncrement("198.51.100.10"))
+                .isInstanceOf(DailyLimitExceededException.class);
+
+        // Simulate currentDate having been yesterday and a stale yesterday key in map
+        AtomicReference<LocalDate> dateRef = (AtomicReference<LocalDate>) ReflectionTestUtils.getField(customService, "currentDate");
+        java.util.Map<String, Integer> counts = (java.util.Map<String, Integer>) ReflectionTestUtils.getField(customService, "requestCounts");
+        LocalDate yesterday = LocalDate.now(ZoneOffset.UTC).minusDays(1);
+        dateRef.set(yesterday);
+        counts.clear();
+        counts.put(yesterday + ":198.51.100.10", 2);
+
+        // Next call rolls over to today, purging yesterday's entry and allowing today's request
+        assertThatCode(() -> customService.checkAndIncrement("198.51.100.10"))
+                .doesNotThrowAnyException();
+        assertThat(customService.getTrackedKeyCount()).isEqualTo(1);
     }
 }

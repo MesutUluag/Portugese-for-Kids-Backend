@@ -33,20 +33,30 @@ public class ImageService {
 
     private static final Logger log = LoggerFactory.getLogger(ImageService.class);
 
-    /** JPEG compression quality applied to Gemini output (0.0–1.0). */
-    private static final float JPEG_QUALITY = 0.60f;
+    private static final float DEFAULT_JPEG_QUALITY = 0.60f;
 
+    private final float jpegQuality;
     private final SemanticImageCache semanticImageCache;
     private final GeminiImageClient geminiImageClient;
     private final PollinationsImageClient pollinationsImageClient;
+
+    @org.springframework.beans.factory.annotation.Autowired
+    public ImageService(
+            SemanticImageCache semanticImageCache,
+            GeminiImageClient geminiImageClient,
+            PollinationsImageClient pollinationsImageClient,
+            @org.springframework.beans.factory.annotation.Value("${image.jpeg.quality:0.60}") float jpegQuality) {
+        this.semanticImageCache      = semanticImageCache;
+        this.geminiImageClient       = geminiImageClient;
+        this.pollinationsImageClient = pollinationsImageClient;
+        this.jpegQuality             = jpegQuality;
+    }
 
     public ImageService(
             SemanticImageCache semanticImageCache,
             GeminiImageClient geminiImageClient,
             PollinationsImageClient pollinationsImageClient) {
-        this.semanticImageCache      = semanticImageCache;
-        this.geminiImageClient       = geminiImageClient;
-        this.pollinationsImageClient = pollinationsImageClient;
+        this(semanticImageCache, geminiImageClient, pollinationsImageClient, DEFAULT_JPEG_QUALITY);
     }
 
     /**
@@ -70,7 +80,7 @@ public class ImageService {
             try {
                 byte[] raw = geminiImageClient.generate(prompt);
                 if (raw != null) {
-                    byte[] jpeg = toJpeg(raw, JPEG_QUALITY);
+                    byte[] jpeg = toJpeg(raw, jpegQuality);
                     semanticImageCache.put(prompt, jpeg);
                     return jpeg;
                 }

@@ -16,6 +16,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
@@ -78,5 +79,40 @@ class ImageControllerTest {
 
         assertThatThrownBy(() -> controller.generateImage("prompt", 768, 368, request))
                 .isInstanceOf(DailyLimitExceededException.class);
+    }
+
+    @Test
+    void generateImage_blankPrompt_throwsIllegalArgumentException() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+
+        assertThatThrownBy(() -> controller.generateImage("   ", 768, 368, request))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("imagePrompt must not be blank");
+
+        assertThatThrownBy(() -> controller.generateImage(null, 768, 368, request))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("imagePrompt must not be blank");
+    }
+
+    @Test
+    void generateImage_promptTooLong_throwsIllegalArgumentException() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        String longPrompt = "a".repeat(501);
+
+        assertThatThrownBy(() -> controller.generateImage(longPrompt, 768, 368, request))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("imagePrompt must not exceed 500 characters");
+    }
+
+    @Test
+    void generateImage_clampsDimensions_toMinAndMax() throws Exception {
+        byte[] jpegBytes = new byte[]{9};
+        when(imageService.generateJpeg(eq("prompt"), eq(64), eq(1024))).thenReturn(jpegBytes);
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        ResponseEntity<?> response = controller.generateImage("prompt", 10, 2048, request);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        verify(imageService).generateJpeg("prompt", 64, 1024);
     }
 }

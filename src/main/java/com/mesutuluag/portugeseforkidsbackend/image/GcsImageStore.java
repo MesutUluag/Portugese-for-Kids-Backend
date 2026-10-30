@@ -47,14 +47,15 @@ public class GcsImageStore {
 
     private static final Logger log = LoggerFactory.getLogger(GcsImageStore.class);
 
-    private static final String JPEG_NAME           = "image.jpg";
-    private static final String PROMPT_NAME         = "prompt.txt";
-    private static final String PROMPT_METADATA_KEY = "prompt";
-    private static final int    MAX_CONCURRENT_READS = 32;
+    private static final String JPEG_NAME                   = "image.jpg";
+    private static final String PROMPT_NAME                 = "prompt.txt";
+    private static final String PROMPT_METADATA_KEY         = "prompt";
+    private static final int    DEFAULT_MAX_CONCURRENT_READS = 32;
 
     private final Storage storage;
     private final String  bucket;
     private final String  prefix;
+    private final int     maxConcurrentReads;
 
     /** Virtual-thread executor for async writes and bounded startup reads. */
     private final ExecutorService writeExecutor =
@@ -62,10 +63,12 @@ public class GcsImageStore {
 
     public GcsImageStore(
             @Value("${image.cache.gcs.bucket}") String bucket,
-            @Value("${image.cache.gcs.prefix:image-cache}") String prefix) {
-        this.bucket  = bucket;
-        this.prefix  = prefix.endsWith("/") ? prefix.substring(0, prefix.length() - 1) : prefix;
-        this.storage = StorageOptions.getDefaultInstance().getService();
+            @Value("${image.cache.gcs.prefix:image-cache}") String prefix,
+            @Value("${image.cache.gcs.max-concurrent-reads:32}") int maxConcurrentReads) {
+        this.bucket             = bucket;
+        this.prefix             = prefix.endsWith("/") ? prefix.substring(0, prefix.length() - 1) : prefix;
+        this.maxConcurrentReads = maxConcurrentReads > 0 ? maxConcurrentReads : DEFAULT_MAX_CONCURRENT_READS;
+        this.storage            = StorageOptions.getDefaultInstance().getService();
         log.info("[gcs-store] initialised bucket='{}' prefix='{}'", bucket, this.prefix);
     }
 
@@ -116,7 +119,7 @@ public class GcsImageStore {
                     .limit(maxEntries)
                     .toList();
 
-            Semaphore readPermits = new Semaphore(MAX_CONCURRENT_READS);
+            Semaphore readPermits = new Semaphore(maxConcurrentReads);
 
             // Read each entry in parallel using bounded virtual threads.
             List<CompletableFuture<Entry>> futures = imageBlobs.stream()

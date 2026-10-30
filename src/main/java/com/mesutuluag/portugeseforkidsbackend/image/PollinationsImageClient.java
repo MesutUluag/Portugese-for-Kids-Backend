@@ -11,6 +11,8 @@ import java.time.Duration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -25,20 +27,36 @@ public class PollinationsImageClient {
     private static final Logger log = LoggerFactory.getLogger(PollinationsImageClient.class);
 
     private static final String POLLINATIONS_URL = "https://image.pollinations.ai/prompt/";
-    private static final Duration CONNECT_TIMEOUT = Duration.ofSeconds(5);
-    private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(15);
+    private static final Duration DEFAULT_CONNECT_TIMEOUT = Duration.ofSeconds(5);
+    private static final Duration DEFAULT_REQUEST_TIMEOUT = Duration.ofSeconds(15);
 
     private final HttpClient httpClient;
+    private final Duration requestTimeout;
 
     public PollinationsImageClient() {
-        this(HttpClient.newBuilder()
-                .connectTimeout(CONNECT_TIMEOUT)
-                .followRedirects(HttpClient.Redirect.NORMAL)
-                .build());
+        this(DEFAULT_CONNECT_TIMEOUT.toSeconds(), DEFAULT_REQUEST_TIMEOUT.toSeconds());
+    }
+
+    @Autowired
+    public PollinationsImageClient(
+            @Value("${pollinations.connect-timeout-seconds:5}") long connectTimeoutSeconds,
+            @Value("${pollinations.request-timeout-seconds:15}") long requestTimeoutSeconds) {
+        this(
+                HttpClient.newBuilder()
+                        .connectTimeout(Duration.ofSeconds(connectTimeoutSeconds))
+                        .followRedirects(HttpClient.Redirect.NORMAL)
+                        .build(),
+                Duration.ofSeconds(requestTimeoutSeconds)
+        );
     }
 
     PollinationsImageClient(HttpClient httpClient) {
+        this(httpClient, DEFAULT_REQUEST_TIMEOUT);
+    }
+
+    PollinationsImageClient(HttpClient httpClient, Duration requestTimeout) {
         this.httpClient = httpClient;
+        this.requestTimeout = requestTimeout;
     }
 
     /**
@@ -58,7 +76,7 @@ public class PollinationsImageClient {
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
-                    .timeout(REQUEST_TIMEOUT)
+                    .timeout(requestTimeout)
                     .GET()
                     .build();
 
@@ -70,12 +88,12 @@ public class PollinationsImageClient {
             log.warn("[pollinations-client] Non-200 status={}", response.statusCode());
 
         } catch (HttpTimeoutException e) {
-            log.warn("[pollinations-client] Request timed out after {}s: {}", REQUEST_TIMEOUT.toSeconds(), e.getMessage());
+            log.warn("[pollinations-client] Request timed out after {}s: {}", requestTimeout.toSeconds(), e.getMessage());
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             log.warn("[pollinations-client] Request was interrupted: {}", e.getMessage());
         } catch (Exception e) {
-            log.error("[pollinations-client] Request threw: {}", e.getMessage(), e);
+            log.warn("[pollinations-client] Request failed: {}", e.getMessage());
         }
         return null;
     }

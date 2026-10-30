@@ -1,23 +1,37 @@
 package com.mesutuluag.portugeseforkidsbackend.commons;
 
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.mesutuluag.portugeseforkidsbackend.exception.DailyLimitExceededException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class RateLimitService {
 
-	private static final int DAILY_LIMIT = 250;
-
-	@Value("${rate-limit.enabled:true}")
-	private boolean enabled;
-
+	private final int dailyLimit;
+	private final boolean enabled;
+	private final AtomicReference<LocalDate> currentDate;
 	private final Map<String, Integer> requestCounts = new ConcurrentHashMap<>();
+
+	public RateLimitService() {
+		this(250, true);
+	}
+
+	@Autowired
+	public RateLimitService(
+			@Value("${rate-limit.daily-limit:250}") int dailyLimit,
+			@Value("${rate-limit.enabled:true}") boolean enabled) {
+		this.dailyLimit = dailyLimit;
+		this.enabled = enabled;
+		this.currentDate = new AtomicReference<>(LocalDate.now(ZoneOffset.UTC));
+	}
 
 	/**
 	 * Resolves the client IP address from the request.
@@ -93,11 +107,32 @@ public class RateLimitService {
 			return;
 		}
 
+		LocalDate today = LocalDate.now(ZoneOffset.UTC);
+		LocalDate current = currentDate.get();
+		if (!today.equals(current) && currentDate.compareAndSet(current, today)) {
+			// Date rolled over — purge stale day counts
+			requestCounts.keySet().removeIf(k -> !k.startsWith(today.toString()));
+		}
+
 		String safeIp = (ipAddress != null && !ipAddress.isBlank()) ? ipAddress.trim() : "unknown";
-		String key = LocalDate.now() + ":" + safeIp;
-		int count = requestCounts.merge(key, 1, Integer::sum);
-		if (count > DAILY_LIMIT) {
+		String key = today + ":" + safeIp;
+
+		// Bound count increment to avoid integer overflow
+		int count = requestCounts.compute(key, (k, currentVal) -> {
+			int val = (currentVal == null) ? 1 : currentVal + 1;
+			return (val > dailyLimit + 1) ? dailyLimit + 1 : val;
+		});
+
+		if (count > dailyLimit) {
 			throw new DailyLimitExceededException();
 		}
+	}
+
+	int getDailyLimit() {
+		return dailyLimit;
+	}
+
+	int getTrackedKeyCount() {
+		return requestCounts.size();
 	}
 }
