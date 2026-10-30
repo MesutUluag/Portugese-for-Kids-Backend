@@ -7,6 +7,7 @@ on:
 env:
   PROJECT_ID: project-b933c218-2521-4f77-a37
   REGION: us-central1
+  VERTEX_LOCATION: us
   SERVICE: portugese-for-kids-backend
   IMAGE: gcr.io/project-b933c218-2521-4f77-a37/portugese-for-kids-backend
 
@@ -54,5 +55,5 @@ jobs:
             --region ${{ env.REGION }} \
             --allow-unauthenticated \
             --service-account portugese-for-kids-backend@${{ env.PROJECT_ID }}.iam.gserviceaccount.com \
-            --set-env-vars GOOGLE_CLOUD_PROJECT=${{ env.PROJECT_ID }},GOOGLE_CLOUD_LOCATION=${{ env.REGION }},SERVER_ADDRESS=0.0.0.0,GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }},GEMINI_IMAGE_ENABLED=${{ vars.GEMINI_IMAGE_ENABLED || 'false' }} \
+            --set-env-vars GOOGLE_CLOUD_PROJECT=${{ env.PROJECT_ID }},GOOGLE_CLOUD_LOCATION=${{ env.VERTEX_LOCATION }},SERVER_ADDRESS=0.0.0.0,GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }},GEMINI_IMAGE_ENABLED=${{ vars.GEMINI_IMAGE_ENABLED || 'false' }} \
             --project ${{ env.PROJECT_ID }}
