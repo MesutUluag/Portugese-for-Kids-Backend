@@ -62,6 +62,16 @@ src/test/
 ├── image/GeminiImageClientTest.java      # Unit (toggle & cooldown)
 ├── image/PollinationsImageClientTest.java # Unit (mocked HttpClient)
 └── image/SemanticImageCacheTest.java     # Unit (no network)
+
+.agents/skills/gcs-image-seeding/
+└── SKILL.md                              # Custom skill for validating, processing & uploading story images to GCS
+
+seed-images/
+├── process_images.py                     # Resizing (768x336), 60% JPEG, SHA-256 staging script
+├── upload_to_gcs.py                      # GCS push script with metadata & prompt.txt (supports --dry-run)
+├── audit_cache.py                        # Audits GCS cache coverage against all story prompts
+├── manifest.json                         # Local registry of staged/processed images
+└── prompts.json                          # Custom prompt mapping overrides
 ```
 
 ---
@@ -129,6 +139,17 @@ Key = `LocalDate.now(ZoneOffset.UTC) + ":" + ipAddress`. Limit = **250 per IP pe
 2. Inject it into `ImageService` via the constructor.
 3. Insert it at the correct position in the fallback chain in `ImageService.generateJpeg`.
 4. Document it in the **Image Provider Chain** table in `README.md`.
+
+---
+
+## Adding Images to GCS Semantic Cache (Skill: `gcs-image-seeding`)
+
+When adding new story scenes, themes, or pre-caching illustrations:
+1. Refer to the [`.agents/skills/gcs-image-seeding/SKILL.md`](.agents/skills/gcs-image-seeding/SKILL.md) skill.
+2. Drop raw images into `seed-images/incoming/` with a companion `.txt` prompt file (e.g. `scene.png` + `scene.txt`) or name it after a story prompt code (e.g. `school-02.jpg`).
+3. Run `python3 seed-images/process_images.py` to resize to `768x336`, compress to 60% JPEG, and stage under `seed-images/processed/<sha256>/`.
+4. Run `python3 seed-images/audit_cache.py` to verify prompt coverage against GCS.
+5. **STOP AND VERIFY:** Always obtain explicit user confirmation before executing `python3 seed-images/upload_to_gcs.py` to upload to `gs://portugese-kids-image-cache/`.
 
 ---
 

@@ -1,0 +1,5 @@
+# Ignore raw incoming uploads and generated processed binaries
+incoming/*
+!incoming/.gitkeep
+processed/*
+!processed/.gitkeep

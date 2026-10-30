@@ -1,0 +1,154 @@
+[
+  {
+    "id": "M-18",
+    "filename": "M-18.jpeg",
+    "sha256": "2c96b815e50bafaf9adef214ed2dad766c1355e326fa2955013bc645f7922c4f",
+    "prompt": "an adult handing a stack of bank statement papers over a counter at an immigration office, colorful friendly illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/2c96b815e50bafaf9adef214ed2dad766c1355e326fa2955013bc645f7922c4f/image.jpg",
+    "destination_blob_prompt": "image-cache/2c96b815e50bafaf9adef214ed2dad766c1355e326fa2955013bc645f7922c4f/prompt.txt"
+  },
+  {
+    "id": "M-02",
+    "filename": "M-02.jpeg",
+    "sha256": "a51478182c11271f971b84538b4b011c99e45a2087926baf3fb0e2e21f4eeca4",
+    "prompt": "a child waving to get the waiter's attention at a sunny Portuguese restaurant table, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/a51478182c11271f971b84538b4b011c99e45a2087926baf3fb0e2e21f4eeca4/image.jpg",
+    "destination_blob_prompt": "image-cache/a51478182c11271f971b84538b4b011c99e45a2087926baf3fb0e2e21f4eeca4/prompt.txt"
+  },
+  {
+    "id": "M-14",
+    "filename": "M-14.jpeg",
+    "sha256": "1e854cb4a737000c0cd81c0fb824ef62911f6358092b855484faf4282c9cf811",
+    "prompt": "a person sitting in a government office waiting room with numbered tickets and plastic chairs, colorful friendly illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/1e854cb4a737000c0cd81c0fb824ef62911f6358092b855484faf4282c9cf811/image.jpg",
+    "destination_blob_prompt": "image-cache/1e854cb4a737000c0cd81c0fb824ef62911f6358092b855484faf4282c9cf811/prompt.txt"
+  },
+  {
+    "id": "M-15",
+    "filename": "M-15.jpeg",
+    "sha256": "13b09024652a28035d1db6e6663f656c0306823c06e9fe2b2f6446ae694f3032",
+    "prompt": "an adult at an immigration office counter handing over a visa application form, colorful friendly illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/13b09024652a28035d1db6e6663f656c0306823c06e9fe2b2f6446ae694f3032/image.jpg",
+    "destination_blob_prompt": "image-cache/13b09024652a28035d1db6e6663f656c0306823c06e9fe2b2f6446ae694f3032/prompt.txt"
+  },
+  {
+    "id": "M-03",
+    "filename": "M-03.jpeg",
+    "sha256": "94c14d930a88c30961061dadd9de9fdb2010f619ffabd666a3c9d03b8c4f20fc",
+    "prompt": "a family sitting in a hospital waiting room with plastic chairs and a number display board, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/94c14d930a88c30961061dadd9de9fdb2010f619ffabd666a3c9d03b8c4f20fc/image.jpg",
+    "destination_blob_prompt": "image-cache/94c14d930a88c30961061dadd9de9fdb2010f619ffabd666a3c9d03b8c4f20fc/prompt.txt"
+  },
+  {
+    "id": "M-19",
+    "filename": "M-19.jpeg",
+    "sha256": "b736d3574a757026e1124ef40c3f7b94f31ce0b172b95a54d2f76b3ce355e9d2",
+    "prompt": "an adult pointing to a bank statement showing a Portuguese bank account balance at an immigration office counter, colorful friendly illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/b736d3574a757026e1124ef40c3f7b94f31ce0b172b95a54d2f76b3ce355e9d2/image.jpg",
+    "destination_blob_prompt": "image-cache/b736d3574a757026e1124ef40c3f7b94f31ce0b172b95a54d2f76b3ce355e9d2/prompt.txt"
+  },
+  {
+    "id": "M-04",
+    "filename": "M-04.jpeg",
+    "sha256": "e316f573266dfdaa67150ba35e5e362db0929562a18e5ace1c26417ce9ebf8c6",
+    "prompt": "a child pointing to their throat while talking to a kind doctor in a bright Portuguese clinic, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/e316f573266dfdaa67150ba35e5e362db0929562a18e5ace1c26417ce9ebf8c6/image.jpg",
+    "destination_blob_prompt": "image-cache/e316f573266dfdaa67150ba35e5e362db0929562a18e5ace1c26417ce9ebf8c6/prompt.txt"
+  },
+  {
+    "id": "M-12",
+    "filename": "M-12.jpeg",
+    "sha256": "e9e95d4e036a4c66031577aabe41c1acb4e857e439e2c3a3fb476240a7ab8394",
+    "prompt": "a family car stuck in heavy traffic on a Portuguese motorway with many cars queued, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/e9e95d4e036a4c66031577aabe41c1acb4e857e439e2c3a3fb476240a7ab8394/image.jpg",
+    "destination_blob_prompt": "image-cache/e9e95d4e036a4c66031577aabe41c1acb4e857e439e2c3a3fb476240a7ab8394/prompt.txt"
+  },
+  {
+    "id": "M-08",
+    "filename": "M-08.jpeg",
+    "sha256": "60148589e766b838e2ff1159fed10c21672438897846ce9950e7251d1c3fce9c",
+    "prompt": "a child pointing at apples at a Portuguese market stall asking the price to a friendly shopkeeper, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/60148589e766b838e2ff1159fed10c21672438897846ce9950e7251d1c3fce9c/image.jpg",
+    "destination_blob_prompt": "image-cache/60148589e766b838e2ff1159fed10c21672438897846ce9950e7251d1c3fce9c/prompt.txt"
+  },
+  {
+    "id": "M-09",
+    "filename": "M-09.jpeg",
+    "sha256": "bcd606bf6998a5a67f0d30ef7d420c5d952e67b4024c0e3cccd7f0e5ac909717",
+    "prompt": "a family boarding a yellow bus and tapping their travel card on the validator near the driver, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/bcd606bf6998a5a67f0d30ef7d420c5d952e67b4024c0e3cccd7f0e5ac909717/image.jpg",
+    "destination_blob_prompt": "image-cache/bcd606bf6998a5a67f0d30ef7d420c5d952e67b4024c0e3cccd7f0e5ac909717/prompt.txt"
+  },
+  {
+    "id": "M-13",
+    "filename": "M-13.jpeg",
+    "sha256": "2e4aec123d2ce0b1f9bf274f3a54f6f0a00972b509d3cae4df7a62be701db91e",
+    "prompt": "a car passing through a Via Verde toll gantry on a Portuguese highway, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/2e4aec123d2ce0b1f9bf274f3a54f6f0a00972b509d3cae4df7a62be701db91e/image.jpg",
+    "destination_blob_prompt": "image-cache/2e4aec123d2ce0b1f9bf274f3a54f6f0a00972b509d3cae4df7a62be701db91e/prompt.txt"
+  },
+  {
+    "id": "M-05",
+    "filename": "M-05.jpeg",
+    "sha256": "c583e65059773fcab1f9fdcee3151c4643ea49859cba9f9e598589594c17731c",
+    "prompt": "a family waiting at an airport boarding gate with hand luggage and a departure screen, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/c583e65059773fcab1f9fdcee3151c4643ea49859cba9f9e598589594c17731c/image.jpg",
+    "destination_blob_prompt": "image-cache/c583e65059773fcab1f9fdcee3151c4643ea49859cba9f9e598589594c17731c/prompt.txt"
+  },
+  {
+    "id": "M-10",
+    "filename": "M-10.jpeg",
+    "sha256": "29d7116baacd80ff11becab0471b1885756d09907cfcb5eef41e0485206a3d39",
+    "prompt": "a pharmacist handing a medicine box to a parent at a bright pharmacy counter under a green cross sign, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/29d7116baacd80ff11becab0471b1885756d09907cfcb5eef41e0485206a3d39/image.jpg",
+    "destination_blob_prompt": "image-cache/29d7116baacd80ff11becab0471b1885756d09907cfcb5eef41e0485206a3d39/prompt.txt"
+  },
+  {
+    "id": "M-06",
+    "filename": "M-06.jpeg",
+    "sha256": "e5b241f554c38ab9d4baddeb8295b0a18e668b5046735b81fa399a183542555d",
+    "prompt": "a child with a parent looking at airport departure boards searching for their gate at a Portuguese airport, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/e5b241f554c38ab9d4baddeb8295b0a18e668b5046735b81fa399a183542555d/image.jpg",
+    "destination_blob_prompt": "image-cache/e5b241f554c38ab9d4baddeb8295b0a18e668b5046735b81fa399a183542555d/prompt.txt"
+  },
+  {
+    "id": "M-07",
+    "filename": "M-07.jpeg",
+    "sha256": "0037dee7db6b262105dd5e4981726cde008204d7b25cfcf604cea27359568be8",
+    "prompt": "a family walking down a bright supermarket aisle with a trolley, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/0037dee7db6b262105dd5e4981726cde008204d7b25cfcf604cea27359568be8/image.jpg",
+    "destination_blob_prompt": "image-cache/0037dee7db6b262105dd5e4981726cde008204d7b25cfcf604cea27359568be8/prompt.txt"
+  },
+  {
+    "id": "M-11",
+    "filename": "M-11.jpeg",
+    "sha256": "bf68cb928ec48003c2e5430479e3afa7c1551fceb9f7aa87f75969d8cba2f49b",
+    "prompt": "a family car parked at a Galp petrol station forecourt next to a fuel pump, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/bf68cb928ec48003c2e5430479e3afa7c1551fceb9f7aa87f75969d8cba2f49b/image.jpg",
+    "destination_blob_prompt": "image-cache/bf68cb928ec48003c2e5430479e3afa7c1551fceb9f7aa87f75969d8cba2f49b/prompt.txt"
+  },
+  {
+    "id": "M-16",
+    "filename": "M-16.jpeg",
+    "sha256": "e93f384ee757c12e02f173820d2a90f79e3d6a5aa667c319929474f1c8b7119d",
+    "prompt": "an adult at a desk with a laptop and documents at a government office, colorful friendly illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/e93f384ee757c12e02f173820d2a90f79e3d6a5aa667c319929474f1c8b7119d/image.jpg",
+    "destination_blob_prompt": "image-cache/e93f384ee757c12e02f173820d2a90f79e3d6a5aa667c319929474f1c8b7119d/prompt.txt"
+  },
+  {
+    "id": "M-01",
+    "filename": "M-01.jpeg",
+    "sha256": "b312c27840daba179f1de9daed071821602cacedc2ca57af57ddd0ab70a82672",
+    "prompt": "children sitting together at a school canteen table with food trays, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/b312c27840daba179f1de9daed071821602cacedc2ca57af57ddd0ab70a82672/image.jpg",
+    "destination_blob_prompt": "image-cache/b312c27840daba179f1de9daed071821602cacedc2ca57af57ddd0ab70a82672/prompt.txt"
+  },
+  {
+    "id": "M-17",
+    "filename": "M-17.jpeg",
+    "sha256": "be1ba0c9e0d7118ef405404b9ced70fe5517715b55a6b806662ec94c1e7225b8",
+    "prompt": "a parent at an official government service counter checking their appointment on their phone, colorful friendly illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/be1ba0c9e0d7118ef405404b9ced70fe5517715b55a6b806662ec94c1e7225b8/image.jpg",
+    "destination_blob_prompt": "image-cache/be1ba0c9e0d7118ef405404b9ced70fe5517715b55a6b806662ec94c1e7225b8/prompt.txt"
+  }
+]
