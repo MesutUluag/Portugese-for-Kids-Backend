@@ -36,14 +36,13 @@ public class ImageController {
     @GetMapping
     public ResponseEntity<?> generateImage(
             @RequestParam String imagePrompt,
-            @RequestParam(defaultValue = "10") int steps,
             @RequestParam(defaultValue = "768") int width,
             @RequestParam(defaultValue = "368") int height,
             HttpServletRequest httpServletRequest) throws Exception {
 
         rateLimitService.checkAndIncrement(httpServletRequest.getRemoteAddr());
 
-        byte[] jpeg = imageService.generateJpeg(imagePrompt, steps, width, height);
+        byte[] jpeg = imageService.generateJpeg(imagePrompt, width, height);
 
         if (jpeg == null) {
             log.error("[image] All providers failed for prompt='{}'",

@@ -23,10 +23,9 @@ src/main/java/com/mesutuluag/portugeseforkidsbackend/
 │   └── StoryPage.java                    # JSON record (pt, en, mainEmoji, bgLeft, bgRight, imagePrompt)
 └── image/
     ├── ImageController.java              # GET /api/image — delegates to ImageService
-    ├── ImageService.java                 # Provider chain: cache → Gemini → Pollinations → HF
+    ├── ImageService.java                 # Provider chain: cache → Gemini → Pollinations
     ├── GeminiImageClient.java            # Gemini GenAI image provider
     ├── PollinationsImageClient.java      # Pollinations fallback (no auth)
-    ├── HuggingFaceImageClient.java       # HF Stable Diffusion 3 fallback
     ├── SemanticImageCache.java           # In-memory LRU + TF-IDF cosine similarity
     └── GcsImageStore.java                # GCS persistence (optional, conditional bean)
 
@@ -72,7 +71,7 @@ The raw string from the chat client is passed through two cleanup steps before J
 A lenient `ObjectMapper` (duplicate-key last-value-wins, unknown fields ignored) is then used to parse the JSON into `StoryPage`.
 
 ### Image provider chain (ImageService)
-Resolution order: **semantic cache → Gemini → Pollinations → Hugging Face → null (503)**. Only Gemini results are JPEG-compressed and cached. Pollinations and HF results are returned as-is and not cached.
+Resolution order: **semantic cache → Gemini (when enabled via `gemini.image.enabled`) → Pollinations → null (503)**. Gemini image generation is disabled by default (`gemini.image.enabled=false`) to prevent costs and is parametric via `GEMINI_IMAGE_ENABLED` (set to `true` to enable). When disabled, it falls through directly to Pollinations without network calls to Gemini. Only Gemini results are JPEG-compressed and cached. Pollinations results are returned as-is and not cached.
 
 ### Semantic cache (SemanticImageCache)
 TF-IDF cosine similarity with a threshold of **0.85**. Backed by a `LinkedHashMap` with LRU eviction. A `ReentrantReadWriteLock` guards all access. When `image.cache.gcs.enabled=true`, `GcsImageStore` is injected as an `Optional<GcsImageStore>` and loaded synchronously at startup; writes are fire-and-forget on a virtual-thread executor. `GcsImageStore` is a conditional bean — absent when the property is not `true`.

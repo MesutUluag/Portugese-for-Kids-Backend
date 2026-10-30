@@ -27,11 +27,17 @@ public class GeminiImageClient {
             .responseModalities("IMAGE", "TEXT")
             .build();
 
+    private final boolean enabled;
     private final Client client;
 
-    public GeminiImageClient(@Value("${gemini.image.api-key:}") String apiKey) {
+    public GeminiImageClient(
+            @Value("${gemini.image.api-key:}") String apiKey,
+            @Value("${gemini.image.enabled:false}") boolean enabled) {
+        this.enabled = enabled;
         Client built = null;
-        if (apiKey != null && !apiKey.isBlank()) {
+        if (!enabled) {
+            log.info("[gemini-client] Gemini image generation is disabled via gemini.image.enabled=false");
+        } else if (apiKey != null && !apiKey.isBlank()) {
             try {
                 built = Client.builder()
                         .apiKey(apiKey)
@@ -46,12 +52,19 @@ public class GeminiImageClient {
     }
 
     /**
+     * Indicates whether Gemini image generation is enabled and a valid client is configured.
+     */
+    public boolean isEnabled() {
+        return enabled && client != null;
+    }
+
+    /**
      * Generate an image for {@code prompt}.
      *
      * @return raw image bytes from Gemini, or {@code null} if unavailable
      */
     public byte[] generate(String prompt) {
-        if (client == null) {
+        if (!isEnabled()) {
             return null;
         }
         try {
