@@ -63,7 +63,6 @@ jobs:
             --image ${{ env.IMAGE }}:${{ github.sha }} \
             --platform managed \
             --region ${{ env.REGION }} \
-            --allow-unauthenticated \
             --service-account portugese-for-kids-backend@${{ env.PROJECT_ID }}.iam.gserviceaccount.com \
             --set-env-vars GOOGLE_CLOUD_PROJECT=${{ env.PROJECT_ID }},GOOGLE_CLOUD_LOCATION=${{ env.VERTEX_LOCATION }},SERVER_ADDRESS=0.0.0.0,GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }},GEMINI_IMAGE_ENABLED=${{ vars.GEMINI_IMAGE_ENABLED || 'false' }} \
             --project ${{ env.PROJECT_ID }}
