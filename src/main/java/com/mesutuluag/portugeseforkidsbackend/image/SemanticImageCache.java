@@ -1,5 +1,6 @@
 package com.mesutuluag.portugeseforkidsbackend.image;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -10,9 +11,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -50,7 +54,7 @@ public class SemanticImageCache {
     static final double SIMILARITY_THRESHOLD = 0.55;
 
     /** Maximum number of cached entries before LRU eviction kicks in. */
-    private static final int MAX_ENTRIES = 1000;
+    static final int MAX_ENTRIES = 1000;
 
     /** Stop-words that carry no semantic weight for image prompts. */
     private static final Set<String> STOP_WORDS = Set.of(
@@ -66,7 +70,7 @@ public class SemanticImageCache {
      *
      * <p>Also includes common scene-dressing positional/spatial/colour words
      * that add visual flavour but do not identify the core activity
-     * (e.g. "sunny", "wall", "against", "standing", "first", "smiling").
+     * (e.g. "sunny", "wall", "against", "first").
      */
     private static final Set<String> BOILERPLATE_WORDS = Set.of(
             // Style boilerplate
@@ -78,12 +82,18 @@ public class SemanticImageCache {
             "against", "behind", "beside", "front", "side", "corner",
             "wall", "door", "tree", "outside", "inside", "nearby",
             // Scene-dressing: descriptive adjectives
-            "sunny", "happy", "smiling", "laughing", "excited", "cheerful",
+            "sunny", "happy", "laughing", "excited", "cheerful", "joyful",
             "young", "little", "small", "big", "tall", "short",
             // Scene-dressing: ordinal / sequence words
             "first", "second", "next", "last", "together", "alone",
-            // Scene-dressing: common filler verbs already covered by synonyms
+            // Scene-dressing: common filler verbs
             "going", "starting", "beginning", "trying"
+    );
+
+    /** Nouns ending in -er/-or that should not have their suffix stripped to a verb stem. */
+    private static final Set<String> KEEP_ER_OR_NOUNS = Set.of(
+            "waiter", "counter", "dinner", "number", "water", "scooter",
+            "mother", "father", "sister", "brother", "finger", "paper"
     );
 
     /**
@@ -125,7 +135,6 @@ public class SemanticImageCache {
         s.put("supermarket","store");
         s.put("clinic",    "hospital");
         s.put("cafe",      "cafeteria");
-        s.put("café",      "cafeteria");
         s.put("canteen",   "cafeteria");
         s.put("classroom", "school");
         s.put("airport",   "airport");
@@ -223,9 +232,6 @@ public class SemanticImageCache {
         s.put("automobile","car");
         s.put("road",      "street");
         s.put("avenue",    "street");
-        s.put("sunny",     "bright");
-        s.put("cheerful",  "happy");
-        s.put("joyful",    "happy");
         SYNONYMS = Collections.unmodifiableMap(s);
     }
 
@@ -238,7 +244,7 @@ public class SemanticImageCache {
      */
     private record CacheEntry(byte[] jpeg, Map<String, Double> tf) {}
 
-    /** Lock guarding access to the LRU cache. */
+    /** Lock guarding access to the LRU cache and document-frequency index. */
     private final Object lock = new Object();
 
     /** Shared RNG used to pick randomly among qualifying cache candidates. */
@@ -247,34 +253,60 @@ public class SemanticImageCache {
     /** Bounded LRU map: prompt → CacheEntry. */
     private final Map<String, CacheEntry> cache;
 
+    /**
+     * Live document-frequency index: term → number of cached entries containing {@code term}.
+     * Maintained incrementally on insert/overwrite/eviction so IDF lookups are O(1) instead of O(N).
+     * Guarded by {@link #lock}.
+     */
+    private final Map<String, Integer> docFreq = new HashMap<>();
+
     /** GCS store — absent when {@code image.cache.gcs.enabled} is not {@code true}. */
     private final Optional<GcsImageStore> gcsStore;
 
     public SemanticImageCache(Optional<GcsImageStore> gcsStore) {
+        this(gcsStore, false);
+    }
+
+    @Autowired
+    public SemanticImageCache(
+            Optional<GcsImageStore> gcsStore,
+            @Value("${image.cache.gcs.async-warmup:true}") boolean asyncWarmup) {
         this.gcsStore = gcsStore;
         this.cache    = new LruMap(MAX_ENTRIES);
-        loadFromGcs();
+        if (asyncWarmup && gcsStore.isPresent()) {
+            CompletableFuture.runAsync(this::loadFromGcs);
+        } else {
+            loadFromGcs();
+        }
     }
 
     /**
-     * Warm the in-memory cache from GCS at startup.
-     * Called once from the constructor — runs synchronously so the cache is
-     * fully populated before the first request is served.
+     * Warm the in-memory cache from GCS.
+     * Tokenisation is performed outside the lock so incoming requests are never blocked
+     * during background warmup.
      */
     private void loadFromGcs() {
         gcsStore.ifPresent(store -> {
-            List<GcsImageStore.Entry> entries = store.loadAll();
-            synchronized (lock) {
-                for (GcsImageStore.Entry e : entries) {
-                    Map<String, Double> tf = toTfLocked(e.prompt());
-                    cache.put(e.prompt(), new CacheEntry(e.jpeg(), tf));
+            List<GcsImageStore.Entry> entries = store.loadAll(MAX_ENTRIES);
+            List<Map.Entry<String, CacheEntry>> prepared = new ArrayList<>(entries.size());
+            for (GcsImageStore.Entry e : entries) {
+                if (e.prompt() != null && e.jpeg() != null && e.jpeg().length > 0) {
+                    prepared.add(Map.entry(e.prompt(), new CacheEntry(e.jpeg(), toTf(e.prompt()))));
                 }
             }
-            log.info("[semantic-cache] warmed {} entries from GCS", entries.size());
+            synchronized (lock) {
+                for (Map.Entry<String, CacheEntry> item : prepared) {
+                    // Do not overwrite newer entries added while warmup was running
+                    if (!cache.containsKey(item.getKey())) {
+                        putEntryLocked(item.getKey(), item.getValue());
+                    }
+                }
+            }
+            log.info("[semantic-cache] warmed {} entries from GCS", prepared.size());
         });
     }
 
-    private static final class LruMap extends LinkedHashMap<String, CacheEntry> {
+    private final class LruMap extends LinkedHashMap<String, CacheEntry> {
         private final int maxSize;
 
         LruMap(int maxSize) {
@@ -284,7 +316,11 @@ public class SemanticImageCache {
 
         @Override
         protected boolean removeEldestEntry(Map.Entry<String, CacheEntry> eldest) {
-            return size() > maxSize;
+            boolean evict = size() > maxSize;
+            if (evict) {
+                decrementDocFreqLocked(eldest.getValue().tf());
+            }
+            return evict;
         }
     }
 
@@ -300,6 +336,9 @@ public class SemanticImageCache {
     public byte[] get(String prompt) {
         if (prompt == null || prompt.isBlank()) return null;
 
+        // Pre-compute query TF outside the lock to minimise critical section time
+        Map<String, Double> queryTf = null;
+
         synchronized (lock) {
             // 1. O(1) Fast path: exact string match (also updates LRU order)
             CacheEntry exactHit = cache.get(prompt);
@@ -309,11 +348,15 @@ public class SemanticImageCache {
             }
 
             if (cache.isEmpty()) return null;
+        }
 
-            // 2. O(N) Semantic search — IDF applied fresh at query time so weights
-            //    are always consistent with the current corpus state.
-            Map<String, Double> queryTf = toTfLocked(prompt);
-            if (queryTf.isEmpty()) return null;
+        queryTf = toTf(prompt);
+        if (queryTf.isEmpty()) return null;
+
+        synchronized (lock) {
+            if (cache.isEmpty()) return null;
+
+            // 2. O(N) Semantic search — IDF looked up in O(1) from live docFreq index
             Map<String, Double> queryVec = applyIdfAndNormaliseLocked(queryTf);
 
             // Collect all entries that exceed the similarity threshold so we can
@@ -351,16 +394,38 @@ public class SemanticImageCache {
     public void put(String prompt, byte[] jpeg) {
         if (prompt == null || jpeg == null || jpeg.length == 0) return;
 
+        // Compute raw TF outside the lock — IDF will be applied fresh at query time.
+        Map<String, Double> tf = toTf(prompt);
+        CacheEntry newEntry = new CacheEntry(jpeg, tf);
+
         synchronized (lock) {
-            // Store raw TF only — IDF will be applied fresh at query time.
-            Map<String, Double> tf = toTfLocked(prompt);
-            cache.put(prompt, new CacheEntry(jpeg, tf));
+            putEntryLocked(prompt, newEntry);
         }
 
         log.debug("[semantic-cache] stored prompt='{}' size={}KB",
                 truncate(prompt), jpeg.length / 1024);
 
         gcsStore.ifPresent(store -> store.saveAsync(prompt, jpeg));
+    }
+
+    private void putEntryLocked(String prompt, CacheEntry newEntry) {
+        CacheEntry previous = cache.put(prompt, newEntry);
+        if (previous != null) {
+            decrementDocFreqLocked(previous.tf());
+        }
+        incrementDocFreqLocked(newEntry.tf());
+    }
+
+    private void incrementDocFreqLocked(Map<String, Double> tf) {
+        for (String term : tf.keySet()) {
+            docFreq.merge(term, 1, Integer::sum);
+        }
+    }
+
+    private void decrementDocFreqLocked(Map<String, Double> tf) {
+        for (String term : tf.keySet()) {
+            docFreq.computeIfPresent(term, (k, v) -> v > 1 ? v - 1 : null);
+        }
     }
 
     /** Current number of entries in the cache. */
@@ -377,9 +442,8 @@ public class SemanticImageCache {
     /**
      * Build a raw term-frequency map for {@code prompt} (no IDF, no normalisation).
      * Stored in {@link CacheEntry} so IDF can be applied fresh at query time.
-     * Must be called with {@link #lock} held.
      */
-    private static Map<String, Double> toTfLocked(String prompt) {
+    private static Map<String, Double> toTf(String prompt) {
         String[] tokens = tokenise(prompt);
         if (tokens.length == 0) return Collections.emptyMap();
 
@@ -397,8 +461,8 @@ public class SemanticImageCache {
 
     /**
      * Apply current-corpus IDF weights to a raw TF map and L2-normalise the result.
-     * Because IDF is computed from the live cache, all vectors — stored and query —
-     * always use the same weight scale regardless of when they were inserted.
+     * Because IDF is computed from the live {@link #docFreq} index, all vectors —
+     * stored and query — always use the same weight scale in O(T) time.
      * Must be called with {@link #lock} held.
      */
     private Map<String, Double> applyIdfAndNormaliseLocked(Map<String, Double> tf) {
@@ -416,22 +480,20 @@ public class SemanticImageCache {
         return l2Normalise(vec);
     }
 
-    /** Must be called with {@link #lock} held. */
+    /** O(1) lookup of cached entries containing {@code term}. Must be called with {@link #lock} held. */
     private int countDocsContainingLocked(String term) {
-        int count = 0;
-        for (CacheEntry entry : cache.values()) {
-            if (entry.tf().containsKey(term)) count++;
-        }
-        return count;
+        return docFreq.getOrDefault(term, 0);
     }
 
     /**
-     * Tokenise, filter stop-words/boilerplate, apply synonym expansion,
+     * Strip diacritics, tokenise, filter stop-words/boilerplate, apply synonym expansion,
      * then apply lightweight suffix-stripping so inflected forms collapse
-     * to a shared stem ("running" → "run", "doctor's" → "doctor").
+     * to a shared stem ("running" → "run", "doctor's" → "doctor", "café" → "cafeteria").
      */
     static String[] tokenise(String text) {
-        return Arrays.stream(text.toLowerCase().split("[^a-z0-9]+"))
+        String ascii = Normalizer.normalize(text.toLowerCase(), Normalizer.Form.NFD)
+                .replaceAll("\\p{M}+", "");
+        return Arrays.stream(ascii.split("[^a-z0-9]+"))
                 .filter(t -> t.length() > 1)
                 .filter(t -> !STOP_WORDS.contains(t))
                 .filter(t -> !BOILERPLATE_WORDS.contains(t))
@@ -487,8 +549,8 @@ public class SemanticImageCache {
             return word.substring(0, len - 4);
         }
 
-        // -er / -or (teacher → teach, doctor → stays via synonym map)
-        if (len > 5 && (word.endsWith("er") || word.endsWith("or"))) {
+        // -er / -or (teacher → teach, doctor → doct, but preserve nouns like "waiter" or "counter")
+        if (len > 5 && (word.endsWith("er") || word.endsWith("or")) && !KEEP_ER_OR_NOUNS.contains(word)) {
             return word.substring(0, len - 2);
         }
 

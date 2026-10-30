@@ -5,11 +5,15 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HexFormat;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.StreamSupport;
 
+import jakarta.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,18 +29,17 @@ import com.google.cloud.storage.StorageOptions;
 /**
  * Thin GCS-backed store for the semantic image cache.
  *
- * <p>Each entry is stored as two objects under {@code image-cache/<sha256>/}:
- * <ul>
- *   <li>{@code image.jpg} — the raw JPEG bytes</li>
- *   <li>{@code prompt.txt} — the original prompt text (UTF-8)</li>
- * </ul>
+ * <p>Each entry is stored under {@code image-cache/<sha256>/image.jpg} with the
+ * prompt text stored in custom object metadata ({@code prompt}). Legacy entries
+ * that stored {@code prompt.txt} as a separate sibling object are also supported
+ * transparently on load.
  *
  * <p>Writes are fire-and-forget (virtual-thread executor) so they never block
- * the request path. Startup loads all existing entries synchronously so the
- * in-memory cache is warm before the first request is served.
+ * the request path. Startup warmup caps loaded entries to {@link SemanticImageCache#MAX_ENTRIES}
+ * and bounds concurrent GCS reads with a semaphore.
  *
  * <p>Activated only when {@code image.cache.gcs.enabled=true}. When disabled,
- * {@link SemanticImageCache} behaves exactly as before (pure in-memory).
+ * {@link SemanticImageCache} behaves as a pure in-memory cache.
  */
 @Component
 @ConditionalOnProperty(name = "image.cache.gcs.enabled", havingValue = "true")
@@ -44,14 +47,16 @@ public class GcsImageStore {
 
     private static final Logger log = LoggerFactory.getLogger(GcsImageStore.class);
 
-    private static final String JPEG_NAME   = "image.jpg";
-    private static final String PROMPT_NAME = "prompt.txt";
+    private static final String JPEG_NAME           = "image.jpg";
+    private static final String PROMPT_NAME         = "prompt.txt";
+    private static final String PROMPT_METADATA_KEY = "prompt";
+    private static final int    MAX_CONCURRENT_READS = 32;
 
     private final Storage storage;
     private final String  bucket;
     private final String  prefix;
 
-    /** Single virtual-thread executor for async writes — low overhead, bounded parallelism. */
+    /** Virtual-thread executor for async writes and bounded startup reads. */
     private final ExecutorService writeExecutor =
             Executors.newVirtualThreadPerTaskExecutor();
 
@@ -64,39 +69,86 @@ public class GcsImageStore {
         log.info("[gcs-store] initialised bucket='{}' prefix='{}'", bucket, this.prefix);
     }
 
+    @PreDestroy
+    void shutdown() {
+        writeExecutor.shutdown();
+        try {
+            if (!writeExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
+                writeExecutor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            writeExecutor.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
+    }
+
     // -----------------------------------------------------------------------
     // Public API
     // -----------------------------------------------------------------------
 
     /**
-     * Load all cache entries from GCS.
-     * Called once at startup from {@link SemanticImageCache}.
+     * Load up to {@link SemanticImageCache#MAX_ENTRIES} cache entries from GCS.
      *
      * @return list of (prompt, jpeg) pairs; never null
      */
     public List<Entry> loadAll() {
+        return loadAll(SemanticImageCache.MAX_ENTRIES);
+    }
+
+    /**
+     * Load up to {@code maxEntries} cache entries from GCS with bounded concurrency.
+     *
+     * @param maxEntries maximum number of entries to load
+     * @return list of (prompt, jpeg) pairs; never null
+     */
+    public List<Entry> loadAll(int maxEntries) {
+        if (maxEntries <= 0) {
+            return List.of();
+        }
         try {
-            // Collect the directory paths first (fast listing — name field only).
-            List<String> dirs = StreamSupport.stream(
+            // Collect up to maxEntries image blobs (name + metadata only).
+            List<Blob> imageBlobs = StreamSupport.stream(
                             storage.list(bucket,
                                     Storage.BlobListOption.prefix(prefix + "/"),
-                                    Storage.BlobListOption.fields(Storage.BlobField.NAME))
+                                    Storage.BlobListOption.fields(Storage.BlobField.NAME, Storage.BlobField.METADATA))
                                     .iterateAll().spliterator(), false)
-                    .map(Blob::getName)
-                    .filter(name -> name.endsWith("/" + JPEG_NAME))
-                    .map(name -> name.substring(0, name.lastIndexOf('/')))
+                    .filter(blob -> blob.getName().endsWith("/" + JPEG_NAME))
+                    .limit(maxEntries)
                     .toList();
 
-            // Read each entry's jpeg + prompt in parallel using virtual threads.
-            List<CompletableFuture<Entry>> futures = dirs.stream()
-                    .map(dir -> CompletableFuture.supplyAsync(() -> {
+            Semaphore readPermits = new Semaphore(MAX_CONCURRENT_READS);
+
+            // Read each entry in parallel using bounded virtual threads.
+            List<CompletableFuture<Entry>> futures = imageBlobs.stream()
+                    .map(blob -> CompletableFuture.supplyAsync(() -> {
+                        boolean acquired = false;
                         try {
-                            byte[] jpeg   = storage.readAllBytes(BlobId.of(bucket, dir + "/" + JPEG_NAME));
-                            byte[] prompt = storage.readAllBytes(BlobId.of(bucket, dir + "/" + PROMPT_NAME));
-                            return new Entry(new String(prompt, StandardCharsets.UTF_8), jpeg);
-                        } catch (Exception e) {
-                            log.warn("[gcs-store] skipping malformed entry dir='{}': {}", dir, e.getMessage());
+                            readPermits.acquire();
+                            acquired = true;
+
+                            String blobName = blob.getName();
+                            byte[] jpeg = storage.readAllBytes(BlobId.of(bucket, blobName));
+
+                            Map<String, String> metadata = blob.getMetadata();
+                            String prompt = (metadata != null) ? metadata.get(PROMPT_METADATA_KEY) : null;
+                            if (prompt == null || prompt.isBlank()) {
+                                // Legacy fallback: read sibling prompt.txt object
+                                String dir = blobName.substring(0, blobName.lastIndexOf('/'));
+                                byte[] promptBytes = storage.readAllBytes(BlobId.of(bucket, dir + "/" + PROMPT_NAME));
+                                prompt = new String(promptBytes, StandardCharsets.UTF_8);
+                            }
+
+                            return new Entry(prompt, jpeg);
+                        } catch (InterruptedException ie) {
+                            Thread.currentThread().interrupt();
                             return null;
+                        } catch (Exception e) {
+                            log.warn("[gcs-store] skipping malformed entry blob='{}': {}", blob.getName(), e.getMessage());
+                            return null;
+                        } finally {
+                            if (acquired) {
+                                readPermits.release();
+                            }
                         }
                     }, writeExecutor))
                     .toList();
@@ -115,7 +167,8 @@ public class GcsImageStore {
     }
 
     /**
-     * Persist a prompt/jpeg pair asynchronously (fire-and-forget).
+     * Persist a prompt/jpeg pair asynchronously (fire-and-forget) as a single GCS object
+     * with the prompt stored in custom metadata.
      * Never throws — errors are logged only.
      */
     public void saveAsync(String prompt, byte[] jpeg) {
@@ -125,13 +178,9 @@ public class GcsImageStore {
                 storage.create(
                         BlobInfo.newBuilder(BlobId.of(bucket, dir + "/" + JPEG_NAME))
                                 .setContentType("image/jpeg")
+                                .setMetadata(Map.of(PROMPT_METADATA_KEY, prompt))
                                 .build(),
                         jpeg);
-                storage.create(
-                        BlobInfo.newBuilder(BlobId.of(bucket, dir + "/" + PROMPT_NAME))
-                                .setContentType("text/plain; charset=utf-8")
-                                .build(),
-                        prompt.getBytes(StandardCharsets.UTF_8));
             } catch (Exception e) {
                 log.warn("[gcs-store] async save failed for prompt='{}': {}",
                         prompt.substring(0, Math.min(60, prompt.length())), e.getMessage());

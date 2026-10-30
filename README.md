@@ -168,11 +168,11 @@ Returns `null` (→ `503`) only when all steps fail.
 
 ### Semantic Image Cache
 
-`SemanticImageCache` stores JPEG bytes keyed by an in-memory TF-IDF cosine-similarity index. A cache hit is declared when a new prompt has **cosine similarity ≥ 0.85** to a stored prompt, avoiding redundant generation for semantically equivalent requests.
+`SemanticImageCache` stores JPEG bytes keyed by an in-memory TF-IDF cosine-similarity index with an incremental document-frequency (`docFreq`) counter. A cache hit is declared when a new prompt has **cosine similarity ≥ 0.55** to a stored prompt, avoiding redundant generation for semantically equivalent requests.
 
-- Bounded LRU map — oldest entry is evicted when the cap is reached.
-- Thread-safe via a `ReentrantReadWriteLock`.
-- Optional GCS backing (`image.cache.gcs.enabled=true`) — the store is loaded synchronously at startup and written asynchronously (fire-and-forget virtual-thread executor) on each new Gemini result.
+- Bounded LRU map (`MAX_ENTRIES = 1000`) — oldest entry is evicted when the cap is reached, keeping `docFreq` in sync.
+- Thread-safe via an internal `synchronized` lock (with tokenisation and TF calculation performed outside the lock).
+- Optional GCS backing (`image.cache.gcs.enabled=true`) — the store is warmed up asynchronously at startup (bounded at `MAX_ENTRIES` and `32` concurrent reads) and written asynchronously (fire-and-forget virtual-thread executor with `@PreDestroy` shutdown) as a single `image.jpg` object with custom `prompt` metadata on each new Gemini result.
 
 ---
 

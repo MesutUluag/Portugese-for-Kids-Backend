@@ -1,5 +1,6 @@
 package com.mesutuluag.portugeseforkidsbackend.image;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -10,6 +11,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link SemanticImageCache}.
@@ -496,5 +500,56 @@ class SemanticImageCacheTest {
         exec.shutdownNow();
         assertThat(completed).as("All threads should complete within 10 seconds").isTrue();
         assertThat(cache.size()).isPositive();
+    }
+
+    // -------------------------------------------------------------------------
+    // B-05, B-06, B-07, B-15 — Normalisation & GCS / IDF regression tests
+    // -------------------------------------------------------------------------
+
+    @Test
+    void tokenise_unicodeDiacritics_normalisesCafeToCafeteria() {
+        String[] tokens = SemanticImageCache.tokenise("child drinking coffee at café");
+        assertThat(tokens).contains("cafeteria");
+        assertThat(tokens).doesNotContain("caf");
+    }
+
+    @Test
+    void get_accentedCafe_matchesCafeteria() {
+        cache.put("child drinking coffee at cafeteria", IMAGE_A);
+        assertThat(cache.get("child drinking coffee at café")).isEqualTo(IMAGE_A);
+    }
+
+    @Test
+    void tokenise_waiterNoun_doesNotStemToWait() {
+        String[] tokens = SemanticImageCache.tokenise("waiter serving food at restaurant");
+        assertThat(tokens).contains("waiter");
+        assertThat(tokens).doesNotContain("wait");
+    }
+
+    @Test
+    void get_waiterAtRestaurant_doesNotCrossWithWaitingAtBusStop() {
+        cache.put("child waiting at bus stop", IMAGE_A);
+        assertThat(cache.get("waiter serving dinner at restaurant")).isNull();
+    }
+
+    @Test
+    void tokenise_smiling_mapsToSmileSynonym() {
+        String[] tokens = SemanticImageCache.tokenise("smiling child at school");
+        assertThat(tokens).contains("smile");
+    }
+
+    @Test
+    void gcsWarmup_loadsCappedEntriesAndForwardsPuts() {
+        GcsImageStore mockStore = mock(GcsImageStore.class);
+        when(mockStore.loadAll(1000)).thenReturn(List.of(
+                new GcsImageStore.Entry("child reading book at school", IMAGE_A)
+        ));
+
+        SemanticImageCache gcsBackedCache = new SemanticImageCache(Optional.of(mockStore), false);
+        assertThat(gcsBackedCache.size()).isEqualTo(1);
+        assertThat(gcsBackedCache.get("kid reading book in classroom")).isEqualTo(IMAGE_A);
+
+        gcsBackedCache.put("child buying fruit at market", IMAGE_B);
+        verify(mockStore).saveAsync("child buying fruit at market", IMAGE_B);
     }
 }
