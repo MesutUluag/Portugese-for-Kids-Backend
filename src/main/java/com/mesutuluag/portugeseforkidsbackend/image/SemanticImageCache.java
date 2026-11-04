@@ -63,7 +63,7 @@ public class SemanticImageCache {
             "by", "as", "from", "up", "was", "has", "have", "had", "not",
             "about", "after", "into", "over", "down", "through", "their",
             "them", "our", "your", "his", "her", "while", "towards", "toward",
-            "under", "near", "very", "much", "some", "any", "more", "before", "here"
+            "under", "near", "very", "much", "some", "any", "more", "before", "here", "until", "out"
     );
 
     /**
@@ -90,12 +90,12 @@ public class SemanticImageCache {
             "young", "little", "small", "big", "tall", "short",
             "wooden", "plastic", "round", "filled", "portuguese", "portugal", "lisbon", "city",
             // Scene-dressing: ordinal / sequence words
-            "first", "second", "next", "last", "together", "alone",
+            "first", "second", "next", "last", "together", "alone", "two",
             // Scene-dressing: common filler verbs & adverbs
             "going", "starting", "beginning", "trying", "using",
             "carefully", "nervously", "quickly", "slowly", "narrow", "rear", "back",
             "empty", "free", "day", "time", "arrival", "spot", "space", "sign", "direction",
-            "turn", "convenience", "uniform", "contactless"
+            "turn", "convenience", "uniform", "contactless", "successful", "purchase", "open", "distance"
     );
 
     /** Nouns ending in -er/-or that should not have their suffix stripped to a verb stem. */
@@ -122,7 +122,7 @@ public class SemanticImageCache {
             "bus",
             "pharmacy", "pharmacist",
             "petrol", "pump", "fuel",
-            "motorway", "traffic", "toll", "park", "roundabout",
+            "motorway", "traffic", "toll", "park", "roundabout", "seatbelt",
             "immigra", "biometric", "visa"
     );
 
@@ -151,6 +151,8 @@ public class SemanticImageCache {
         s.put("student",   "child");
         s.put("pupil",     "child");
         s.put("baby",      "child");
+        s.put("friend",    "child");
+        s.put("classmate", "child");
         s.put("man",       "person");
         s.put("woman",     "person");
         s.put("lady",      "person");
@@ -162,6 +164,8 @@ public class SemanticImageCache {
         s.put("parent",    "person");
         s.put("parents",   "person");
         s.put("family",    "person");
+        s.put("father",    "person");
+        s.put("mother",    "person");
         // Medical
         s.put("physician", "doctor");
         s.put("nurse",     "doctor");
@@ -196,7 +200,20 @@ public class SemanticImageCache {
         s.put("saline",    "medication");
         s.put("ampoule",   "medication");
         s.put("ampoules",  "medication");
+        s.put("syrup",     "medication");
+        s.put("sachet",    "medication");
+        s.put("sachets",   "medication");
+        s.put("repellent", "medication");
+        s.put("spray",     "medication");
+        s.put("gel",       "medication");
+        s.put("tube",      "medication");
+        s.put("water",     "drink");
+        s.put("juice",     "drink");
+        s.put("juices",    "drink");
         // Actions
+        s.put("driving",    "drive");
+        s.put("drives",     "drive");
+        s.put("drove",      "drive");
         s.put("steering",   "drive");
         s.put("steers",     "drive");
         s.put("steered",    "drive");
@@ -207,10 +224,16 @@ public class SemanticImageCache {
         s.put("approaches", "drive");
         s.put("approached", "drive");
         s.put("pulling",    "drive");
+        s.put("pulls",      "drive");
         s.put("changing",   "drive");
         s.put("reversing",  "park");
         s.put("reverses",   "park");
         s.put("reversed",   "park");
+        s.put("unbuckling", "check");
+        s.put("buckling",   "check");
+        s.put("placing",    "share");
+        s.put("sharing",    "share");
+        s.put("telling",    "talk");
         s.put("eating",    "eat");
         s.put("eats",      "eat");
         s.put("ate",       "eat");
@@ -257,6 +280,9 @@ public class SemanticImageCache {
         s.put("showing",   "show");
         s.put("shows",     "show");
         s.put("showed",    "show");
+        s.put("leaving",   "leave");
+        s.put("leaves",    "leave");
+        s.put("left",      "leave");
         s.put("playing",   "play");
         s.put("plays",     "play");
         s.put("played",    "play");
@@ -604,7 +630,12 @@ public class SemanticImageCache {
         String ascii = Normalizer.normalize(text.toLowerCase(), Normalizer.Form.NFD)
                 .replaceAll("\\p{M}+", "")
                 .replaceAll("\\bbank\\s+cards?\\b", "card")
-                .replaceAll("\\b(?:convenience|petrol|gas|galp)\\s+(?:shop|store)s?\\b", "petrol counter");
+                .replaceAll("\\bshopping\\s+bags?\\b", "bag")
+                .replaceAll("\\bservice\\s+(?:station|area)s?\\b", "petrol station")
+                .replaceAll("\\b(?:convenience|petrol|gas|galp)\\s+station\\s+(?:convenience\\s+)?(?:shop|store)s?\\b", "petrol counter")
+                .replaceAll("\\b(?:convenience|petrol|gas|galp)\\s+(?:shop|store)s?\\b", "petrol counter")
+                .replaceAll("\\bpencil\\s+cases?\\b", "pencil")
+                .replaceAll("\\bsigns?\\s+showing\\b", "sign");
         return Arrays.stream(ascii.split("[^a-z0-9]+"))
                 .filter(t -> t.length() > 1)
                 .filter(t -> !STOP_WORDS.contains(t))
