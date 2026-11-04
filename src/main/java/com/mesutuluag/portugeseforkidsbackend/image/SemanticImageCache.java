@@ -63,7 +63,7 @@ public class SemanticImageCache {
             "by", "as", "from", "up", "was", "has", "have", "had", "not",
             "about", "after", "into", "over", "down", "through", "their",
             "them", "our", "your", "his", "her", "while", "towards", "toward",
-            "under", "near", "very", "much", "some", "any", "more"
+            "under", "near", "very", "much", "some", "any", "more", "before", "here"
     );
 
     /**
@@ -88,11 +88,14 @@ public class SemanticImageCache {
             "sunny", "happy", "laughing", "excited", "cheerful", "joyful",
             "cozy", "traditional", "formal", "official", "original", "fresh", "new",
             "young", "little", "small", "big", "tall", "short",
-            "wooden", "plastic", "round", "filled", "portuguese",
+            "wooden", "plastic", "round", "filled", "portuguese", "portugal", "lisbon", "city",
             // Scene-dressing: ordinal / sequence words
             "first", "second", "next", "last", "together", "alone",
-            // Scene-dressing: common filler verbs
-            "going", "starting", "beginning", "trying", "using"
+            // Scene-dressing: common filler verbs & adverbs
+            "going", "starting", "beginning", "trying", "using",
+            "carefully", "nervously", "quickly", "slowly", "narrow", "rear", "back",
+            "empty", "free", "day", "time", "arrival", "spot", "space", "sign", "direction",
+            "turn", "convenience", "uniform", "contactless"
     );
 
     /** Nouns ending in -er/-or that should not have their suffix stripped to a verb stem. */
@@ -115,11 +118,11 @@ public class SemanticImageCache {
             "hospital", "doct",
             "cafeteria", "nata", "terrace",
             "airport", "board", "checkpoint",
-            "store", "stall", "aisle", "trolley", "shopkeeper", "cashier",
+            "store", "stall", "aisle", "trolley", "shopkeeper",
             "bus",
-            "pharmacy", "pharmacist", "medica",
-            "petrol", "galp", "pump", "fuel",
-            "motorway", "highway", "traffic", "toll", "park",
+            "pharmacy", "pharmacist",
+            "petrol", "pump", "fuel",
+            "motorway", "traffic", "toll", "park", "roundabout",
             "immigra", "biometric", "visa"
     );
 
@@ -147,6 +150,7 @@ public class SemanticImageCache {
         s.put("children",  "child");
         s.put("student",   "child");
         s.put("pupil",     "child");
+        s.put("baby",      "child");
         s.put("man",       "person");
         s.put("woman",     "person");
         s.put("lady",      "person");
@@ -155,11 +159,14 @@ public class SemanticImageCache {
         s.put("adult",     "person");
         s.put("applicant", "person");
         s.put("customer",  "person");
+        s.put("parent",    "person");
+        s.put("parents",   "person");
+        s.put("family",    "person");
         // Medical
         s.put("physician", "doctor");
         s.put("nurse",     "doctor");
         s.put("medic",     "doctor");
-        // Locations
+        // Locations & roles
         s.put("shop",      "store");
         s.put("market",    "store");
         s.put("supermarket","store");
@@ -167,6 +174,11 @@ public class SemanticImageCache {
         s.put("cafe",      "cafeteria");
         s.put("pastelaria","cafeteria");
         s.put("gas",       "petrol");
+        s.put("galp",      "petrol");
+        s.put("gasoline",  "fuel");
+        s.put("diesel",    "fuel");
+        s.put("assistant", "attendant");
+        s.put("cashier",   "attendant");
         s.put("classroom", "school");
         s.put("airport",   "airport");
         s.put("pharmacy",  "pharmacy");
@@ -178,7 +190,27 @@ public class SemanticImageCache {
         s.put("eatery",    "restaurant");
         s.put("aima",      "immigration");
         s.put("government","immigration");
+        s.put("highway",   "motorway");
+        s.put("backseat",  "seat");
+        s.put("dispenser", "machine");
+        s.put("saline",    "medication");
+        s.put("ampoule",   "medication");
+        s.put("ampoules",  "medication");
         // Actions
+        s.put("steering",   "drive");
+        s.put("steers",     "drive");
+        s.put("steered",    "drive");
+        s.put("navigating", "drive");
+        s.put("navigates",  "drive");
+        s.put("navigated",  "drive");
+        s.put("approaching","drive");
+        s.put("approaches", "drive");
+        s.put("approached", "drive");
+        s.put("pulling",    "drive");
+        s.put("changing",   "drive");
+        s.put("reversing",  "park");
+        s.put("reverses",   "park");
+        s.put("reversed",   "park");
         s.put("eating",    "eat");
         s.put("eats",      "eat");
         s.put("ate",       "eat");
@@ -570,7 +602,9 @@ public class SemanticImageCache {
      */
     static String[] tokenise(String text) {
         String ascii = Normalizer.normalize(text.toLowerCase(), Normalizer.Form.NFD)
-                .replaceAll("\\p{M}+", "");
+                .replaceAll("\\p{M}+", "")
+                .replaceAll("\\bbank\\s+cards?\\b", "card")
+                .replaceAll("\\b(?:convenience|petrol|gas|galp)\\s+(?:shop|store)s?\\b", "petrol counter");
         return Arrays.stream(ascii.split("[^a-z0-9]+"))
                 .filter(t -> t.length() > 1)
                 .filter(t -> !STOP_WORDS.contains(t))

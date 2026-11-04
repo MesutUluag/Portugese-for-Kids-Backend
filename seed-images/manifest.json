@@ -1,11 +1,11 @@
 [
   {
-    "id": "M-18",
-    "filename": "M-18.jpeg",
-    "sha256": "2c96b815e50bafaf9adef214ed2dad766c1355e326fa2955013bc645f7922c4f",
-    "prompt": "an adult handing a stack of bank statement papers over a counter at an immigration office, colorful friendly illustration, storybook art, bright colors, simple background, no text",
-    "destination_blob_image": "image-cache/2c96b815e50bafaf9adef214ed2dad766c1355e326fa2955013bc645f7922c4f/image.jpg",
-    "destination_blob_prompt": "image-cache/2c96b815e50bafaf9adef214ed2dad766c1355e326fa2955013bc645f7922c4f/prompt.txt"
+    "id": "M-01",
+    "filename": "M-01.jpeg",
+    "sha256": "b312c27840daba179f1de9daed071821602cacedc2ca57af57ddd0ab70a82672",
+    "prompt": "children sitting together at a school canteen table with food trays, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/b312c27840daba179f1de9daed071821602cacedc2ca57af57ddd0ab70a82672/image.jpg",
+    "destination_blob_prompt": "image-cache/b312c27840daba179f1de9daed071821602cacedc2ca57af57ddd0ab70a82672/prompt.txt"
   },
   {
     "id": "M-02",
@@ -16,36 +16,12 @@
     "destination_blob_prompt": "image-cache/a51478182c11271f971b84538b4b011c99e45a2087926baf3fb0e2e21f4eeca4/prompt.txt"
   },
   {
-    "id": "M-14",
-    "filename": "M-14.jpeg",
-    "sha256": "1e854cb4a737000c0cd81c0fb824ef62911f6358092b855484faf4282c9cf811",
-    "prompt": "a person sitting in a government office waiting room with numbered tickets and plastic chairs, colorful friendly illustration, storybook art, bright colors, simple background, no text",
-    "destination_blob_image": "image-cache/1e854cb4a737000c0cd81c0fb824ef62911f6358092b855484faf4282c9cf811/image.jpg",
-    "destination_blob_prompt": "image-cache/1e854cb4a737000c0cd81c0fb824ef62911f6358092b855484faf4282c9cf811/prompt.txt"
-  },
-  {
-    "id": "M-15",
-    "filename": "M-15.jpeg",
-    "sha256": "13b09024652a28035d1db6e6663f656c0306823c06e9fe2b2f6446ae694f3032",
-    "prompt": "an adult at an immigration office counter handing over a visa application form, colorful friendly illustration, storybook art, bright colors, simple background, no text",
-    "destination_blob_image": "image-cache/13b09024652a28035d1db6e6663f656c0306823c06e9fe2b2f6446ae694f3032/image.jpg",
-    "destination_blob_prompt": "image-cache/13b09024652a28035d1db6e6663f656c0306823c06e9fe2b2f6446ae694f3032/prompt.txt"
-  },
-  {
     "id": "M-03",
     "filename": "M-03.jpeg",
     "sha256": "94c14d930a88c30961061dadd9de9fdb2010f619ffabd666a3c9d03b8c4f20fc",
     "prompt": "a family sitting in a hospital waiting room with plastic chairs and a number display board, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
     "destination_blob_image": "image-cache/94c14d930a88c30961061dadd9de9fdb2010f619ffabd666a3c9d03b8c4f20fc/image.jpg",
     "destination_blob_prompt": "image-cache/94c14d930a88c30961061dadd9de9fdb2010f619ffabd666a3c9d03b8c4f20fc/prompt.txt"
-  },
-  {
-    "id": "M-19",
-    "filename": "M-19.jpeg",
-    "sha256": "b736d3574a757026e1124ef40c3f7b94f31ce0b172b95a54d2f76b3ce355e9d2",
-    "prompt": "an adult pointing to a bank statement showing a Portuguese bank account balance at an immigration office counter, colorful friendly illustration, storybook art, bright colors, simple background, no text",
-    "destination_blob_image": "image-cache/b736d3574a757026e1124ef40c3f7b94f31ce0b172b95a54d2f76b3ce355e9d2/image.jpg",
-    "destination_blob_prompt": "image-cache/b736d3574a757026e1124ef40c3f7b94f31ce0b172b95a54d2f76b3ce355e9d2/prompt.txt"
   },
   {
     "id": "M-04",
@@ -56,52 +32,12 @@
     "destination_blob_prompt": "image-cache/e316f573266dfdaa67150ba35e5e362db0929562a18e5ace1c26417ce9ebf8c6/prompt.txt"
   },
   {
-    "id": "M-12",
-    "filename": "M-12.jpeg",
-    "sha256": "e9e95d4e036a4c66031577aabe41c1acb4e857e439e2c3a3fb476240a7ab8394",
-    "prompt": "a family car stuck in heavy traffic on a Portuguese motorway with many cars queued, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
-    "destination_blob_image": "image-cache/e9e95d4e036a4c66031577aabe41c1acb4e857e439e2c3a3fb476240a7ab8394/image.jpg",
-    "destination_blob_prompt": "image-cache/e9e95d4e036a4c66031577aabe41c1acb4e857e439e2c3a3fb476240a7ab8394/prompt.txt"
-  },
-  {
-    "id": "M-08",
-    "filename": "M-08.jpeg",
-    "sha256": "60148589e766b838e2ff1159fed10c21672438897846ce9950e7251d1c3fce9c",
-    "prompt": "a child pointing at apples at a Portuguese market stall asking the price to a friendly shopkeeper, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
-    "destination_blob_image": "image-cache/60148589e766b838e2ff1159fed10c21672438897846ce9950e7251d1c3fce9c/image.jpg",
-    "destination_blob_prompt": "image-cache/60148589e766b838e2ff1159fed10c21672438897846ce9950e7251d1c3fce9c/prompt.txt"
-  },
-  {
-    "id": "M-09",
-    "filename": "M-09.jpeg",
-    "sha256": "bcd606bf6998a5a67f0d30ef7d420c5d952e67b4024c0e3cccd7f0e5ac909717",
-    "prompt": "a family boarding a yellow bus and tapping their travel card on the validator near the driver, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
-    "destination_blob_image": "image-cache/bcd606bf6998a5a67f0d30ef7d420c5d952e67b4024c0e3cccd7f0e5ac909717/image.jpg",
-    "destination_blob_prompt": "image-cache/bcd606bf6998a5a67f0d30ef7d420c5d952e67b4024c0e3cccd7f0e5ac909717/prompt.txt"
-  },
-  {
-    "id": "M-13",
-    "filename": "M-13.jpeg",
-    "sha256": "2e4aec123d2ce0b1f9bf274f3a54f6f0a00972b509d3cae4df7a62be701db91e",
-    "prompt": "a car passing through a Via Verde toll gantry on a Portuguese highway, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
-    "destination_blob_image": "image-cache/2e4aec123d2ce0b1f9bf274f3a54f6f0a00972b509d3cae4df7a62be701db91e/image.jpg",
-    "destination_blob_prompt": "image-cache/2e4aec123d2ce0b1f9bf274f3a54f6f0a00972b509d3cae4df7a62be701db91e/prompt.txt"
-  },
-  {
     "id": "M-05",
     "filename": "M-05.jpeg",
     "sha256": "c583e65059773fcab1f9fdcee3151c4643ea49859cba9f9e598589594c17731c",
     "prompt": "a family waiting at an airport boarding gate with hand luggage and a departure screen, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
     "destination_blob_image": "image-cache/c583e65059773fcab1f9fdcee3151c4643ea49859cba9f9e598589594c17731c/image.jpg",
     "destination_blob_prompt": "image-cache/c583e65059773fcab1f9fdcee3151c4643ea49859cba9f9e598589594c17731c/prompt.txt"
-  },
-  {
-    "id": "M-10",
-    "filename": "M-10.jpeg",
-    "sha256": "29d7116baacd80ff11becab0471b1885756d09907cfcb5eef41e0485206a3d39",
-    "prompt": "a pharmacist handing a medicine box to a parent at a bright pharmacy counter under a green cross sign, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
-    "destination_blob_image": "image-cache/29d7116baacd80ff11becab0471b1885756d09907cfcb5eef41e0485206a3d39/image.jpg",
-    "destination_blob_prompt": "image-cache/29d7116baacd80ff11becab0471b1885756d09907cfcb5eef41e0485206a3d39/prompt.txt"
   },
   {
     "id": "M-06",
@@ -120,12 +56,68 @@
     "destination_blob_prompt": "image-cache/0037dee7db6b262105dd5e4981726cde008204d7b25cfcf604cea27359568be8/prompt.txt"
   },
   {
+    "id": "M-08",
+    "filename": "M-08.jpeg",
+    "sha256": "60148589e766b838e2ff1159fed10c21672438897846ce9950e7251d1c3fce9c",
+    "prompt": "a child pointing at apples at a Portuguese market stall asking the price to a friendly shopkeeper, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/60148589e766b838e2ff1159fed10c21672438897846ce9950e7251d1c3fce9c/image.jpg",
+    "destination_blob_prompt": "image-cache/60148589e766b838e2ff1159fed10c21672438897846ce9950e7251d1c3fce9c/prompt.txt"
+  },
+  {
+    "id": "M-09",
+    "filename": "M-09.jpeg",
+    "sha256": "bcd606bf6998a5a67f0d30ef7d420c5d952e67b4024c0e3cccd7f0e5ac909717",
+    "prompt": "a family boarding a yellow bus and tapping their travel card on the validator near the driver, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/bcd606bf6998a5a67f0d30ef7d420c5d952e67b4024c0e3cccd7f0e5ac909717/image.jpg",
+    "destination_blob_prompt": "image-cache/bcd606bf6998a5a67f0d30ef7d420c5d952e67b4024c0e3cccd7f0e5ac909717/prompt.txt"
+  },
+  {
+    "id": "M-10",
+    "filename": "M-10.jpeg",
+    "sha256": "29d7116baacd80ff11becab0471b1885756d09907cfcb5eef41e0485206a3d39",
+    "prompt": "a pharmacist handing a medicine box to a parent at a bright pharmacy counter under a green cross sign, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/29d7116baacd80ff11becab0471b1885756d09907cfcb5eef41e0485206a3d39/image.jpg",
+    "destination_blob_prompt": "image-cache/29d7116baacd80ff11becab0471b1885756d09907cfcb5eef41e0485206a3d39/prompt.txt"
+  },
+  {
     "id": "M-11",
     "filename": "M-11.jpeg",
     "sha256": "bf68cb928ec48003c2e5430479e3afa7c1551fceb9f7aa87f75969d8cba2f49b",
     "prompt": "a family car parked at a Galp petrol station forecourt next to a fuel pump, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
     "destination_blob_image": "image-cache/bf68cb928ec48003c2e5430479e3afa7c1551fceb9f7aa87f75969d8cba2f49b/image.jpg",
     "destination_blob_prompt": "image-cache/bf68cb928ec48003c2e5430479e3afa7c1551fceb9f7aa87f75969d8cba2f49b/prompt.txt"
+  },
+  {
+    "id": "M-12",
+    "filename": "M-12.jpeg",
+    "sha256": "e9e95d4e036a4c66031577aabe41c1acb4e857e439e2c3a3fb476240a7ab8394",
+    "prompt": "a family car stuck in heavy traffic on a Portuguese motorway with many cars queued, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/e9e95d4e036a4c66031577aabe41c1acb4e857e439e2c3a3fb476240a7ab8394/image.jpg",
+    "destination_blob_prompt": "image-cache/e9e95d4e036a4c66031577aabe41c1acb4e857e439e2c3a3fb476240a7ab8394/prompt.txt"
+  },
+  {
+    "id": "M-13",
+    "filename": "M-13.jpeg",
+    "sha256": "2e4aec123d2ce0b1f9bf274f3a54f6f0a00972b509d3cae4df7a62be701db91e",
+    "prompt": "a car passing through a Via Verde toll gantry on a Portuguese highway, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/2e4aec123d2ce0b1f9bf274f3a54f6f0a00972b509d3cae4df7a62be701db91e/image.jpg",
+    "destination_blob_prompt": "image-cache/2e4aec123d2ce0b1f9bf274f3a54f6f0a00972b509d3cae4df7a62be701db91e/prompt.txt"
+  },
+  {
+    "id": "M-14",
+    "filename": "M-14.jpeg",
+    "sha256": "1e854cb4a737000c0cd81c0fb824ef62911f6358092b855484faf4282c9cf811",
+    "prompt": "a person sitting in a government office waiting room with numbered tickets and plastic chairs, colorful friendly illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/1e854cb4a737000c0cd81c0fb824ef62911f6358092b855484faf4282c9cf811/image.jpg",
+    "destination_blob_prompt": "image-cache/1e854cb4a737000c0cd81c0fb824ef62911f6358092b855484faf4282c9cf811/prompt.txt"
+  },
+  {
+    "id": "M-15",
+    "filename": "M-15.jpeg",
+    "sha256": "13b09024652a28035d1db6e6663f656c0306823c06e9fe2b2f6446ae694f3032",
+    "prompt": "an adult at an immigration office counter handing over a visa application form, colorful friendly illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/13b09024652a28035d1db6e6663f656c0306823c06e9fe2b2f6446ae694f3032/image.jpg",
+    "destination_blob_prompt": "image-cache/13b09024652a28035d1db6e6663f656c0306823c06e9fe2b2f6446ae694f3032/prompt.txt"
   },
   {
     "id": "M-16",
@@ -136,20 +128,28 @@
     "destination_blob_prompt": "image-cache/e93f384ee757c12e02f173820d2a90f79e3d6a5aa667c319929474f1c8b7119d/prompt.txt"
   },
   {
-    "id": "M-01",
-    "filename": "M-01.jpeg",
-    "sha256": "b312c27840daba179f1de9daed071821602cacedc2ca57af57ddd0ab70a82672",
-    "prompt": "children sitting together at a school canteen table with food trays, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
-    "destination_blob_image": "image-cache/b312c27840daba179f1de9daed071821602cacedc2ca57af57ddd0ab70a82672/image.jpg",
-    "destination_blob_prompt": "image-cache/b312c27840daba179f1de9daed071821602cacedc2ca57af57ddd0ab70a82672/prompt.txt"
-  },
-  {
     "id": "M-17",
     "filename": "M-17.jpeg",
     "sha256": "be1ba0c9e0d7118ef405404b9ced70fe5517715b55a6b806662ec94c1e7225b8",
     "prompt": "a parent at an official government service counter checking their appointment on their phone, colorful friendly illustration, storybook art, bright colors, simple background, no text",
     "destination_blob_image": "image-cache/be1ba0c9e0d7118ef405404b9ced70fe5517715b55a6b806662ec94c1e7225b8/image.jpg",
     "destination_blob_prompt": "image-cache/be1ba0c9e0d7118ef405404b9ced70fe5517715b55a6b806662ec94c1e7225b8/prompt.txt"
+  },
+  {
+    "id": "M-18",
+    "filename": "M-18.jpeg",
+    "sha256": "2c96b815e50bafaf9adef214ed2dad766c1355e326fa2955013bc645f7922c4f",
+    "prompt": "an adult handing a stack of bank statement papers over a counter at an immigration office, colorful friendly illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/2c96b815e50bafaf9adef214ed2dad766c1355e326fa2955013bc645f7922c4f/image.jpg",
+    "destination_blob_prompt": "image-cache/2c96b815e50bafaf9adef214ed2dad766c1355e326fa2955013bc645f7922c4f/prompt.txt"
+  },
+  {
+    "id": "M-19",
+    "filename": "M-19.jpeg",
+    "sha256": "b736d3574a757026e1124ef40c3f7b94f31ce0b172b95a54d2f76b3ce355e9d2",
+    "prompt": "an adult pointing to a bank statement showing a Portuguese bank account balance at an immigration office counter, colorful friendly illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/b736d3574a757026e1124ef40c3f7b94f31ce0b172b95a54d2f76b3ce355e9d2/image.jpg",
+    "destination_blob_prompt": "image-cache/b736d3574a757026e1124ef40c3f7b94f31ce0b172b95a54d2f76b3ce355e9d2/prompt.txt"
   },
   {
     "id": "M-20",
@@ -758,5 +758,389 @@
     "prompt": "a parent and child standing outside a Portuguese pharmacy with a glowing green cross sign in the evening, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
     "destination_blob_image": "image-cache/b206395115bfe63832349eb6db6a2f15d2e52810b5b0bcdcde74e61c0a591b7d/image.jpg",
     "destination_blob_prompt": "image-cache/b206395115bfe63832349eb6db6a2f15d2e52810b5b0bcdcde74e61c0a591b7d/prompt.txt"
+  },
+  {
+    "id": "M-96",
+    "filename": "M-96.jpg",
+    "sha256": "027bcdef5a90d1f8567ec629af43696e12a7028a24eb85d87c803c1150f707a1",
+    "prompt": "a person at a Portuguese bank counter with a glass screen talking to a teller in formal clothing, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/027bcdef5a90d1f8567ec629af43696e12a7028a24eb85d87c803c1150f707a1/image.jpg",
+    "destination_blob_prompt": "image-cache/027bcdef5a90d1f8567ec629af43696e12a7028a24eb85d87c803c1150f707a1/prompt.txt"
+  },
+  {
+    "id": "M-97",
+    "filename": "M-97.jpg",
+    "sha256": "066d473da2579554341ba75dcfc903fe3b6ea40e1a94badf503d9e5db440d2fb",
+    "prompt": "a parent using a smartphone to pay for parking on a Lisbon street with colorful buildings, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/066d473da2579554341ba75dcfc903fe3b6ea40e1a94badf503d9e5db440d2fb/image.jpg",
+    "destination_blob_prompt": "image-cache/066d473da2579554341ba75dcfc903fe3b6ea40e1a94badf503d9e5db440d2fb/prompt.txt"
+  },
+  {
+    "id": "M-98",
+    "filename": "M-98.jpg",
+    "sha256": "07d6b3dc6e6c7d314e2990397d30bbfb13082a0038b52209a50cc52b318c4fca",
+    "prompt": "a person placing fingers on a biometric reader at an immigration office counter, colorful friendly illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/07d6b3dc6e6c7d314e2990397d30bbfb13082a0038b52209a50cc52b318c4fca/image.jpg",
+    "destination_blob_prompt": "image-cache/07d6b3dc6e6c7d314e2990397d30bbfb13082a0038b52209a50cc52b318c4fca/prompt.txt"
+  },
+  {
+    "id": "M-99",
+    "filename": "M-99.jpg",
+    "sha256": "089c04cf446744440c4a1f5d443b1722468557f5575c871fecb230918b0347f8",
+    "prompt": "an adult at an AIMA immigration office counter with a formal officer and a folder of documents, colorful friendly illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/089c04cf446744440c4a1f5d443b1722468557f5575c871fecb230918b0347f8/image.jpg",
+    "destination_blob_prompt": "image-cache/089c04cf446744440c4a1f5d443b1722468557f5575c871fecb230918b0347f8/prompt.txt"
+  },
+  {
+    "id": "M-100",
+    "filename": "M-100.jpg",
+    "sha256": "0a2e219a6a78589d5ca57ded3eaef6dce3297db79fbdb660e71583e2748a86dd",
+    "prompt": "a child and parent waiting at a Lisbon bus stop with a yellow bus approaching, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/0a2e219a6a78589d5ca57ded3eaef6dce3297db79fbdb660e71583e2748a86dd/image.jpg",
+    "destination_blob_prompt": "image-cache/0a2e219a6a78589d5ca57ded3eaef6dce3297db79fbdb660e71583e2748a86dd/prompt.txt"
+  },
+  {
+    "id": "M-101",
+    "filename": "M-101.jpg",
+    "sha256": "1a3d8e147636c3ec0fb01d5198746aa3a2cdff8e4ca05811c5416c0536ac4ce1",
+    "prompt": "a child sitting at a school desk in a bright classroom with a teacher at the front, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/1a3d8e147636c3ec0fb01d5198746aa3a2cdff8e4ca05811c5416c0536ac4ce1/image.jpg",
+    "destination_blob_prompt": "image-cache/1a3d8e147636c3ec0fb01d5198746aa3a2cdff8e4ca05811c5416c0536ac4ce1/prompt.txt"
+  },
+  {
+    "id": "M-102",
+    "filename": "M-102.jpg",
+    "sha256": "1f24d1e09133e15cf1700171a937c10ceb6bb03acb39c7786d03bbe248977e39",
+    "prompt": "a parent and child at a hospital reception desk with a receptionist in a bright health centre, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/1f24d1e09133e15cf1700171a937c10ceb6bb03acb39c7786d03bbe248977e39/image.jpg",
+    "destination_blob_prompt": "image-cache/1f24d1e09133e15cf1700171a937c10ceb6bb03acb39c7786d03bbe248977e39/prompt.txt"
+  },
+  {
+    "id": "M-103",
+    "filename": "M-103.jpg",
+    "sha256": "26fc387228a9920ee7d76bcf186c36f27a7e317438dd4be52387cb9d6d108bbc",
+    "prompt": "a teacher standing in a bright classroom with a whiteboard, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/26fc387228a9920ee7d76bcf186c36f27a7e317438dd4be52387cb9d6d108bbc/image.jpg",
+    "destination_blob_prompt": "image-cache/26fc387228a9920ee7d76bcf186c36f27a7e317438dd4be52387cb9d6d108bbc/prompt.txt"
+  },
+  {
+    "id": "M-104",
+    "filename": "M-104.jpg",
+    "sha256": "27dd14bfb25b409a186e76525da506a4d0df9664411d6d2a3bb507bf6bfd783d",
+    "prompt": "a parent at a petrol station convenience shop counter paying while a child waits, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/27dd14bfb25b409a186e76525da506a4d0df9664411d6d2a3bb507bf6bfd783d/image.jpg",
+    "destination_blob_prompt": "image-cache/27dd14bfb25b409a186e76525da506a4d0df9664411d6d2a3bb507bf6bfd783d/prompt.txt"
+  },
+  {
+    "id": "M-105",
+    "filename": "M-105.jpg",
+    "sha256": "3a8033e53aefb99d6d3101bc1715c9e2fb9aa9a72ec4cd3f523b3e08206a9663",
+    "prompt": "a teacher helping a child at a school desk in a bright classroom, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/3a8033e53aefb99d6d3101bc1715c9e2fb9aa9a72ec4cd3f523b3e08206a9663/image.jpg",
+    "destination_blob_prompt": "image-cache/3a8033e53aefb99d6d3101bc1715c9e2fb9aa9a72ec4cd3f523b3e08206a9663/prompt.txt"
+  },
+  {
+    "id": "M-106",
+    "filename": "M-106.jpg",
+    "sha256": "45a9b5d1d22bd5fcfaff63505d3fc03c28d8a01d435754e9f26341120a91e5e8",
+    "prompt": "a doctor in a white coat talking to a parent and child at a desk in a bright Portuguese clinic, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/45a9b5d1d22bd5fcfaff63505d3fc03c28d8a01d435754e9f26341120a91e5e8/image.jpg",
+    "destination_blob_prompt": "image-cache/45a9b5d1d22bd5fcfaff63505d3fc03c28d8a01d435754e9f26341120a91e5e8/prompt.txt"
+  },
+  {
+    "id": "M-107",
+    "filename": "M-107.jpg",
+    "sha256": "4f21ae4b349e52c79a23c918c2e3121608a6986ee785d1816b34383ab09f9483",
+    "prompt": "two children talking together in a sunny school playground, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/4f21ae4b349e52c79a23c918c2e3121608a6986ee785d1816b34383ab09f9483/image.jpg",
+    "destination_blob_prompt": "image-cache/4f21ae4b349e52c79a23c918c2e3121608a6986ee785d1816b34383ab09f9483/prompt.txt"
+  },
+  {
+    "id": "M-108",
+    "filename": "M-108.jpg",
+    "sha256": "5e088e6b71453d4aa76b8566aeea8788b163520a8f3fd681777b70b93d739450",
+    "prompt": "a family with suitcases at a Portuguese airport check-in counter with an airline agent, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/5e088e6b71453d4aa76b8566aeea8788b163520a8f3fd681777b70b93d739450/image.jpg",
+    "destination_blob_prompt": "image-cache/5e088e6b71453d4aa76b8566aeea8788b163520a8f3fd681777b70b93d739450/prompt.txt"
+  },
+  {
+    "id": "M-109",
+    "filename": "M-109.jpg",
+    "sha256": "671a0dbfb344349955889a0559425723d93bfd27419965df7e3bd75884f1fd38",
+    "prompt": "a person using a Multibanco ATM machine inside a bright Portuguese bank, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/671a0dbfb344349955889a0559425723d93bfd27419965df7e3bd75884f1fd38/image.jpg",
+    "destination_blob_prompt": "image-cache/671a0dbfb344349955889a0559425723d93bfd27419965df7e3bd75884f1fd38/prompt.txt"
+  },
+  {
+    "id": "M-110",
+    "filename": "M-110.jpg",
+    "sha256": "6be9b86165f6a191651e77d137d110268f77ab30fa56b9a4e8fef99348037047",
+    "prompt": "a child sitting on an examination table while a doctor in a white coat checks them in a bright clinic, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/6be9b86165f6a191651e77d137d110268f77ab30fa56b9a4e8fef99348037047/image.jpg",
+    "destination_blob_prompt": "image-cache/6be9b86165f6a191651e77d137d110268f77ab30fa56b9a4e8fef99348037047/prompt.txt"
+  },
+  {
+    "id": "M-111",
+    "filename": "M-111.jpg",
+    "sha256": "78e43ea16de5c9d047dd2cd3dcfab449abff1d491ec8efa732333a04912acd86",
+    "prompt": "a parent at a Portuguese Galp gas station choosing fuel at the pump, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/78e43ea16de5c9d047dd2cd3dcfab449abff1d491ec8efa732333a04912acd86/image.jpg",
+    "destination_blob_prompt": "image-cache/78e43ea16de5c9d047dd2cd3dcfab449abff1d491ec8efa732333a04912acd86/prompt.txt"
+  },
+  {
+    "id": "M-112",
+    "filename": "M-112.jpg",
+    "sha256": "7c39e2402e874f328f48e1ff585414a15d0b70c1a5c11cdd3967cf85f8b2fb42",
+    "prompt": "a parent parking a car on a Lisbon street with colourful buildings nearby, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/7c39e2402e874f328f48e1ff585414a15d0b70c1a5c11cdd3967cf85f8b2fb42/image.jpg",
+    "destination_blob_prompt": "image-cache/7c39e2402e874f328f48e1ff585414a15d0b70c1a5c11cdd3967cf85f8b2fb42/prompt.txt"
+  },
+  {
+    "id": "M-113",
+    "filename": "M-113.jpg",
+    "sha256": "8d3056ecca01e1dae645baaa051d74020b087a890f6aeb7b488c8fc3c3af73a4",
+    "prompt": "a parent talking to a doctor in a bright clinic, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/8d3056ecca01e1dae645baaa051d74020b087a890f6aeb7b488c8fc3c3af73a4/image.jpg",
+    "destination_blob_prompt": "image-cache/8d3056ecca01e1dae645baaa051d74020b087a890f6aeb7b488c8fc3c3af73a4/prompt.txt"
+  },
+  {
+    "id": "M-114",
+    "filename": "M-114.jpg",
+    "sha256": "960374a33a0158ffbad8665ccb2d1b5d32f7a363a2d306994ed6888e79de794e",
+    "prompt": "a family sitting at a wooden table in a cozy Portuguese restaurant with a waiter in an apron nearby, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/960374a33a0158ffbad8665ccb2d1b5d32f7a363a2d306994ed6888e79de794e/image.jpg",
+    "destination_blob_prompt": "image-cache/960374a33a0158ffbad8665ccb2d1b5d32f7a363a2d306994ed6888e79de794e/prompt.txt"
+  },
+  {
+    "id": "M-115",
+    "filename": "M-115.jpg",
+    "sha256": "9f5cec65e2ae2d6d2de388bc36a6520a13ced99cee30e6e63e73baadfc9d4438",
+    "prompt": "a person standing at a traditional Portuguese caf\u00e9 counter with pasteis de nata under glass and a waiter behind it, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/9f5cec65e2ae2d6d2de388bc36a6520a13ced99cee30e6e63e73baadfc9d4438/image.jpg",
+    "destination_blob_prompt": "image-cache/9f5cec65e2ae2d6d2de388bc36a6520a13ced99cee30e6e63e73baadfc9d4438/prompt.txt"
+  },
+  {
+    "id": "M-116",
+    "filename": "M-116.jpg",
+    "sha256": "a301e3cb03e45e47f013f1f4e34e0184f17e9eda807a336de8a9c3b9be5e1902",
+    "prompt": "an attendant at a Portuguese Galp petrol station talking to a driver at the pump, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/a301e3cb03e45e47f013f1f4e34e0184f17e9eda807a336de8a9c3b9be5e1902/image.jpg",
+    "destination_blob_prompt": "image-cache/a301e3cb03e45e47f013f1f4e34e0184f17e9eda807a336de8a9c3b9be5e1902/prompt.txt"
+  },
+  {
+    "id": "M-117",
+    "filename": "M-117.jpg",
+    "sha256": "acbc81f98c4eb587f33a16a6b72522894325f55b212f74d6b39529b628590390",
+    "prompt": "a family with suitcases in an airport arrivals hall with metro and taxi exit signs, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/acbc81f98c4eb587f33a16a6b72522894325f55b212f74d6b39529b628590390/image.jpg",
+    "destination_blob_prompt": "image-cache/acbc81f98c4eb587f33a16a6b72522894325f55b212f74d6b39529b628590390/prompt.txt"
+  },
+  {
+    "id": "M-118",
+    "filename": "M-118.jpg",
+    "sha256": "b0fdab654b4201ab6fe5cd32ad454d559cb391654a06d80a3c7bebd237b37e4d",
+    "prompt": "a waiter with a notepad standing at a wooden table in a traditional Portuguese restaurant, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/b0fdab654b4201ab6fe5cd32ad454d559cb391654a06d80a3c7bebd237b37e4d/image.jpg",
+    "destination_blob_prompt": "image-cache/b0fdab654b4201ab6fe5cd32ad454d559cb391654a06d80a3c7bebd237b37e4d/prompt.txt"
+  },
+  {
+    "id": "M-119",
+    "filename": "M-119.jpg",
+    "sha256": "b849bde858291783682beb802197ee49c252079b376aeb5bc9ca2574ea210668",
+    "prompt": "a child and parent at a colourful Portuguese market stall with fruit and vegetables on display, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/b849bde858291783682beb802197ee49c252079b376aeb5bc9ca2574ea210668/image.jpg",
+    "destination_blob_prompt": "image-cache/b849bde858291783682beb802197ee49c252079b376aeb5bc9ca2574ea210668/prompt.txt"
+  },
+  {
+    "id": "M-120",
+    "filename": "M-120.jpg",
+    "sha256": "b87b494c0d329a5e85ca5169fdc8c93d9e6d2c2870af27002ba2e9b8d115f1ed",
+    "prompt": "a doctor in a white coat holding a thermometer near a child in a bright clinic, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/b87b494c0d329a5e85ca5169fdc8c93d9e6d2c2870af27002ba2e9b8d115f1ed/image.jpg",
+    "destination_blob_prompt": "image-cache/b87b494c0d329a5e85ca5169fdc8c93d9e6d2c2870af27002ba2e9b8d115f1ed/prompt.txt"
+  },
+  {
+    "id": "M-121",
+    "filename": "M-121.jpg",
+    "sha256": "bc393419efd4a431897eff1c7804db2fbf9fe8196cc24ea45958a4f04bce4b51",
+    "prompt": "a parent checking a mobile phone in a bright clinic with a doctor in a white coat nearby, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/bc393419efd4a431897eff1c7804db2fbf9fe8196cc24ea45958a4f04bce4b51/image.jpg",
+    "destination_blob_prompt": "image-cache/bc393419efd4a431897eff1c7804db2fbf9fe8196cc24ea45958a4f04bce4b51/prompt.txt"
+  },
+  {
+    "id": "M-122",
+    "filename": "M-122.jpg",
+    "sha256": "c2c8189320ce3c6a344c505b031836393ca6abf716195cf1562b3b3cdae84510",
+    "prompt": "a family sitting at a small round table in a sunny Portuguese caf\u00e9 with a waiter nearby, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/c2c8189320ce3c6a344c505b031836393ca6abf716195cf1562b3b3cdae84510/image.jpg",
+    "destination_blob_prompt": "image-cache/c2c8189320ce3c6a344c505b031836393ca6abf716195cf1562b3b3cdae84510/prompt.txt"
+  },
+  {
+    "id": "M-123",
+    "filename": "M-123.jpg",
+    "sha256": "c32569814ce9dd1e52c8d7e79d4c28f08384b15549d77e6ca374661d68217965",
+    "prompt": "a parent driving a car on a Portuguese road with a child looking out the window, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/c32569814ce9dd1e52c8d7e79d4c28f08384b15549d77e6ca374661d68217965/image.jpg",
+    "destination_blob_prompt": "image-cache/c32569814ce9dd1e52c8d7e79d4c28f08384b15549d77e6ca374661d68217965/prompt.txt"
+  },
+  {
+    "id": "M-124",
+    "filename": "M-124.jpg",
+    "sha256": "c36f47dc9909991d6cbd324591fb80ef1505acae809ed5149c176974cd16541d",
+    "prompt": "a doctor in a white coat typing on a computer in a bright Portuguese clinic, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/c36f47dc9909991d6cbd324591fb80ef1505acae809ed5149c176974cd16541d/image.jpg",
+    "destination_blob_prompt": "image-cache/c36f47dc9909991d6cbd324591fb80ef1505acae809ed5149c176974cd16541d/prompt.txt"
+  },
+  {
+    "id": "M-125",
+    "filename": "M-125.jpg",
+    "sha256": "cc442efd728d1d32449c54eae299adde20729d0ae26b16d0604960fec3f3a160",
+    "prompt": "a family driving a car on a sunny Portuguese road, child looking out the window, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/cc442efd728d1d32449c54eae299adde20729d0ae26b16d0604960fec3f3a160/image.jpg",
+    "destination_blob_prompt": "image-cache/cc442efd728d1d32449c54eae299adde20729d0ae26b16d0604960fec3f3a160/prompt.txt"
+  },
+  {
+    "id": "M-126",
+    "filename": "M-126.jpg",
+    "sha256": "da0c52d27e0ba2d53cd0e48fa00593f6927ed0931926a147c4583bf1a8ef98b2",
+    "prompt": "a teacher standing in a bright classroom with children working at their desks, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/da0c52d27e0ba2d53cd0e48fa00593f6927ed0931926a147c4583bf1a8ef98b2/image.jpg",
+    "destination_blob_prompt": "image-cache/da0c52d27e0ba2d53cd0e48fa00593f6927ed0931926a147c4583bf1a8ef98b2/prompt.txt"
+  },
+  {
+    "id": "M-127",
+    "filename": "M-127.jpg",
+    "sha256": "da6d51026e8eccede8461b26c0f546a58792b0e73c1a45cdcf6c1c7c6059989f",
+    "prompt": "a family at an airport security checkpoint with bags on a conveyor belt and an X-ray scanner, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/da6d51026e8eccede8461b26c0f546a58792b0e73c1a45cdcf6c1c7c6059989f/image.jpg",
+    "destination_blob_prompt": "image-cache/da6d51026e8eccede8461b26c0f546a58792b0e73c1a45cdcf6c1c7c6059989f/prompt.txt"
+  },
+  {
+    "id": "M-128",
+    "filename": "M-128.jpg",
+    "sha256": "e7d9f2d4c3b3e0e9179e6dd2c1df3795756d200d2f22c3525f1f9dbccdab1073",
+    "prompt": "a parent asking for the air pressure machine at a Portuguese petrol station, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/e7d9f2d4c3b3e0e9179e6dd2c1df3795756d200d2f22c3525f1f9dbccdab1073/image.jpg",
+    "destination_blob_prompt": "image-cache/e7d9f2d4c3b3e0e9179e6dd2c1df3795756d200d2f22c3525f1f9dbccdab1073/prompt.txt"
+  },
+  {
+    "id": "M-129",
+    "filename": "M-129.jpg",
+    "sha256": "ebd79a301b8addf935a6412161bd1cc3a0cb2588b3e56eb910cb4a662aec4c4a",
+    "prompt": "a parent and child at a Portuguese pharmacy counter with a pharmacist in a white coat and medicine shelves behind, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/ebd79a301b8addf935a6412161bd1cc3a0cb2588b3e56eb910cb4a662aec4c4a/image.jpg",
+    "destination_blob_prompt": "image-cache/ebd79a301b8addf935a6412161bd1cc3a0cb2588b3e56eb910cb4a662aec4c4a/prompt.txt"
+  },
+  {
+    "id": "M-130",
+    "filename": "M-130.jpg",
+    "sha256": "ec7ad97a7202fae44b70be69418592b690f8b26dc37e4d4fc3aa02342615f5bd",
+    "prompt": "a family at a supermarket checkout counter with a cashier, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/ec7ad97a7202fae44b70be69418592b690f8b26dc37e4d4fc3aa02342615f5bd/image.jpg",
+    "destination_blob_prompt": "image-cache/ec7ad97a7202fae44b70be69418592b690f8b26dc37e4d4fc3aa02342615f5bd/prompt.txt"
+  },
+  {
+    "id": "M-131",
+    "filename": "M-131.jpg",
+    "sha256": "f27b641c0db5856c3f08840174641ed353cab1511c028933d74c4dd7d2610309",
+    "prompt": "a family sitting on a yellow Lisbon bus looking out the window at a Portuguese city street, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/f27b641c0db5856c3f08840174641ed353cab1511c028933d74c4dd7d2610309/image.jpg",
+    "destination_blob_prompt": "image-cache/f27b641c0db5856c3f08840174641ed353cab1511c028933d74c4dd7d2610309/prompt.txt"
+  },
+  {
+    "id": "M-132",
+    "filename": "M-132.jpg",
+    "sha256": "facb2ca300401336a60f57d3fb34f9b3a82f9618dbce6a7042a96d42c9534e60",
+    "prompt": "a family at a Portuguese restaurant table with a card payment terminal on the table, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/facb2ca300401336a60f57d3fb34f9b3a82f9618dbce6a7042a96d42c9534e60/image.jpg",
+    "destination_blob_prompt": "image-cache/facb2ca300401336a60f57d3fb34f9b3a82f9618dbce6a7042a96d42c9534e60/prompt.txt"
+  },
+  {
+    "id": "M-133",
+    "filename": "M-133.jpeg",
+    "sha256": "ab4fd0226493a32c87cada133686ef9127d39344f033353499e329f07b56c34d",
+    "prompt": "a young child sitting in the back seat of a car talking to their parents while driving, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/ab4fd0226493a32c87cada133686ef9127d39344f033353499e329f07b56c34d/image.jpg",
+    "destination_blob_prompt": "image-cache/ab4fd0226493a32c87cada133686ef9127d39344f033353499e329f07b56c34d/prompt.txt"
+  },
+  {
+    "id": "M-134",
+    "filename": "M-134.jpeg",
+    "sha256": "d11876761ab1b4c4ab7c78e78daacbc7ed0ad50f0fbd99c2b5f26a3a9f684280",
+    "prompt": "a family car driving on a motorway towards a highway service station sign, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/d11876761ab1b4c4ab7c78e78daacbc7ed0ad50f0fbd99c2b5f26a3a9f684280/image.jpg",
+    "destination_blob_prompt": "image-cache/d11876761ab1b4c4ab7c78e78daacbc7ed0ad50f0fbd99c2b5f26a3a9f684280/prompt.txt"
+  },
+  {
+    "id": "M-135",
+    "filename": "M-135.jpeg",
+    "sha256": "3ed2d31deff3fcd65b7bb197ed74514848d6b79671f6eb5b17eb553a1316e20e",
+    "prompt": "a family car approaching a motorway exit sign with a turn signal indicator on a Portuguese highway, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/3ed2d31deff3fcd65b7bb197ed74514848d6b79671f6eb5b17eb553a1316e20e/image.jpg",
+    "destination_blob_prompt": "image-cache/3ed2d31deff3fcd65b7bb197ed74514848d6b79671f6eb5b17eb553a1316e20e/prompt.txt"
+  },
+  {
+    "id": "M-136",
+    "filename": "M-136.jpeg",
+    "sha256": "291de2b5ba510bc384295037b91f99b2c7292b7794513bbc890996f323e501e0",
+    "prompt": "a driver looking in the mirror while changing lanes on a Portuguese motorway, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/291de2b5ba510bc384295037b91f99b2c7292b7794513bbc890996f323e501e0/image.jpg",
+    "destination_blob_prompt": "image-cache/291de2b5ba510bc384295037b91f99b2c7292b7794513bbc890996f323e501e0/prompt.txt"
+  },
+  {
+    "id": "M-137",
+    "filename": "M-137.jpeg",
+    "sha256": "e62ac99c55dae213aa0131d45cf4697a6ee9e076bf694eb37903a286e20e21be",
+    "prompt": "a driver reversing a car into a street parking space while looking through the rear window, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/e62ac99c55dae213aa0131d45cf4697a6ee9e076bf694eb37903a286e20e21be/image.jpg",
+    "destination_blob_prompt": "image-cache/e62ac99c55dae213aa0131d45cf4697a6ee9e076bf694eb37903a286e20e21be/prompt.txt"
+  },
+  {
+    "id": "M-138",
+    "filename": "M-138.jpeg",
+    "sha256": "ec9c0ea3acb57fa06130fbcd8145b8589ad63368630c3b0043e69d227575bd04",
+    "prompt": "a driver looking for an empty parking spot on a sunny Portuguese city street, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/ec9c0ea3acb57fa06130fbcd8145b8589ad63368630c3b0043e69d227575bd04/image.jpg",
+    "destination_blob_prompt": "image-cache/ec9c0ea3acb57fa06130fbcd8145b8589ad63368630c3b0043e69d227575bd04/prompt.txt"
+  },
+  {
+    "id": "M-139",
+    "filename": "M-139.jpeg",
+    "sha256": "8f740b79e4c0707c20c4cf100fc75c69ad46a71432181dea2f9b50e3dbe8cf32",
+    "prompt": "a driver paying with a card and giving their tax number to an attendant at a Portuguese petrol station counter, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/8f740b79e4c0707c20c4cf100fc75c69ad46a71432181dea2f9b50e3dbe8cf32/image.jpg",
+    "destination_blob_prompt": "image-cache/8f740b79e4c0707c20c4cf100fc75c69ad46a71432181dea2f9b50e3dbe8cf32/prompt.txt"
+  },
+  {
+    "id": "M-140",
+    "filename": "M-140.jpeg",
+    "sha256": "257be1b2ccd24760cc5dbc45413b2b1d73756b1268644f6afab03a44eb618193",
+    "prompt": "a customer handing a card to a pharmacist to pay at a Portuguese pharmacy counter, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/257be1b2ccd24760cc5dbc45413b2b1d73756b1268644f6afab03a44eb618193/image.jpg",
+    "destination_blob_prompt": "image-cache/257be1b2ccd24760cc5dbc45413b2b1d73756b1268644f6afab03a44eb618193/prompt.txt"
+  },
+  {
+    "id": "M-141",
+    "filename": "M-141.jpeg",
+    "sha256": "4f6bf1a0ff6797e8095a66b07454f8d018f08f595a2a06a096a4a00c9ed3cd3d",
+    "prompt": "a customer waiting near a numbered ticket machine in a bright Portuguese pharmacy waiting area, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/4f6bf1a0ff6797e8095a66b07454f8d018f08f595a2a06a096a4a00c9ed3cd3d/image.jpg",
+    "destination_blob_prompt": "image-cache/4f6bf1a0ff6797e8095a66b07454f8d018f08f595a2a06a096a4a00c9ed3cd3d/prompt.txt"
+  },
+  {
+    "id": "M-142",
+    "filename": "M-142.jpeg",
+    "sha256": "c87332070d25f56e6ae6da6a69297e8480cae8d1562f89c4dbc485bc86141656",
+    "prompt": "a parent asking a pharmacist for a box of saline solution ampoules at a pharmacy counter, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/c87332070d25f56e6ae6da6a69297e8480cae8d1562f89c4dbc485bc86141656/image.jpg",
+    "destination_blob_prompt": "image-cache/c87332070d25f56e6ae6da6a69297e8480cae8d1562f89c4dbc485bc86141656/prompt.txt"
+  },
+  {
+    "id": "M-143",
+    "filename": "M-143.jpeg",
+    "sha256": "9086e6682c7531b0108abef555b79ca92d81df5a5a0bba89c7a24f97388ef161",
+    "prompt": "an attendant at a Galp petrol station counter handing a payment receipt to a customer, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/9086e6682c7531b0108abef555b79ca92d81df5a5a0bba89c7a24f97388ef161/image.jpg",
+    "destination_blob_prompt": "image-cache/9086e6682c7531b0108abef555b79ca92d81df5a5a0bba89c7a24f97388ef161/prompt.txt"
   }
 ]
