@@ -161,15 +161,22 @@ When the user prompt contains a previous sentence (e.g. "The previous sentence w
 {"pt":"<Portuguese sentence>","en":"<English translation>","mainEmoji":"<one emoji>","bgLeft":"<one emoji>","bgRight":"<one emoji>","imagePrompt":"<image generation prompt>"}
 
 # imagePrompt
-Describe the general setting: where the scene takes place and who is present, with 1–2 fixed visual details always true for a Portuguese AIMA immigration office (formal counter, officer in uniform, numbered tickets, document folders).
-Only include the specific action of the current sentence if it is visually very distinct — such as placing fingers on a biometric reader, or signing a document.
-For all routine conversation sentences (presenting documents, asking questions, waiting), default to the general AIMA counter setting and ignore the specific sentence action.
+Match the `imagePrompt` to the specific action or topic of the current sentence so consecutive story pages show varied, relevant illustrations rather than repeating the same default prompt.
 Always end with: colorful friendly illustration, storybook art, bright colors, simple background, no text
 
-Examples of general defaults:
-- counter scene: "an adult at an AIMA immigration office counter with a formal officer and a folder of documents, colorful friendly illustration, storybook art, bright colors, simple background, no text"
-- waiting room scene: "a person sitting in a government office waiting room with numbered tickets and plastic chairs, colorful friendly illustration, storybook art, bright colors, simple background, no text"
-- biometric scene: "a person placing fingers on a biometric reader at an immigration office counter, colorful friendly illustration, storybook art, bright colors, simple background, no text"
+Choose the closest matching scene from these canonical prompts:
+- appointment / checking schedule: "a parent at an official government service counter checking their appointment on their phone, colorful friendly illustration, storybook art, bright colors, simple background, no text"
+- waiting room / ticket queue: "a person sitting in a government office waiting room with numbered tickets and plastic chairs, colorful friendly illustration, storybook art, bright colors, simple background, no text"
+- handing application form / documents: "an adult at an immigration office counter handing over a visa application form, colorful friendly illustration, storybook art, bright colors, simple background, no text"
+- handing passport / NIF / visa stamp: "an adult handing a passport over a formal government office counter to an officer, colorful friendly illustration, storybook art, bright colors, simple background, no text"
+- presenting bank statements / lease / proofs: "an adult handing a stack of bank statement papers over a counter at an immigration office, colorful friendly illustration, storybook art, bright colors, simple background, no text"
+- showing account balance / income: "an adult pointing to a bank statement showing a Portuguese bank account balance at an immigration office counter, colorful friendly illustration, storybook art, bright colors, simple background, no text"
+- remote work / employment contract: "an adult at a desk with a laptop and documents at a government office, colorful friendly illustration, storybook art, bright colors, simple background, no text"
+- biometric fingerprints: "a person placing fingers on a biometric reader at an immigration office counter, colorful friendly illustration, storybook art, bright colors, simple background, no text"
+- biometric camera / photo: "a person looking at a camera for a biometric photo at an immigration office counter, colorful friendly illustration, storybook art, bright colors, simple background, no text"
+- paying fees / Multibanco card terminal: "an adult at an immigration office counter using a card payment terminal, colorful friendly illustration, storybook art, bright colors, simple background, no text"
+- receiving receipt / residence card delivery / closing: "an officer at an AIMA immigration office counter handing a payment receipt to an applicant, colorful friendly illustration, storybook art, bright colors, simple background, no text"
+- general counter discussion: "an adult at an AIMA immigration office counter with a formal officer and a folder of documents, colorful friendly illustration, storybook art, bright colors, simple background, no text"
 
 # Examples
 {"pt":"Estou a candidatar-me ao visto D7.","en":"I am applying for the D7 visa.","mainEmoji":"📄","bgLeft":"🏛️","bgRight":"✈️","imagePrompt":"an adult at an immigration office counter handing over a visa application form, colorful friendly illustration, storybook art, bright colors, simple background, no text"}
