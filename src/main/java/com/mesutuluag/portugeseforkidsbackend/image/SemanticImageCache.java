@@ -60,7 +60,10 @@ public class SemanticImageCache {
     private static final Set<String> STOP_WORDS = Set.of(
             "a", "an", "the", "and", "or", "of", "in", "on", "at", "to",
             "for", "with", "is", "are", "that", "this", "it", "its", "be",
-            "by", "as", "from", "up", "was", "has", "have", "had", "not"
+            "by", "as", "from", "up", "was", "has", "have", "had", "not",
+            "about", "after", "into", "over", "down", "through", "their",
+            "them", "our", "your", "his", "her", "while", "towards", "toward",
+            "under", "near", "very", "much", "some", "any", "more"
     );
 
     /**
@@ -73,27 +76,50 @@ public class SemanticImageCache {
      * (e.g. "sunny", "wall", "against", "first").
      */
     private static final Set<String> BOILERPLATE_WORDS = Set.of(
-            // Style boilerplate
-            "colorful", "cute", "kids", "illustration", "storybook", "art",
-            "bright", "colors", "simple", "background", "no", "text",
+            // Style boilerplate (US & UK spellings)
+            "colorful", "colourful", "cute", "kids", "illustration", "storybook", "art",
+            "bright", "colors", "colours", "simple", "background", "no", "text",
             "friendly", "style", "cartoon", "digital", "painting", "render",
             "scene", "image", "photo", "picture",
             // Scene-dressing: spatial / positional
             "against", "behind", "beside", "front", "side", "corner",
-            "wall", "door", "tree", "outside", "inside", "nearby",
-            // Scene-dressing: descriptive adjectives
+            "wall", "door", "tree", "outside", "inside", "nearby", "area",
+            // Scene-dressing: descriptive adjectives & nationality boilerplate
             "sunny", "happy", "laughing", "excited", "cheerful", "joyful",
+            "cozy", "traditional", "formal", "official", "original", "fresh", "new",
             "young", "little", "small", "big", "tall", "short",
+            "wooden", "plastic", "round", "filled", "portuguese",
             // Scene-dressing: ordinal / sequence words
             "first", "second", "next", "last", "together", "alone",
             // Scene-dressing: common filler verbs
-            "going", "starting", "beginning", "trying"
+            "going", "starting", "beginning", "trying", "using"
     );
 
     /** Nouns ending in -er/-or that should not have their suffix stripped to a verb stem. */
     private static final Set<String> KEEP_ER_OR_NOUNS = Set.of(
             "waiter", "counter", "dinner", "number", "water", "scooter",
-            "mother", "father", "sister", "brother", "finger", "paper"
+            "mother", "father", "sister", "brother", "finger", "paper",
+            "officer", "teller", "cashier", "driver", "customer", "shopkeeper", "passenger"
+    );
+
+    /**
+     * Core location/domain stems that anchor a prompt to a specific story setting.
+     * Given a 2x TF weight boost and used as a cross-domain guard when both query and
+     * candidate contain domain stems.
+     */
+    private static final Set<String> DOMAIN_STEMS = Set.of(
+            "school", "playground",
+            "restaurant",
+            "bank", "multibanco", "atm",
+            "hospital", "doct",
+            "cafeteria", "nata", "terrace",
+            "airport", "board", "checkpoint",
+            "store", "stall", "aisle", "trolley", "shopkeeper", "cashier",
+            "bus",
+            "pharmacy", "pharmacist", "medica",
+            "petrol", "galp", "pump", "fuel",
+            "motorway", "highway", "traffic", "toll", "park",
+            "immigra", "biometric", "visa"
     );
 
     /**
@@ -125,6 +151,9 @@ public class SemanticImageCache {
         s.put("lady",      "person");
         s.put("gentleman", "person");
         s.put("people",    "person");
+        s.put("adult",     "person");
+        s.put("applicant", "person");
+        s.put("customer",  "person");
         // Medical
         s.put("physician", "doctor");
         s.put("nurse",     "doctor");
@@ -145,6 +174,8 @@ public class SemanticImageCache {
         s.put("restaurant","restaurant");
         s.put("diner",     "restaurant");
         s.put("eatery",    "restaurant");
+        s.put("aima",      "immigration");
+        s.put("government","immigration");
         // Actions
         s.put("eating",    "eat");
         s.put("eats",      "eat");
@@ -161,6 +192,7 @@ public class SemanticImageCache {
         s.put("paying",    "pay");
         s.put("pays",      "pay");
         s.put("paid",      "pay");
+        s.put("payment",   "pay");
         s.put("sitting",   "sit");
         s.put("sits",      "sit");
         s.put("sat",       "sit");
@@ -226,6 +258,10 @@ public class SemanticImageCache {
         s.put("drugs",     "medication");
         s.put("ticket",    "ticket");
         s.put("tickets",   "ticket");
+        s.put("luggage",   "bag");
+        s.put("suitcase",  "bag");
+        s.put("suitcases", "bag");
+        s.put("bags",      "bag");
         s.put("bus",       "bus");
         s.put("car",       "car");
         s.put("vehicle",   "car");
@@ -368,15 +404,23 @@ public class SemanticImageCache {
 
             // 2. O(N) Semantic search — IDF looked up in O(1) from live docFreq index
             Map<String, Double> queryVec = applyIdfAndNormaliseLocked(queryTf);
+            Set<String> queryDomains = extractDomains(queryTf);
 
             // Collect all entries that exceed the similarity threshold so we can
-            // randomly select one of them — avoids showing the same photo repeatedly.
+            // randomly select one of the top-scoring matches.
             record Candidate(String key, byte[] jpeg, double score) {}
             List<Candidate> candidates = new ArrayList<>();
             double bestScore = 0.0;
 
             for (Map.Entry<String, CacheEntry> entry : cache.entrySet()) {
-                Map<String, Double> entryVec = applyIdfAndNormaliseLocked(entry.getValue().tf());
+                Map<String, Double> entryTf = entry.getValue().tf();
+                if (!queryDomains.isEmpty()) {
+                    Set<String> entryDomains = extractDomains(entryTf);
+                    if (!entryDomains.isEmpty() && Collections.disjoint(queryDomains, entryDomains)) {
+                        continue; // Cross-domain guard: prevent different story settings from matching
+                    }
+                }
+                Map<String, Double> entryVec = applyIdfAndNormaliseLocked(entryTf);
                 double score = cosineSimilarity(queryVec, entryVec);
                 if (score > bestScore) bestScore = score;
                 if (score >= similarityThreshold) {
@@ -385,9 +429,13 @@ public class SemanticImageCache {
             }
 
             if (!candidates.isEmpty()) {
-                Candidate chosen = candidates.get(RANDOM.nextInt(candidates.size()));
+                double topTierFloor = Math.max(similarityThreshold, bestScore - 0.12);
+                List<Candidate> topCandidates = candidates.stream()
+                        .filter(c -> c.score() >= topTierFloor)
+                        .toList();
+                Candidate chosen = topCandidates.get(RANDOM.nextInt(topCandidates.size()));
                 log.info("[semantic-cache] SEMANTIC HIT score={} key='{}' (picked 1 of {})",
-                        String.format("%.3f", chosen.score()), truncate(chosen.key()), candidates.size());
+                        String.format("%.3f", chosen.score()), truncate(chosen.key()), topCandidates.size());
                 cache.get(chosen.key()); // touch to update LRU order for the matched key
                 return chosen.jpeg();
             }
@@ -449,22 +497,37 @@ public class SemanticImageCache {
     // TF-IDF helpers — all called with lock already held
     // -----------------------------------------------------------------------
 
+    private static Set<String> extractDomains(Map<String, Double> tf) {
+        if (tf.isEmpty()) return Collections.emptySet();
+        java.util.HashSet<String> domains = new java.util.HashSet<>();
+        for (String term : tf.keySet()) {
+            if (DOMAIN_STEMS.contains(term)) {
+                domains.add(term);
+            }
+        }
+        return domains;
+    }
+
     /**
      * Build a raw term-frequency map for {@code prompt} (no IDF, no normalisation).
+     * Core domain stems receive a 2x weight boost so scene setting anchors similarity.
      * Stored in {@link CacheEntry} so IDF can be applied fresh at query time.
      */
     private static Map<String, Double> toTf(String prompt) {
         String[] tokens = tokenise(prompt);
         if (tokens.length == 0) return Collections.emptyMap();
 
-        Map<String, Integer> counts = new HashMap<>();
+        Map<String, Double> counts = new HashMap<>();
+        double totalWeight = 0.0;
         for (String t : tokens) {
-            counts.merge(t, 1, Integer::sum);
+            double weight = DOMAIN_STEMS.contains(t) ? 2.0 : 1.0;
+            counts.merge(t, weight, Double::sum);
+            totalWeight += weight;
         }
 
         Map<String, Double> tf = new HashMap<>();
-        for (Map.Entry<String, Integer> e : counts.entrySet()) {
-            tf.put(e.getKey(), (double) e.getValue() / tokens.length);
+        for (Map.Entry<String, Double> e : counts.entrySet()) {
+            tf.put(e.getKey(), e.getValue() / totalWeight);
         }
         return tf;
     }
@@ -473,17 +536,20 @@ public class SemanticImageCache {
      * Apply current-corpus IDF weights to a raw TF map and L2-normalise the result.
      * Because IDF is computed from the live {@link #docFreq} index, all vectors —
      * stored and query — always use the same weight scale in O(T) time.
+     * When the cache holds at least 10 entries, unseen query terms are dampened
+     * (`effectiveDf = max(docsWithTerm, 2)`) so 1–2 incidental words do not tank similarity.
      * Must be called with {@link #lock} held.
      */
     private Map<String, Double> applyIdfAndNormaliseLocked(Map<String, Double> tf) {
         if (tf.isEmpty()) return Collections.emptyMap();
 
         int totalDocs = cache.size() + 1; // +1 for the query document
+        int minDfFloor = cache.size() >= 10 ? 2 : 0;
 
         Map<String, Double> vec = new HashMap<>();
         for (Map.Entry<String, Double> e : tf.entrySet()) {
             String term      = e.getKey();
-            int docsWithTerm = countDocsContainingLocked(term);
+            int docsWithTerm = Math.max(countDocsContainingLocked(term), minDfFloor);
             double idf       = Math.log(1.0 + (double) totalDocs / (1.0 + docsWithTerm));
             vec.put(term, e.getValue() * idf);
         }

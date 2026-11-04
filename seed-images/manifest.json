@@ -390,5 +390,61 @@
     "prompt": "a family placing suitcases on an airport check-in scale, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
     "destination_blob_image": "image-cache/2a5100eb71e1f81b2a4609a8d7bc3368592c5543d2414381c44ccdcecc0abc34/image.jpg",
     "destination_blob_prompt": "image-cache/2a5100eb71e1f81b2a4609a8d7bc3368592c5543d2414381c44ccdcecc0abc34/prompt.txt"
+  },
+  {
+    "id": "M-50",
+    "filename": "M-50.jpeg",
+    "sha256": "144bb0f7a940a36302a47e63e38bf717cda0385ed5e235029432ae1b038bfb80",
+    "prompt": "a friendly shopkeeper at a Portuguese market stall handing a bag of potatoes to a customer, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/144bb0f7a940a36302a47e63e38bf717cda0385ed5e235029432ae1b038bfb80/image.jpg",
+    "destination_blob_prompt": "image-cache/144bb0f7a940a36302a47e63e38bf717cda0385ed5e235029432ae1b038bfb80/prompt.txt"
+  },
+  {
+    "id": "M-51",
+    "filename": "M-51.jpeg",
+    "sha256": "a0c9f9429a765d85e5260de4c50f97ff169ccca222868c031703609cb5af1293",
+    "prompt": "a family leaving a supermarket with a shopping bag, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/a0c9f9429a765d85e5260de4c50f97ff169ccca222868c031703609cb5af1293/image.jpg",
+    "destination_blob_prompt": "image-cache/a0c9f9429a765d85e5260de4c50f97ff169ccca222868c031703609cb5af1293/prompt.txt"
+  },
+  {
+    "id": "M-52",
+    "filename": "M-52.jpeg",
+    "sha256": "e80a057bbe54bd36a950b8d722f37a737dc717937b18d7d5f7d4f7fe7542ec21",
+    "prompt": "a supermarket employee pointing towards an aisle in a bright supermarket, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/e80a057bbe54bd36a950b8d722f37a737dc717937b18d7d5f7d4f7fe7542ec21/image.jpg",
+    "destination_blob_prompt": "image-cache/e80a057bbe54bd36a950b8d722f37a737dc717937b18d7d5f7d4f7fe7542ec21/prompt.txt"
+  },
+  {
+    "id": "M-53",
+    "filename": "M-53.jpeg",
+    "sha256": "98e02148680724ddb21b68fc77e3579947ec61ca03af3f5ff6f77d7d2c93ef32",
+    "prompt": "an adult handing a passport over a formal government office counter to an officer, colorful friendly illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/98e02148680724ddb21b68fc77e3579947ec61ca03af3f5ff6f77d7d2c93ef32/image.jpg",
+    "destination_blob_prompt": "image-cache/98e02148680724ddb21b68fc77e3579947ec61ca03af3f5ff6f77d7d2c93ef32/prompt.txt"
+  },
+  {
+    "id": "M-54",
+    "filename": "M-54.jpeg",
+    "sha256": "e0e32276df82bae61f3edfa8709ff1105c70fe04055aeb34b8388f7daf061ebe",
+    "prompt": "a person looking at a camera for a biometric photo at an immigration office counter, colorful friendly illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/e0e32276df82bae61f3edfa8709ff1105c70fe04055aeb34b8388f7daf061ebe/image.jpg",
+    "destination_blob_prompt": "image-cache/e0e32276df82bae61f3edfa8709ff1105c70fe04055aeb34b8388f7daf061ebe/prompt.txt"
+  },
+  {
+    "id": "M-55",
+    "filename": "M-55.jpeg",
+    "sha256": "6400035de5757fa85b56ad87803c0f865eea29e7f86c14b342180c3fd1606a98",
+    "prompt": "an adult at an immigration office counter using a card payment terminal, colorful friendly illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/6400035de5757fa85b56ad87803c0f865eea29e7f86c14b342180c3fd1606a98/image.jpg",
+    "destination_blob_prompt": "image-cache/6400035de5757fa85b56ad87803c0f865eea29e7f86c14b342180c3fd1606a98/prompt.txt"
+  },
+  {
+    "id": "M-56",
+    "filename": "M-56.jpeg",
+    "sha256": "268f2ee7e5a6b0cf8468bff5634be197d8d12125f64556d7b03dc49c32b0865c",
+    "prompt": "an officer at an AIMA immigration office counter handing a payment receipt to an applicant, colorful friendly illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/268f2ee7e5a6b0cf8468bff5634be197d8d12125f64556d7b03dc49c32b0865c/image.jpg",
+    "destination_blob_prompt": "image-cache/268f2ee7e5a6b0cf8468bff5634be197d8d12125f64556d7b03dc49c32b0865c/prompt.txt"
   }
 ]

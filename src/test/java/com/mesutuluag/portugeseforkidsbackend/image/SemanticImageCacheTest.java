@@ -552,4 +552,29 @@ class SemanticImageCacheTest {
         gcsBackedCache.put("child buying fruit at market", IMAGE_B);
         verify(mockStore).saveAsync("child buying fruit at market", IMAGE_B);
     }
+
+    @Test
+    void get_crossDomainGuard_preventsPaymentTerminalCrossMatchBetweenRestaurantAndImmigration() {
+        cache.put("an adult paying with a card on a payment terminal at a restaurant table", IMAGE_A);
+
+        // Shares "adult", "card", "payment", "terminal" (~65% surface overlap), but domains
+        // ("restaurant" vs "immigration") conflict and must not cross-match.
+        assertThat(cache.get("an adult at an immigration office counter using a card payment terminal")).isNull();
+    }
+
+    @Test
+    void get_marketProduceVariation_hitsSameMarketStallScene() {
+        cache.put("a friendly shopkeeper at a Portuguese market stall handing a bag of potatoes to a customer, colorful cute kids illustration, storybook art, bright colors, simple background, no text", IMAGE_A);
+
+        assertThat(cache.get("a friendly shopkeeper at a Portuguese market stall handing a bag of oranges to a customer, colorful cute kids illustration, storybook art, bright colors, simple background, no text"))
+                .isEqualTo(IMAGE_A);
+    }
+
+    @Test
+    void get_governmentOfficeSynonym_matchesImmigrationCounterScene() {
+        cache.put("a person handing a passport and documents to a friendly officer at an immigration office counter, colorful friendly illustration", IMAGE_A);
+
+        assertThat(cache.get("an adult handing a passport over a formal government office counter to an officer, colorful friendly illustration"))
+                .isEqualTo(IMAGE_A);
+    }
 }
