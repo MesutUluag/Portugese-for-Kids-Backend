@@ -150,5 +150,173 @@
     "prompt": "a parent at an official government service counter checking their appointment on their phone, colorful friendly illustration, storybook art, bright colors, simple background, no text",
     "destination_blob_image": "image-cache/be1ba0c9e0d7118ef405404b9ced70fe5517715b55a6b806662ec94c1e7225b8/image.jpg",
     "destination_blob_prompt": "image-cache/be1ba0c9e0d7118ef405404b9ced70fe5517715b55a6b806662ec94c1e7225b8/prompt.txt"
+  },
+  {
+    "id": "M-20",
+    "filename": "M-20.jpeg",
+    "sha256": "a345ead63cf497954e7f089c82466150270a310f8d00135f37b7cec48a696ada",
+    "prompt": "a child smiling while holding a notebook in a bright classroom, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/a345ead63cf497954e7f089c82466150270a310f8d00135f37b7cec48a696ada/image.jpg",
+    "destination_blob_prompt": "image-cache/a345ead63cf497954e7f089c82466150270a310f8d00135f37b7cec48a696ada/prompt.txt"
+  },
+  {
+    "id": "M-21",
+    "filename": "M-21.jpeg",
+    "sha256": "1f9569c852c334e5f76af43312f537ef05cc3a1078629ffbcf1fe56bd3dfb7ab",
+    "prompt": "a family arriving at a cozy Portuguese restaurant with traditional tiled walls, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/1f9569c852c334e5f76af43312f537ef05cc3a1078629ffbcf1fe56bd3dfb7ab/image.jpg",
+    "destination_blob_prompt": "image-cache/1f9569c852c334e5f76af43312f537ef05cc3a1078629ffbcf1fe56bd3dfb7ab/prompt.txt"
+  },
+  {
+    "id": "M-22",
+    "filename": "M-22.jpeg",
+    "sha256": "4958741b466443959a278ffb7975ab1d83a3918d8cb1f440bd04f13e70318726",
+    "prompt": "a family looking at a menu at a wooden table in a cozy Portuguese restaurant with tiled walls, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/4958741b466443959a278ffb7975ab1d83a3918d8cb1f440bd04f13e70318726/image.jpg",
+    "destination_blob_prompt": "image-cache/4958741b466443959a278ffb7975ab1d83a3918d8cb1f440bd04f13e70318726/prompt.txt"
+  },
+  {
+    "id": "M-23",
+    "filename": "M-23.jpeg",
+    "sha256": "6cae315a625cc993a7e61136a292ffe7731d1f2b0e914492c2030ce7d7f66843",
+    "prompt": "a person at a Portuguese bank counter with a glass screen signing a document, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/6cae315a625cc993a7e61136a292ffe7731d1f2b0e914492c2030ce7d7f66843/image.jpg",
+    "destination_blob_prompt": "image-cache/6cae315a625cc993a7e61136a292ffe7731d1f2b0e914492c2030ce7d7f66843/prompt.txt"
+  },
+  {
+    "id": "M-24",
+    "filename": "M-24.jpeg",
+    "sha256": "44d7cbabaced3b4dce946ebfe2a47256ec6a290d9b1f6420baf1beac6b4d9041",
+    "prompt": "a child lying down on a medical examination table in a bright clinic with a doctor nearby, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/44d7cbabaced3b4dce946ebfe2a47256ec6a290d9b1f6420baf1beac6b4d9041/image.jpg",
+    "destination_blob_prompt": "image-cache/44d7cbabaced3b4dce946ebfe2a47256ec6a290d9b1f6420baf1beac6b4d9041/prompt.txt"
+  },
+  {
+    "id": "M-25",
+    "filename": "M-25.jpeg",
+    "sha256": "195e2c45219269c0e9cc74bf0ff566266ebba3b2a9c866de737ed817f08d36ef",
+    "prompt": "a doctor in a white coat writing a prescription in a bright clinic, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/195e2c45219269c0e9cc74bf0ff566266ebba3b2a9c866de737ed817f08d36ef/image.jpg",
+    "destination_blob_prompt": "image-cache/195e2c45219269c0e9cc74bf0ff566266ebba3b2a9c866de737ed817f08d36ef/prompt.txt"
+  },
+  {
+    "id": "M-26",
+    "filename": "M-26.jpeg",
+    "sha256": "cea1fa9017e63bb347410b9a66a917e82540087436a16a3cb64762fbd214f3ef",
+    "prompt": "a doctor pointing towards the exit of a bright hospital clinic, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/cea1fa9017e63bb347410b9a66a917e82540087436a16a3cb64762fbd214f3ef/image.jpg",
+    "destination_blob_prompt": "image-cache/cea1fa9017e63bb347410b9a66a917e82540087436a16a3cb64762fbd214f3ef/prompt.txt"
+  },
+  {
+    "id": "M-27",
+    "filename": "M-27.jpeg",
+    "sha256": "15049ca64b4ffadfd3e217b95a67aa1515ab5840acd06444162fdd63b5f0c7df",
+    "prompt": "a waiter handing a bill to a customer at a sunny Portuguese caf\u00e9 table, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/15049ca64b4ffadfd3e217b95a67aa1515ab5840acd06444162fdd63b5f0c7df/image.jpg",
+    "destination_blob_prompt": "image-cache/15049ca64b4ffadfd3e217b95a67aa1515ab5840acd06444162fdd63b5f0c7df/prompt.txt"
+  },
+  {
+    "id": "M-28",
+    "filename": "M-28.jpeg",
+    "sha256": "679be96fd256003e609a51d618bdb73f21f3b3342f768173e3660f73a136a707",
+    "prompt": "a customer paying with a smartphone at a traditional Portuguese caf\u00e9 counter with a waiter, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/679be96fd256003e609a51d618bdb73f21f3b3342f768173e3660f73a136a707/image.jpg",
+    "destination_blob_prompt": "image-cache/679be96fd256003e609a51d618bdb73f21f3b3342f768173e3660f73a136a707/prompt.txt"
+  },
+  {
+    "id": "M-29",
+    "filename": "M-29.jpeg",
+    "sha256": "0b39a56f82a7577e848093b061fa50289d9db1493bda74b6cef958813b8c3c07",
+    "prompt": "a friendly waiter waving goodbye to a family leaving a traditional Portuguese caf\u00e9, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/0b39a56f82a7577e848093b061fa50289d9db1493bda74b6cef958813b8c3c07/image.jpg",
+    "destination_blob_prompt": "image-cache/0b39a56f82a7577e848093b061fa50289d9db1493bda74b6cef958813b8c3c07/prompt.txt"
+  },
+  {
+    "id": "M-30",
+    "filename": "M-30.jpeg",
+    "sha256": "d28938960693e552f106b91284e7a8605e63f02594d139cb22295aee2c4c2334",
+    "prompt": "a family arriving at a sunny Portuguese caf\u00e9 with outdoor tables, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/d28938960693e552f106b91284e7a8605e63f02594d139cb22295aee2c4c2334/image.jpg",
+    "destination_blob_prompt": "image-cache/d28938960693e552f106b91284e7a8605e63f02594d139cb22295aee2c4c2334/prompt.txt"
+  },
+  {
+    "id": "M-31",
+    "filename": "M-31.jpeg",
+    "sha256": "9541022d1e9a42212417a986b8a6e2184e5359de048efef86a061aaf81de667a",
+    "prompt": "a waiter standing by a sunny outdoor terrace table in a Portuguese caf\u00e9, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/9541022d1e9a42212417a986b8a6e2184e5359de048efef86a061aaf81de667a/image.jpg",
+    "destination_blob_prompt": "image-cache/9541022d1e9a42212417a986b8a6e2184e5359de048efef86a061aaf81de667a/prompt.txt"
+  },
+  {
+    "id": "M-32",
+    "filename": "M-32.jpeg",
+    "sha256": "00f35dc750cffc4bc3c61ce4abf3347e40c7ceffea1e3f20221ae13a5266d850",
+    "prompt": "a waiter smiling while carrying a tray with two pasteis de nata towards a table in a sunny Portuguese caf\u00e9, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/00f35dc750cffc4bc3c61ce4abf3347e40c7ceffea1e3f20221ae13a5266d850/image.jpg",
+    "destination_blob_prompt": "image-cache/00f35dc750cffc4bc3c61ce4abf3347e40c7ceffea1e3f20221ae13a5266d850/prompt.txt"
+  },
+  {
+    "id": "M-33",
+    "filename": "M-33.jpeg",
+    "sha256": "91b137fa7257a6a0b04e681b7fc0a7f22a7215e77b9c50aa0d10f01c927a74b4",
+    "prompt": "an airport security officer gesturing towards the security checkpoint for a family with luggage, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/91b137fa7257a6a0b04e681b7fc0a7f22a7215e77b9c50aa0d10f01c927a74b4/image.jpg",
+    "destination_blob_prompt": "image-cache/91b137fa7257a6a0b04e681b7fc0a7f22a7215e77b9c50aa0d10f01c927a74b4/prompt.txt"
+  },
+  {
+    "id": "M-34",
+    "filename": "M-34.jpeg",
+    "sha256": "6ae989a3c440e2bc0c34ee0d4121b3025345ca9db454839f51190dd9c9905399",
+    "prompt": "an airport staff member pointing towards the security checkpoint area in a Portuguese airport, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/6ae989a3c440e2bc0c34ee0d4121b3025345ca9db454839f51190dd9c9905399/image.jpg",
+    "destination_blob_prompt": "image-cache/6ae989a3c440e2bc0c34ee0d4121b3025345ca9db454839f51190dd9c9905399/prompt.txt"
+  },
+  {
+    "id": "M-35",
+    "filename": "M-35.jpeg",
+    "sha256": "619c362e6b609db1ca5c96f185dc6e3b2d811964d881d6ddab3610b1e91ede22",
+    "prompt": "a family following a waiter to a table in a cozy Portuguese restaurant with traditional tiled walls, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/619c362e6b609db1ca5c96f185dc6e3b2d811964d881d6ddab3610b1e91ede22/image.jpg",
+    "destination_blob_prompt": "image-cache/619c362e6b609db1ca5c96f185dc6e3b2d811964d881d6ddab3610b1e91ede22/prompt.txt"
+  },
+  {
+    "id": "M-36",
+    "filename": "M-36.jpeg",
+    "sha256": "135637fb8f5e8a9e24c28a336c814e4a44283385f1eac00419cada5b0f85bdbd",
+    "prompt": "a family choosing a table on a sunny outdoor terrace at a Portuguese caf\u00e9, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/135637fb8f5e8a9e24c28a336c814e4a44283385f1eac00419cada5b0f85bdbd/image.jpg",
+    "destination_blob_prompt": "image-cache/135637fb8f5e8a9e24c28a336c814e4a44283385f1eac00419cada5b0f85bdbd/prompt.txt"
+  },
+  {
+    "id": "M-37",
+    "filename": "M-37.jpeg",
+    "sha256": "6a1f2904bd0034790a26cceefd4b3bce916fa012771c0b72cfe67691656c5cf9",
+    "prompt": "a family with luggage walking through a bright airport terminal towards the security checkpoint, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/6a1f2904bd0034790a26cceefd4b3bce916fa012771c0b72cfe67691656c5cf9/image.jpg",
+    "destination_blob_prompt": "image-cache/6a1f2904bd0034790a26cceefd4b3bce916fa012771c0b72cfe67691656c5cf9/prompt.txt"
+  },
+  {
+    "id": "M-38",
+    "filename": "M-38.jpeg",
+    "sha256": "9616a06047f4b21e9866b7ff6bfd481e2af03cd22bbc8a43148bfc2f6ba0bf76",
+    "prompt": "a family with suitcases walking towards the security checkpoint area at a Portuguese airport, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/9616a06047f4b21e9866b7ff6bfd481e2af03cd22bbc8a43148bfc2f6ba0bf76/image.jpg",
+    "destination_blob_prompt": "image-cache/9616a06047f4b21e9866b7ff6bfd481e2af03cd22bbc8a43148bfc2f6ba0bf76/prompt.txt"
+  },
+  {
+    "id": "M-39",
+    "filename": "M-39.jpeg",
+    "sha256": "f024d5f48c4087e2db49350338da2a395cc68b2595e32dab0ca30cc064f99f6a",
+    "prompt": "an airport security officer smiling at a family walking towards the security checkpoint at a Portuguese airport, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/f024d5f48c4087e2db49350338da2a395cc68b2595e32dab0ca30cc064f99f6a/image.jpg",
+    "destination_blob_prompt": "image-cache/f024d5f48c4087e2db49350338da2a395cc68b2595e32dab0ca30cc064f99f6a/prompt.txt"
+  },
+  {
+    "id": "M-40",
+    "filename": "M-40.jpeg",
+    "sha256": "c904ffe5b5627721e16940eab516d0a498e15716b26967540931c66657b0818e",
+    "prompt": "an airport staff member pointing towards a gate area in a Portuguese airport terminal, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/c904ffe5b5627721e16940eab516d0a498e15716b26967540931c66657b0818e/image.jpg",
+    "destination_blob_prompt": "image-cache/c904ffe5b5627721e16940eab516d0a498e15716b26967540931c66657b0818e/prompt.txt"
   }
 ]

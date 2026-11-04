@@ -4,6 +4,7 @@ Uploads processed image cache entries to Google Cloud Storage.
 
 Features:
 - Preserves exact contract required by GcsImageStore.java
+- Automatically checks existing GCS hashes and skips already-uploaded entries (unless --force)
 - Uploads `image.jpg` with custom metadata `--custom-metadata="^:^prompt=..."`
 - Uploads sibling `prompt.txt`
 - Supports `--dry-run` to preview uploads without mutating GCS
@@ -22,7 +23,22 @@ MANIFEST_FILE = BASE_DIR / "manifest.json"
 DEFAULT_BUCKET = "gs://portugese-kids-image-cache"
 
 
-def upload(bucket: str = DEFAULT_BUCKET, target_sha: str = None, dry_run: bool = False):
+def get_existing_gcs_shas(bucket: str) -> set:
+    try:
+        res = subprocess.run(
+            ["gcloud", "storage", "objects", "list", f"{bucket}/image-cache/**/image.jpg"],
+            capture_output=True, text=True, check=True
+        )
+        return {
+            line.split("/")[1]
+            for line in res.stdout.splitlines()
+            if line.startswith("name:") and "/" in line
+        }
+    except Exception:
+        return set()
+
+
+def upload(bucket: str = DEFAULT_BUCKET, target_sha: str = None, dry_run: bool = False, force: bool = False):
     if not MANIFEST_FILE.exists():
         print(f"Error: {MANIFEST_FILE} not found. Run process_images.py first.")
         sys.exit(1)
@@ -35,10 +51,22 @@ def upload(bucket: str = DEFAULT_BUCKET, target_sha: str = None, dry_run: bool =
         if not manifest:
             print(f"No entry in manifest matches SHA prefix '{target_sha}'.")
             return
+    elif not force:
+        existing_shas = get_existing_gcs_shas(bucket)
+        if existing_shas:
+            before = len(manifest)
+            manifest = [m for m in manifest if m["sha256"] not in existing_shas]
+            skipped = before - len(manifest)
+            if skipped:
+                print(f"Skipping {skipped} already-uploaded entries in {bucket} (use --force to re-upload).")
 
     total = len(manifest)
+    if total == 0:
+        print("All manifest entries are already present in GCS. Nothing to upload.")
+        return
+
     action = "[DRY RUN] Would upload" if dry_run else "Uploading"
-    print(f"{action} {total} entries to {bucket}...")
+    print(f"{action} {total} new entries to {bucket}...")
 
     success = 0
     errors = 0
@@ -96,9 +124,10 @@ def main():
     parser.add_argument("--bucket", default=DEFAULT_BUCKET, help="Target GCS bucket")
     parser.add_argument("--sha", help="Upload a specific hash only")
     parser.add_argument("--dry-run", action="store_true", help="Print commands without executing")
+    parser.add_argument("--force", action="store_true", help="Re-upload even if SHA already exists in GCS")
     args = parser.parse_args()
 
-    upload(bucket=args.bucket, target_sha=args.sha, dry_run=args.dry_run)
+    upload(bucket=args.bucket, target_sha=args.sha, dry_run=args.dry_run, force=args.force)
 
 
 if __name__ == "__main__":
