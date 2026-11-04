@@ -318,5 +318,77 @@
     "prompt": "an airport staff member pointing towards a gate area in a Portuguese airport terminal, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
     "destination_blob_image": "image-cache/c904ffe5b5627721e16940eab516d0a498e15716b26967540931c66657b0818e/image.jpg",
     "destination_blob_prompt": "image-cache/c904ffe5b5627721e16940eab516d0a498e15716b26967540931c66657b0818e/prompt.txt"
+  },
+  {
+    "id": "M-41",
+    "filename": "M-41.jpeg",
+    "sha256": "247dd259540dba502a1a9332a0193b0b05a67a4b25e0b4ce730784f4c6a8f253",
+    "prompt": "a waiter presenting the daily special at a wooden table in a traditional Portuguese restaurant, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/247dd259540dba502a1a9332a0193b0b05a67a4b25e0b4ce730784f4c6a8f253/image.jpg",
+    "destination_blob_prompt": "image-cache/247dd259540dba502a1a9332a0193b0b05a67a4b25e0b4ce730784f4c6a8f253/prompt.txt"
+  },
+  {
+    "id": "M-42",
+    "filename": "M-42.jpeg",
+    "sha256": "112ce4389101cd7165076810f482ae3250c7e5b6ce32045f89d75c561b0af608",
+    "prompt": "a waiter presenting a bill folder at a wooden table in a traditional Portuguese restaurant, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/112ce4389101cd7165076810f482ae3250c7e5b6ce32045f89d75c561b0af608/image.jpg",
+    "destination_blob_prompt": "image-cache/112ce4389101cd7165076810f482ae3250c7e5b6ce32045f89d75c561b0af608/prompt.txt"
+  },
+  {
+    "id": "M-43",
+    "filename": "M-43.jpeg",
+    "sha256": "f771b72e0d1b90b0be16d7a01216591cbfafe7c259cc05e9932b79da7307d3f1",
+    "prompt": "a parent and child walking out of a hospital towards a nearby pharmacy, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/f771b72e0d1b90b0be16d7a01216591cbfafe7c259cc05e9932b79da7307d3f1/image.jpg",
+    "destination_blob_prompt": "image-cache/f771b72e0d1b90b0be16d7a01216591cbfafe7c259cc05e9932b79da7307d3f1/prompt.txt"
+  },
+  {
+    "id": "M-44",
+    "filename": "M-44.jpeg",
+    "sha256": "ce132d897264d367914eedf15e43e8e7b1d7d805da61df23dc3295b125457214",
+    "prompt": "a receptionist pointing to a ticket machine in a hospital reception area, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/ce132d897264d367914eedf15e43e8e7b1d7d805da61df23dc3295b125457214/image.jpg",
+    "destination_blob_prompt": "image-cache/ce132d897264d367914eedf15e43e8e7b1d7d805da61df23dc3295b125457214/prompt.txt"
+  },
+  {
+    "id": "M-45",
+    "filename": "M-45.jpeg",
+    "sha256": "8fd51ff6d6a57a5a57b6eedc77cfd540361289571ecd80e0ad7c565546389955",
+    "prompt": "a waiter smiling and walking towards a family table in a sunny Portuguese caf\u00e9, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/8fd51ff6d6a57a5a57b6eedc77cfd540361289571ecd80e0ad7c565546389955/image.jpg",
+    "destination_blob_prompt": "image-cache/8fd51ff6d6a57a5a57b6eedc77cfd540361289571ecd80e0ad7c565546389955/prompt.txt"
+  },
+  {
+    "id": "M-46",
+    "filename": "M-46.jpeg",
+    "sha256": "74db8febd76bc2933e8a209a6dba78f2cad3fa88588e868620f7be73417dd382",
+    "prompt": "a waiter bringing a small shaker of cinnamon to a family at a sunny Portuguese caf\u00e9 table, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/74db8febd76bc2933e8a209a6dba78f2cad3fa88588e868620f7be73417dd382/image.jpg",
+    "destination_blob_prompt": "image-cache/74db8febd76bc2933e8a209a6dba78f2cad3fa88588e868620f7be73417dd382/prompt.txt"
+  },
+  {
+    "id": "M-47",
+    "filename": "M-47.jpg",
+    "sha256": "07831659e552fe8df641363a6df8a68b88bed00d46642254827b6f2019452718",
+    "prompt": "a family with suitcases walking quickly through an airport terminal towards a boarding gate, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/07831659e552fe8df641363a6df8a68b88bed00d46642254827b6f2019452718/image.jpg",
+    "destination_blob_prompt": "image-cache/07831659e552fe8df641363a6df8a68b88bed00d46642254827b6f2019452718/prompt.txt"
+  },
+  {
+    "id": "M-48",
+    "filename": "M-48.jpeg",
+    "sha256": "d89f97f2c6198375c2b1772f85bb2d9c820cc7b0a3866f61be85d8b711705e9b",
+    "prompt": "a family walking through an airport security checkpoint after the metal detector, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/d89f97f2c6198375c2b1772f85bb2d9c820cc7b0a3866f61be85d8b711705e9b/image.jpg",
+    "destination_blob_prompt": "image-cache/d89f97f2c6198375c2b1772f85bb2d9c820cc7b0a3866f61be85d8b711705e9b/prompt.txt"
+  },
+  {
+    "id": "M-49",
+    "filename": "M-49.jpeg",
+    "sha256": "2a5100eb71e1f81b2a4609a8d7bc3368592c5543d2414381c44ccdcecc0abc34",
+    "prompt": "a family placing suitcases on an airport check-in scale, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/2a5100eb71e1f81b2a4609a8d7bc3368592c5543d2414381c44ccdcecc0abc34/image.jpg",
+    "destination_blob_prompt": "image-cache/2a5100eb71e1f81b2a4609a8d7bc3368592c5543d2414381c44ccdcecc0abc34/prompt.txt"
   }
 ]

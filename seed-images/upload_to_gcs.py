@@ -112,8 +112,12 @@ def upload(bucket: str = DEFAULT_BUCKET, target_sha: str = None, dry_run: bool =
             print(f"  ✓ Uploaded image.jpg & prompt.txt")
             success += 1
         except subprocess.CalledProcessError as e:
-            print(f"  ✗ Failed: {e.stderr.strip()}")
+            err_msg = e.stderr.strip()
+            print(f"  ✗ Failed: {err_msg}")
             errors += 1
+            if "Operation not permitted" in err_msg or "PermissionError" in err_msg:
+                print("Aborting early due to sandbox/permission restriction on gcloud credentials.")
+                sys.exit(1)
 
     print(f"\n==========================================")
     print(f"Done. Successfully processed: {success}/{total}. Errors: {errors}")
