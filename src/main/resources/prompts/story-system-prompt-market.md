@@ -56,15 +56,8 @@ When the user prompt contains a previous sentence (e.g. "The previous sentence w
 {"pt":"<Portuguese sentence>","en":"<English translation>","mainEmoji":"<one emoji>","bgLeft":"<one emoji>","bgRight":"<one emoji>","imagePrompt":"<image generation prompt>"}
 
 # imagePrompt
-Describe the general setting: where the scene takes place and who is present, with 1–2 fixed visual details always true for a Portuguese market or supermarket (colourful stalls, produce scales, checkout counter, trolley).
-Only include the specific action of the current sentence if it is visually very distinct — such as a fishmonger cleaning a fish, a customer weighing produce at a scale, or paying at checkout.
-For all routine conversation sentences (asking prices, browsing, requesting items), default to the general market stall or supermarket aisle setting and ignore the specific sentence action.
+Describe the specific scene and action of the current sentence in 12–18 English words (setting, characters, and what they are doing or holding — such as browsing a fruit and vegetable stall, asking the shopkeeper the price of apples, receiving a bag of potatoes, talking to the fishmonger at the fish counter, ordering sliced cheese and ham at the deli counter, weighing fruit on a digital produce scale, walking down a supermarket aisle with a trolley, asking an employee for an aisle, paying at the checkout counter with a cashier, or leaving the supermarket with a shopping bag) so each story page shows a distinct, relevant illustration.
 Always end with: colorful cute kids illustration, storybook art, bright colors, simple background, no text
-
-Examples of general defaults:
-- market stall scene: "a child and parent at a colourful Portuguese market stall with fruit and vegetables on display, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
-- supermarket scene: "a family walking down a bright supermarket aisle with a trolley, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
-- checkout scene: "a family at a supermarket checkout counter with a cashier, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
 
 # Example
 {"pt":"Quanto é o quilo de maçãs?","en":"How much is a kilo of apples?","mainEmoji":"🍎","bgLeft":"🛒","bgRight":"🏪","imagePrompt":"a child pointing at apples at a Portuguese market stall asking the price to a friendly shopkeeper, colorful cute kids illustration, storybook art, bright colors, simple background, no text"}

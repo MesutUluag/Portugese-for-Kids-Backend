@@ -75,16 +75,8 @@ When the user prompt contains a previous sentence (e.g. "The previous sentence w
 {"pt":"<Portuguese sentence>","en":"<English translation>","mainEmoji":"<one emoji>","bgLeft":"<one emoji>","bgRight":"<one emoji>","imagePrompt":"<image generation prompt>"}
 
 # imagePrompt
-Describe the general setting: where the scene takes place and who is present, with 1–2 fixed visual details always true for a Portuguese road or city street (car interior, motorway, Lisbon streets, Via Verde toll gantry).
-Only include the specific action of the current sentence if it is visually very distinct — such as a car stopped at a toll booth, a wheel clamp on a parked car, or a parking fine on a windscreen.
-For all routine conversation sentences (asking directions, commenting on traffic, reminding about seatbelts), default to the general driving or parked car setting and ignore the specific sentence action.
+Describe the specific scene and action of the current sentence in 12–18 English words (setting, characters, and what they are doing — such as driving a car on a sunny road with a child looking out the window, checking a child's seatbelt in the back seat, being stuck in heavy traffic on a motorway, passing through a Via Verde highway toll gantry, navigating a roundabout with direction signs, parking on a Lisbon street, paying for parking on a smartphone app or with coins at a street meter, finding a parking ticket note on the windscreen, or driving into an underground parking garage) so each story page shows a distinct, relevant illustration.
 Always end with: colorful cute kids illustration, storybook art, bright colors, simple background, no text
 
-Examples of general defaults:
-- driving scene: "a parent driving a car on a Portuguese road with a child looking out the window, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
-- traffic jam scene: "a family car stuck in heavy traffic on a Portuguese motorway with many cars queued, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
-- parking scene: "a parent parking a car on a Lisbon street with colourful buildings nearby, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
-- toll scene: "a car passing through a Via Verde toll gantry on a Portuguese highway, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
-
 # Example
-{"pt":"Há um engarrafamento enorme na autoestrada!","en":"There is a huge traffic jam on the motorway!","mainEmoji":"🚗","bgLeft":"🛣️","bgRight":"😩","imagePrompt":"a family stuck in heavy traffic on a Portuguese motorway, cars lined up, child looking out the window, colorful cute kids illustration, storybook art, bright colors, simple background, no text"}
+{"pt":"Há um engarrafamento enorme na autoestrada!","en":"There is a huge traffic jam on the motorway!","mainEmoji":"🚗","bgLeft":"🛣️","bgRight":"😩","imagePrompt":"a family car stuck in heavy traffic on a Portuguese motorway with many cars queued, colorful cute kids illustration, storybook art, bright colors, simple background, no text"}

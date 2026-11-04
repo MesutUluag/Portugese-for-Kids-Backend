@@ -446,5 +446,317 @@
     "prompt": "an officer at an AIMA immigration office counter handing a payment receipt to an applicant, colorful friendly illustration, storybook art, bright colors, simple background, no text",
     "destination_blob_image": "image-cache/268f2ee7e5a6b0cf8468bff5634be197d8d12125f64556d7b03dc49c32b0865c/image.jpg",
     "destination_blob_prompt": "image-cache/268f2ee7e5a6b0cf8468bff5634be197d8d12125f64556d7b03dc49c32b0865c/prompt.txt"
+  },
+  {
+    "id": "M-57",
+    "filename": "M-57.jpeg",
+    "sha256": "059e617f6a9a851c44edda420dbdd2bb93d058dc4cf1ecc376c9e2fe87a80a05",
+    "prompt": "a waiter waving goodbye to a family leaving a cozy Portuguese restaurant with tiled walls, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/059e617f6a9a851c44edda420dbdd2bb93d058dc4cf1ecc376c9e2fe87a80a05/image.jpg",
+    "destination_blob_prompt": "image-cache/059e617f6a9a851c44edda420dbdd2bb93d058dc4cf1ecc376c9e2fe87a80a05/prompt.txt"
+  },
+  {
+    "id": "M-58",
+    "filename": "M-58.jpeg",
+    "sha256": "465ec3d22ba8ce98c05edf7f346ccae373bdc7e44b8a456a585d5525b50effb4",
+    "prompt": "a parent and child at a Portuguese supermarket fish counter talking to a friendly fishmonger, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/465ec3d22ba8ce98c05edf7f346ccae373bdc7e44b8a456a585d5525b50effb4/image.jpg",
+    "destination_blob_prompt": "image-cache/465ec3d22ba8ce98c05edf7f346ccae373bdc7e44b8a456a585d5525b50effb4/prompt.txt"
+  },
+  {
+    "id": "M-59",
+    "filename": "M-59.jpeg",
+    "sha256": "0b4d547a3dadd138f80970b76df894d1756497dcdbd62e3de0c208ecfd401568",
+    "prompt": "a parent and child at a Portuguese supermarket deli counter ordering sliced cheese and ham, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/0b4d547a3dadd138f80970b76df894d1756497dcdbd62e3de0c208ecfd401568/image.jpg",
+    "destination_blob_prompt": "image-cache/0b4d547a3dadd138f80970b76df894d1756497dcdbd62e3de0c208ecfd401568/prompt.txt"
+  },
+  {
+    "id": "M-60",
+    "filename": "M-60.jpeg",
+    "sha256": "5e03d241128a0e339a44b2448365bf72f0324408a62251f15bb92b2002ea5b29",
+    "prompt": "a parent and child weighing apples on a digital produce scale in a bright supermarket, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/5e03d241128a0e339a44b2448365bf72f0324408a62251f15bb92b2002ea5b29/image.jpg",
+    "destination_blob_prompt": "image-cache/5e03d241128a0e339a44b2448365bf72f0324408a62251f15bb92b2002ea5b29/prompt.txt"
+  },
+  {
+    "id": "M-61",
+    "filename": "M-61.jpeg",
+    "sha256": "c906d340486be762a65ac2d3998e0ce9d731a29dbf9e28bf7707c8d5ad225cc7",
+    "prompt": "a child raising their hand at a desk in a bright Portuguese school classroom, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/c906d340486be762a65ac2d3998e0ce9d731a29dbf9e28bf7707c8d5ad225cc7/image.jpg",
+    "destination_blob_prompt": "image-cache/c906d340486be762a65ac2d3998e0ce9d731a29dbf9e28bf7707c8d5ad225cc7/prompt.txt"
+  },
+  {
+    "id": "M-62",
+    "filename": "M-62.jpeg",
+    "sha256": "824d6794da91ef7209300db5761fe65dcad1a9ef3f93dceb0ebf1100ae6bc609",
+    "prompt": "two children sharing pencils and a ruler at a desk in a bright classroom, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/824d6794da91ef7209300db5761fe65dcad1a9ef3f93dceb0ebf1100ae6bc609/image.jpg",
+    "destination_blob_prompt": "image-cache/824d6794da91ef7209300db5761fe65dcad1a9ef3f93dceb0ebf1100ae6bc609/prompt.txt"
+  },
+  {
+    "id": "M-63",
+    "filename": "M-63.jpeg",
+    "sha256": "1f8b39f01931b319e9ef5dd71624011ea39d6ebd8efdeef8fa2f720a91506f55",
+    "prompt": "children waving goodbye to their teacher at the school entrance gate in the afternoon, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/1f8b39f01931b319e9ef5dd71624011ea39d6ebd8efdeef8fa2f720a91506f55/image.jpg",
+    "destination_blob_prompt": "image-cache/1f8b39f01931b319e9ef5dd71624011ea39d6ebd8efdeef8fa2f720a91506f55/prompt.txt"
+  },
+  {
+    "id": "M-64",
+    "filename": "M-64.jpg",
+    "sha256": "ea59f847eb3474b9188ab4b5499efd44072757f143fd4527fcbf7cc63a1c3bd2",
+    "prompt": "an attendant in uniform filling a family car with fuel at a Portuguese Galp petrol station, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/ea59f847eb3474b9188ab4b5499efd44072757f143fd4527fcbf7cc63a1c3bd2/image.jpg",
+    "destination_blob_prompt": "image-cache/ea59f847eb3474b9188ab4b5499efd44072757f143fd4527fcbf7cc63a1c3bd2/prompt.txt"
+  },
+  {
+    "id": "M-65",
+    "filename": "M-65.jpeg",
+    "sha256": "638530479c6db57b26fc66c57c60cf3a1cfd2f3852380a4b4f044d1d847431e3",
+    "prompt": "a family car inside an automatic car wash with soap bubbles at a Portuguese petrol station, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/638530479c6db57b26fc66c57c60cf3a1cfd2f3852380a4b4f044d1d847431e3/image.jpg",
+    "destination_blob_prompt": "image-cache/638530479c6db57b26fc66c57c60cf3a1cfd2f3852380a4b4f044d1d847431e3/prompt.txt"
+  },
+  {
+    "id": "M-66",
+    "filename": "M-66.jpeg",
+    "sha256": "c8ad3c6e17328983a7f974b24f7ce948f508ddfa7990910c312b0ea3e5765f80",
+    "prompt": "a parent plugging an electric car into an EV charging station at a Portuguese service area, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/c8ad3c6e17328983a7f974b24f7ce948f508ddfa7990910c312b0ea3e5765f80/image.jpg",
+    "destination_blob_prompt": "image-cache/c8ad3c6e17328983a7f974b24f7ce948f508ddfa7990910c312b0ea3e5765f80/prompt.txt"
+  },
+  {
+    "id": "M-67",
+    "filename": "M-67.jpeg",
+    "sha256": "8aee17c1bde8d5856e3fb30e7f6fccff3081b9c7c3b32b878097f377c362db5b",
+    "prompt": "a parent and child buying water bottles and snacks inside a petrol station convenience shop, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/8aee17c1bde8d5856e3fb30e7f6fccff3081b9c7c3b32b878097f377c362db5b/image.jpg",
+    "destination_blob_prompt": "image-cache/8aee17c1bde8d5856e3fb30e7f6fccff3081b9c7c3b32b878097f377c362db5b/prompt.txt"
+  },
+  {
+    "id": "M-68",
+    "filename": "M-68.jpeg",
+    "sha256": "cbbdca709effc0a43d92d5ebd04aecf1a571d2eb588ca48a10fd83d3ebb2fe70",
+    "prompt": "a family car driving away from a sunny Portuguese petrol station waving goodbye to the attendant, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/cbbdca709effc0a43d92d5ebd04aecf1a571d2eb588ca48a10fd83d3ebb2fe70/image.jpg",
+    "destination_blob_prompt": "image-cache/cbbdca709effc0a43d92d5ebd04aecf1a571d2eb588ca48a10fd83d3ebb2fe70/prompt.txt"
+  },
+  {
+    "id": "M-69",
+    "filename": "M-69.jpeg",
+    "sha256": "d3df12fc523e260785650dc2155898992e77b66d1972d3ad88dab747bc26d180",
+    "prompt": "a parent paying with coins at a street parking meter machine on a sunny Lisbon street, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/d3df12fc523e260785650dc2155898992e77b66d1972d3ad88dab747bc26d180/image.jpg",
+    "destination_blob_prompt": "image-cache/d3df12fc523e260785650dc2155898992e77b66d1972d3ad88dab747bc26d180/prompt.txt"
+  },
+  {
+    "id": "M-70",
+    "filename": "M-70.jpeg",
+    "sha256": "5b4937156f80a0a458214021d5f2c9c9b9ad95cc89236559e5e1065f3ce3fbd4",
+    "prompt": "a parent looking at a parking ticket note on a car windscreen on a Lisbon street, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/5b4937156f80a0a458214021d5f2c9c9b9ad95cc89236559e5e1065f3ce3fbd4/image.jpg",
+    "destination_blob_prompt": "image-cache/5b4937156f80a0a458214021d5f2c9c9b9ad95cc89236559e5e1065f3ce3fbd4/prompt.txt"
+  },
+  {
+    "id": "M-71",
+    "filename": "M-71.jpeg",
+    "sha256": "015eb234c69fc82ee2a1684d830d4fadb55ee896c8930bb64a3e0d693ebcaca5",
+    "prompt": "a family car driving into a bright underground parking garage with parking signs, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/015eb234c69fc82ee2a1684d830d4fadb55ee896c8930bb64a3e0d693ebcaca5/image.jpg",
+    "destination_blob_prompt": "image-cache/015eb234c69fc82ee2a1684d830d4fadb55ee896c8930bb64a3e0d693ebcaca5/prompt.txt"
+  },
+  {
+    "id": "M-72",
+    "filename": "M-72.jpeg",
+    "sha256": "a666a603e00f2f3c36d350eaab6958d5309c326b279eb2e9cc8c1a075c9f2deb",
+    "prompt": "a family car navigating a sunny Portuguese roundabout with road direction signs, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/a666a603e00f2f3c36d350eaab6958d5309c326b279eb2e9cc8c1a075c9f2deb/image.jpg",
+    "destination_blob_prompt": "image-cache/a666a603e00f2f3c36d350eaab6958d5309c326b279eb2e9cc8c1a075c9f2deb/prompt.txt"
+  },
+  {
+    "id": "M-73",
+    "filename": "M-73.jpeg",
+    "sha256": "ff9ee3a89940fc310bf34b7b69c62c029c25219e53ce03b28c1c0e3cf83dba88",
+    "prompt": "a parent checking a child's seatbelt in the back seat of a family car before driving, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/ff9ee3a89940fc310bf34b7b69c62c029c25219e53ce03b28c1c0e3cf83dba88/image.jpg",
+    "destination_blob_prompt": "image-cache/ff9ee3a89940fc310bf34b7b69c62c029c25219e53ce03b28c1c0e3cf83dba88/prompt.txt"
+  },
+  {
+    "id": "M-74",
+    "filename": "M-74.jpeg",
+    "sha256": "ea9c1dfc026af16e6d0bcd5bbddda1a864c107105a23621b826fd785e72e1df7",
+    "prompt": "a parent and child taking a numbered queue ticket from a dispenser inside a bright Portuguese bank, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/ea9c1dfc026af16e6d0bcd5bbddda1a864c107105a23621b826fd785e72e1df7/image.jpg",
+    "destination_blob_prompt": "image-cache/ea9c1dfc026af16e6d0bcd5bbddda1a864c107105a23621b826fd785e72e1df7/prompt.txt"
+  },
+  {
+    "id": "M-75",
+    "filename": "M-75.jpeg",
+    "sha256": "a9c847a8203eb273f0f72cd85a9cd838d3485369c52f1f83ca0a0895b7f1ced0",
+    "prompt": "a family sitting in a bank waiting area looking at the queue number display screen, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/a9c847a8203eb273f0f72cd85a9cd838d3485369c52f1f83ca0a0895b7f1ced0/image.jpg",
+    "destination_blob_prompt": "image-cache/a9c847a8203eb273f0f72cd85a9cd838d3485369c52f1f83ca0a0895b7f1ced0/prompt.txt"
+  },
+  {
+    "id": "M-76",
+    "filename": "M-76.jpeg",
+    "sha256": "02484ae7c903180f97ba6856836caa646e366fc8069e0469be2bbb8a2c59b784",
+    "prompt": "an adult handing a passport and NIF card to a bank teller at a Portuguese bank counter, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/02484ae7c903180f97ba6856836caa646e366fc8069e0469be2bbb8a2c59b784/image.jpg",
+    "destination_blob_prompt": "image-cache/02484ae7c903180f97ba6856836caa646e366fc8069e0469be2bbb8a2c59b784/prompt.txt"
+  },
+  {
+    "id": "M-77",
+    "filename": "M-77.jpeg",
+    "sha256": "ed5fda88db12798a1469bfeab6e1a821d216eaa1340ba1886335a5481dfd8ae4",
+    "prompt": "a bank teller handing a printed IBAN bank statement paper to a customer at a bank counter, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/ed5fda88db12798a1469bfeab6e1a821d216eaa1340ba1886335a5481dfd8ae4/image.jpg",
+    "destination_blob_prompt": "image-cache/ed5fda88db12798a1469bfeab6e1a821d216eaa1340ba1886335a5481dfd8ae4/prompt.txt"
+  },
+  {
+    "id": "M-78",
+    "filename": "M-78.jpeg",
+    "sha256": "8a926c80530971f1b8c56fdb0b6590cc42f553839f41e2ec837d2a4bcd90026d",
+    "prompt": "an adult depositing euro banknotes at a Portuguese bank counter with a teller, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/8a926c80530971f1b8c56fdb0b6590cc42f553839f41e2ec837d2a4bcd90026d/image.jpg",
+    "destination_blob_prompt": "image-cache/8a926c80530971f1b8c56fdb0b6590cc42f553839f41e2ec837d2a4bcd90026d/prompt.txt"
+  },
+  {
+    "id": "M-79",
+    "filename": "M-79.jpeg",
+    "sha256": "f9e0c732f84a6b415f2ea805045df68acdfd34bddab0992c814436c0f8cb3289",
+    "prompt": "a bank teller handing a new debit card to a smiling customer at a Portuguese bank desk, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/f9e0c732f84a6b415f2ea805045df68acdfd34bddab0992c814436c0f8cb3289/image.jpg",
+    "destination_blob_prompt": "image-cache/f9e0c732f84a6b415f2ea805045df68acdfd34bddab0992c814436c0f8cb3289/prompt.txt"
+  },
+  {
+    "id": "M-80",
+    "filename": "M-80.jpeg",
+    "sha256": "c2a0e97856c68842b31a7020ca9078b5b821c97ba124a38a87dc04c30fb123db",
+    "prompt": "an adult entering a PIN code on a card reader terminal at a Portuguese bank counter, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/c2a0e97856c68842b31a7020ca9078b5b821c97ba124a38a87dc04c30fb123db/image.jpg",
+    "destination_blob_prompt": "image-cache/c2a0e97856c68842b31a7020ca9078b5b821c97ba124a38a87dc04c30fb123db/prompt.txt"
+  },
+  {
+    "id": "M-81",
+    "filename": "M-81.jpeg",
+    "sha256": "819204d8d33606dca5968fa753ae90910e2599db5a803d2ff9055402c2dae5ee",
+    "prompt": "a parent and child waving their hand to signal an approaching yellow bus at a Lisbon bus stop, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/819204d8d33606dca5968fa753ae90910e2599db5a803d2ff9055402c2dae5ee/image.jpg",
+    "destination_blob_prompt": "image-cache/819204d8d33606dca5968fa753ae90910e2599db5a803d2ff9055402c2dae5ee/prompt.txt"
+  },
+  {
+    "id": "M-82",
+    "filename": "M-82.jpeg",
+    "sha256": "8cae8318d0a9861e24474adf37cbcfe24831c1b370ef752b1347806a81d4d7d9",
+    "prompt": "a parent and child looking at a bus route map and timetable schedule at a Lisbon bus stop, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/8cae8318d0a9861e24474adf37cbcfe24831c1b370ef752b1347806a81d4d7d9/image.jpg",
+    "destination_blob_prompt": "image-cache/8cae8318d0a9861e24474adf37cbcfe24831c1b370ef752b1347806a81d4d7d9/prompt.txt"
+  },
+  {
+    "id": "M-83",
+    "filename": "M-83.jpeg",
+    "sha256": "6f9f086315b0ae3af75efedc77e2c5b838bca3bca02385f4d86d1377a673ff16",
+    "prompt": "a parent buying a paper bus ticket with coins from a friendly driver on a yellow Lisbon bus, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/6f9f086315b0ae3af75efedc77e2c5b838bca3bca02385f4d86d1377a673ff16/image.jpg",
+    "destination_blob_prompt": "image-cache/6f9f086315b0ae3af75efedc77e2c5b838bca3bca02385f4d86d1377a673ff16/prompt.txt"
+  },
+  {
+    "id": "M-84",
+    "filename": "M-84.jpeg",
+    "sha256": "aeeea3e472528d79dda5a10e840230bc879d7389426a2f94ca0917d63457a474",
+    "prompt": "a parent asking a passenger if the empty seat next to them is free on a sunny Lisbon bus, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/aeeea3e472528d79dda5a10e840230bc879d7389426a2f94ca0917d63457a474/image.jpg",
+    "destination_blob_prompt": "image-cache/aeeea3e472528d79dda5a10e840230bc879d7389426a2f94ca0917d63457a474/prompt.txt"
+  },
+  {
+    "id": "M-85",
+    "filename": "M-85.jpeg",
+    "sha256": "90b258c1501f2fb4ee05c27a5ef33f811f932fbc31d01f41432b0d60b6008687",
+    "prompt": "a child pressing the red stop button on a pole inside a yellow Lisbon bus, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/90b258c1501f2fb4ee05c27a5ef33f811f932fbc31d01f41432b0d60b6008687/image.jpg",
+    "destination_blob_prompt": "image-cache/90b258c1501f2fb4ee05c27a5ef33f811f932fbc31d01f41432b0d60b6008687/prompt.txt"
+  },
+  {
+    "id": "M-86",
+    "filename": "M-86.jpeg",
+    "sha256": "259f889d78c121e42e470e59e1f5271f16d93ba2c491a24b81cd2e8e3cb291bc",
+    "prompt": "a family stepping off the rear exit doors of a yellow Lisbon bus onto a sunny sidewalk, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/259f889d78c121e42e470e59e1f5271f16d93ba2c491a24b81cd2e8e3cb291bc/image.jpg",
+    "destination_blob_prompt": "image-cache/259f889d78c121e42e470e59e1f5271f16d93ba2c491a24b81cd2e8e3cb291bc/prompt.txt"
+  },
+  {
+    "id": "M-87",
+    "filename": "M-87.jpeg",
+    "sha256": "0804e53981950316c0e04226bd4094ca9e9bc8f4ed91b16317edadbf4625a138",
+    "prompt": "a parent and child walking from a yellow bus stop towards a Lisbon metro station entrance sign, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/0804e53981950316c0e04226bd4094ca9e9bc8f4ed91b16317edadbf4625a138/image.jpg",
+    "destination_blob_prompt": "image-cache/0804e53981950316c0e04226bd4094ca9e9bc8f4ed91b16317edadbf4625a138/prompt.txt"
+  },
+  {
+    "id": "M-88",
+    "filename": "M-88.jpeg",
+    "sha256": "a51c2d9c8775a8b8fce6346a68e39555e3f05f7b3405ddc484d8da03162e4561",
+    "prompt": "a parent and child taking a numbered ticket at the entrance of a bright Portuguese pharmacy, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/a51c2d9c8775a8b8fce6346a68e39555e3f05f7b3405ddc484d8da03162e4561/image.jpg",
+    "destination_blob_prompt": "image-cache/a51c2d9c8775a8b8fce6346a68e39555e3f05f7b3405ddc484d8da03162e4561/prompt.txt"
+  },
+  {
+    "id": "M-89",
+    "filename": "M-89.jpeg",
+    "sha256": "924ace5cdc073b88fcc0f30ac9dd361ce1aa8c52fabf1e5138b98003b3ed0429",
+    "prompt": "a parent showing an electronic prescription on a smartphone screen to a pharmacist in a white coat, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/924ace5cdc073b88fcc0f30ac9dd361ce1aa8c52fabf1e5138b98003b3ed0429/image.jpg",
+    "destination_blob_prompt": "image-cache/924ace5cdc073b88fcc0f30ac9dd361ce1aa8c52fabf1e5138b98003b3ed0429/prompt.txt"
+  },
+  {
+    "id": "M-90",
+    "filename": "M-90.jpeg",
+    "sha256": "41834e5b0e2b11f7ab5b53c9ddd7edd14e79bb265e7d166fb13de6c8745788c6",
+    "prompt": "a pharmacist in a white coat showing two medicine boxes to a parent at a pharmacy counter to compare generic and brand, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/41834e5b0e2b11f7ab5b53c9ddd7edd14e79bb265e7d166fb13de6c8745788c6/image.jpg",
+    "destination_blob_prompt": "image-cache/41834e5b0e2b11f7ab5b53c9ddd7edd14e79bb265e7d166fb13de6c8745788c6/prompt.txt"
+  },
+  {
+    "id": "M-91",
+    "filename": "M-91.jpeg",
+    "sha256": "fe5f6a49beaa37942aafa2cf3ad2783e0fc693f49a7ce71eb5a5c372e2038214",
+    "prompt": "a pharmacist holding a bottle of children's cough syrup and a measuring spoon at a pharmacy counter, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/fe5f6a49beaa37942aafa2cf3ad2783e0fc693f49a7ce71eb5a5c372e2038214/image.jpg",
+    "destination_blob_prompt": "image-cache/fe5f6a49beaa37942aafa2cf3ad2783e0fc693f49a7ce71eb5a5c372e2038214/prompt.txt"
+  },
+  {
+    "id": "M-92",
+    "filename": "M-92.jpeg",
+    "sha256": "4491501d075b01ccadb2afdd137b521b7e911386509041c3c5c87a88367c01ad",
+    "prompt": "a parent and child looking at band-aids and antiseptic first aid supplies at a Portuguese pharmacy counter, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/4491501d075b01ccadb2afdd137b521b7e911386509041c3c5c87a88367c01ad/image.jpg",
+    "destination_blob_prompt": "image-cache/4491501d075b01ccadb2afdd137b521b7e911386509041c3c5c87a88367c01ad/prompt.txt"
+  },
+  {
+    "id": "M-93",
+    "filename": "M-93.jpeg",
+    "sha256": "4c8863178f9884cf398efe9126093bceed5db1c22ad36b9b1128ec1ac4c8ec3c",
+    "prompt": "a pharmacist handing a soothing gel tube for mosquito bites to a parent with a child at a pharmacy, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/4c8863178f9884cf398efe9126093bceed5db1c22ad36b9b1128ec1ac4c8ec3c/image.jpg",
+    "destination_blob_prompt": "image-cache/4c8863178f9884cf398efe9126093bceed5db1c22ad36b9b1128ec1ac4c8ec3c/prompt.txt"
+  },
+  {
+    "id": "M-94",
+    "filename": "M-94.jpeg",
+    "sha256": "e4126079c9aa8e61bc6c8d9d43890b9bf927a03d68e846629aa00c4cd3f312df",
+    "prompt": "a parent paying with a contactless card on a payment terminal at a Portuguese pharmacy counter, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/e4126079c9aa8e61bc6c8d9d43890b9bf927a03d68e846629aa00c4cd3f312df/image.jpg",
+    "destination_blob_prompt": "image-cache/e4126079c9aa8e61bc6c8d9d43890b9bf927a03d68e846629aa00c4cd3f312df/prompt.txt"
+  },
+  {
+    "id": "M-95",
+    "filename": "M-95.jpeg",
+    "sha256": "b206395115bfe63832349eb6db6a2f15d2e52810b5b0bcdcde74e61c0a591b7d",
+    "prompt": "a parent and child standing outside a Portuguese pharmacy with a glowing green cross sign in the evening, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/b206395115bfe63832349eb6db6a2f15d2e52810b5b0bcdcde74e61c0a591b7d/image.jpg",
+    "destination_blob_prompt": "image-cache/b206395115bfe63832349eb6db6a2f15d2e52810b5b0bcdcde74e61c0a591b7d/prompt.txt"
   }
 ]

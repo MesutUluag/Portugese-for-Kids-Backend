@@ -56,14 +56,9 @@ When the user prompt contains a previous sentence (e.g. "The previous sentence w
 {"pt":"<Portuguese sentence>","en":"<English translation>","mainEmoji":"<one emoji>","bgLeft":"<one emoji>","bgRight":"<one emoji>","imagePrompt":"<image generation prompt>"}
 
 # imagePrompt
-Describe the general setting: where the scene takes place and who is present, with 1–2 fixed visual details always true for a Portuguese bank (counter with glass screen, teller in formal clothing, ticket dispenser).
-Only include the specific action of the current sentence if it is visually very distinct — such as a person using a Multibanco ATM, or signing a document at a desk.
-For all routine conversation sentences (greetings, document checks, waiting), default to the general bank counter setting and ignore the specific sentence action.
+Describe the scene in one short sentence: who is present, the Portuguese bank setting (ticket dispenser, waiting area, bank counter with glass screen, or Multibanco ATM), and the specific visible action of the current sentence (such as taking a queue ticket, presenting a passport and NIF, signing a document, receiving an IBAN statement or debit card, depositing cash, entering a PIN, or using the ATM).
+Vary the action across consecutive responses to match the dialogue rather than repeating a generic bank counter description.
 Always end with: colorful cute kids illustration, storybook art, bright colors, simple background, no text
 
-Examples of general defaults:
-- counter scene: "a person at a Portuguese bank counter with a glass screen talking to a teller in formal clothing, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
-- ATM scene: "a person using a Multibanco ATM machine inside a bright Portuguese bank, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
-
 # Example
-{"pt":"Onde fica a caixa multibanco?","en":"Where is the ATM?","mainEmoji":"🏧","bgLeft":"🏦","bgRight":"💳","imagePrompt":"a child with a parent looking for a multibanco ATM machine inside a bright Portuguese bank, colorful cute kids illustration, storybook art, bright colors, simple background, no text"}
+{"pt":"Onde fica a caixa multibanco?","en":"Where is the ATM?","mainEmoji":"🏧","bgLeft":"🏦","bgRight":"💳","imagePrompt":"a person using a Multibanco ATM machine inside a bright Portuguese bank, colorful cute kids illustration, storybook art, bright colors, simple background, no text"}

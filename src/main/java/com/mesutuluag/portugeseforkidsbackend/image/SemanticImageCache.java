@@ -99,7 +99,8 @@ public class SemanticImageCache {
     private static final Set<String> KEEP_ER_OR_NOUNS = Set.of(
             "waiter", "counter", "dinner", "number", "water", "scooter",
             "mother", "father", "sister", "brother", "finger", "paper",
-            "officer", "teller", "cashier", "driver", "customer", "shopkeeper", "passenger"
+            "officer", "teller", "cashier", "driver", "customer", "shopkeeper", "passenger",
+            "fishmonger", "receptionist", "attendant"
     );
 
     /**
@@ -164,7 +165,8 @@ public class SemanticImageCache {
         s.put("supermarket","store");
         s.put("clinic",    "hospital");
         s.put("cafe",      "cafeteria");
-        s.put("canteen",   "cafeteria");
+        s.put("pastelaria","cafeteria");
+        s.put("gas",       "petrol");
         s.put("classroom", "school");
         s.put("airport",   "airport");
         s.put("pharmacy",  "pharmacy");

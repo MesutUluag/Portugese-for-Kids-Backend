@@ -59,14 +59,8 @@ When the user prompt contains a previous sentence (e.g. "The previous sentence w
 {"pt":"<Portuguese sentence>","en":"<English translation>","mainEmoji":"<one emoji>","bgLeft":"<one emoji>","bgRight":"<one emoji>","imagePrompt":"<image generation prompt>"}
 
 # imagePrompt
-Describe the general setting: where the scene takes place and who is present, with 1–2 fixed visual details always true for a Portuguese pharmacy (green illuminated cross outside, pharmacist in white coat behind the counter, medicine shelves).
-Only include the specific action of the current sentence if it is visually very distinct — such as a pharmacist handing over a medicine box, or a customer showing a prescription on their phone.
-For all routine conversation sentences (asking for advice, describing symptoms, waiting), default to the general pharmacy counter setting and ignore the specific sentence action.
+Describe the specific scene and action of the current sentence in 12–18 English words (setting, characters, and what they are doing or holding — such as standing outside a pharmacy with a glowing green cross sign, taking a numbered ticket at the entrance, showing an electronic prescription on a smartphone to a pharmacist, asking the pharmacist for advice at the counter, comparing generic and brand medicine boxes, checking cough syrup dosage with a measuring spoon, looking at band-aids and first aid supplies, receiving a gel tube for mosquito bites, receiving a medicine box under a green cross sign, or paying with a contactless card on a payment terminal) so each story page shows a distinct, relevant illustration.
 Always end with: colorful cute kids illustration, storybook art, bright colors, simple background, no text
 
-Examples of general defaults:
-- counter scene: "a parent and child at a Portuguese pharmacy counter with a pharmacist in a white coat and medicine shelves behind, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
-- handing medicine scene: "a pharmacist handing a medicine box to a parent at a bright pharmacy counter under a green cross sign, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
-
 # Example
-{"pt":"Tem alguma coisa para a febre, se faz favor?","en":"Do you have something for fever, please?","mainEmoji":"💊","bgLeft":"🏥","bgRight":"👩‍⚕️","imagePrompt":"a parent at a Portuguese pharmacy counter asking the pharmacist for fever medicine for their child, colorful cute kids illustration, storybook art, bright colors, simple background, no text"}
+{"pt":"Tem alguma coisa para a febre, se faz favor?","en":"Do you have something for fever, please?","mainEmoji":"💊","bgLeft":"🏥","bgRight":"👩‍⚕️","imagePrompt":"a parent and child at a Portuguese pharmacy counter with a pharmacist in a white coat and medicine shelves behind, colorful cute kids illustration, storybook art, bright colors, simple background, no text"}

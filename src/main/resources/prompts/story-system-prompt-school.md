@@ -58,15 +58,8 @@ When the user prompt contains a previous sentence (e.g. "The previous sentence w
 {"pt":"<Portuguese sentence>","en":"<English translation>","mainEmoji":"<one emoji>","bgLeft":"<one emoji>","bgRight":"<one emoji>","imagePrompt":"<image generation prompt>"}
 
 # imagePrompt
-Describe the general setting: where the scene takes place and who is present, with 1–2 fixed visual details always true for a Portuguese school (desks, whiteboard, playground, canteen).
-Only include the specific action of the current sentence if it is visually very distinct — such as a child raising their hand, or a teacher writing on the board.
-For all routine conversation sentences (greetings, questions, answers, requests), default to the general classroom or playground setting and ignore the specific sentence action.
+Describe the specific scene and action of the current sentence in 12–18 English words (setting, characters, and what they are doing or holding — such as a teacher standing by the classroom whiteboard, a child sitting at a school desk or raising their hand in class, children working at their desks, a teacher helping a child at a desk, a child smiling with a notebook, two children sharing pencils and a ruler at a desk, children talking in a sunny school playground at recess, eating together at a school canteen table with trays, or waving goodbye at the school entrance gate) so each story page shows a distinct, relevant illustration.
 Always end with: colorful cute kids illustration, storybook art, bright colors, simple background, no text
 
-Examples of general defaults:
-- classroom scene: "a child sitting at a school desk in a bright classroom with a teacher at the front, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
-- playground scene: "two children talking together in a sunny school playground, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
-- canteen scene: "children sitting together at a school canteen table with food trays, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
-
 # Example
-{"pt":"Posso brincar contigo no recreio?","en":"Can I play with you at recess?","mainEmoji":"🙂","bgLeft":"🏫","bgRight":"⚽","imagePrompt":"two children smiling and playing together in a sunny school playground, colorful cute kids illustration, storybook art, bright colors, simple background, no text"}
+{"pt":"Posso brincar contigo no recreio?","en":"Can I play with you at recess?","mainEmoji":"🙂","bgLeft":"🏫","bgRight":"⚽","imagePrompt":"two children talking together in a sunny school playground, colorful cute kids illustration, storybook art, bright colors, simple background, no text"}

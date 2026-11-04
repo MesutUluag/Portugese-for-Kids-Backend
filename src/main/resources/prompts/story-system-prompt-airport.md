@@ -54,16 +54,9 @@ When the user prompt contains a previous sentence (e.g. "The previous sentence w
 {"pt":"<Portuguese sentence>","en":"<English translation>","mainEmoji":"<one emoji>","bgLeft":"<one emoji>","bgRight":"<one emoji>","imagePrompt":"<image generation prompt>"}
 
 # imagePrompt
-Describe the general setting: where the scene takes place and who is present, with 1–2 fixed visual details always true for a Portuguese airport (check-in counters, departures board, security belt, boarding gate).
-Only include the specific action of the current sentence if it is visually very distinct — such as placing bags on an X-ray belt, handing a passport at border control, or boarding a plane.
-For all routine conversation sentences (asking directions, waiting, checking in), default to the most relevant airport zone and ignore the specific sentence action.
+Describe the scene in one short sentence: who is present, the Portuguese airport zone (check-in counter, luggage scale, security checkpoint, departure board, boarding gate, or arrivals hall), and the specific visible action of the current sentence.
+Vary the action and airport zone across consecutive responses to match the dialogue rather than repeating a generic scene.
 Always end with: colorful cute kids illustration, storybook art, bright colors, simple background, no text
-
-Examples of general defaults:
-- check-in scene: "a family with suitcases at a Portuguese airport check-in counter with an airline agent, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
-- security scene: "a family at an airport security checkpoint with bags on a conveyor belt and an X-ray scanner, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
-- gate scene: "a family waiting at an airport boarding gate with hand luggage and a departure screen, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
-- arrivals scene: "a family with suitcases in an airport arrivals hall with metro and taxi exit signs, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
 
 # Example
 {"pt":"Onde é o nosso portão?","en":"Where is our gate?","mainEmoji":"✈️","bgLeft":"🛫","bgRight":"🧳","imagePrompt":"a child with a parent looking at airport departure boards searching for their gate at a Portuguese airport, colorful cute kids illustration, storybook art, bright colors, simple background, no text"}

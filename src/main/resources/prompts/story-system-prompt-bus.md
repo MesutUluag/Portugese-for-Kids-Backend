@@ -57,15 +57,9 @@ When the user prompt contains a previous sentence (e.g. "The previous sentence w
 {"pt":"<Portuguese sentence>","en":"<English translation>","mainEmoji":"<one emoji>","bgLeft":"<one emoji>","bgRight":"<one emoji>","imagePrompt":"<image generation prompt>"}
 
 # imagePrompt
-Describe the general setting: where the scene takes place and who is present, with 1–2 fixed visual details always true for Portuguese public transport (yellow Lisbon bus, bus stop sign, card validator near the driver).
-Only include the specific action of the current sentence if it is visually very distinct — such as tapping a travel card on the validator, or pressing the stop button.
-For all routine conversation sentences (asking directions, waiting, sitting), default to the general bus stop or on-bus setting and ignore the specific sentence action.
+Describe the scene in one short sentence: who is present, the Lisbon bus or bus stop setting, and the specific visible action of the current sentence (such as waving to signal an approaching yellow bus, checking the route timetable, tapping a travel card on the validator, buying a ticket from the driver, asking about a free seat, looking out the window, pressing the red stop button, exiting the rear doors, or walking toward a metro transfer).
+Vary the action across consecutive responses to match the dialogue rather than repeating a generic bus description.
 Always end with: colorful cute kids illustration, storybook art, bright colors, simple background, no text
 
-Examples of general defaults:
-- bus stop scene: "a child and parent waiting at a Lisbon bus stop with a yellow bus approaching, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
-- on-bus scene: "a family sitting on a yellow Lisbon bus looking out the window at a Portuguese city street, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
-- boarding scene: "a family boarding a yellow bus and tapping their travel card on the validator near the driver, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
-
 # Example
-{"pt":"Este autocarro vai para o centro?","en":"Does this bus go to the centre?","mainEmoji":"🚌","bgLeft":"🛑","bgRight":"🗺️","imagePrompt":"a child asking the bus driver if the bus goes to the city centre at a sunny Lisbon bus stop, colorful cute kids illustration, storybook art, bright colors, simple background, no text"}
+{"pt":"Este autocarro vai para o centro?","en":"Does this bus go to the centre?","mainEmoji":"🚌","bgLeft":"🛑","bgRight":"🗺️","imagePrompt":"a child and parent waiting at a Lisbon bus stop with a yellow bus approaching, colorful cute kids illustration, storybook art, bright colors, simple background, no text"}
