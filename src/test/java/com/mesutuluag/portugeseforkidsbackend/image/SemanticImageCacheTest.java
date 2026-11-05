@@ -212,6 +212,38 @@ class SemanticImageCacheTest {
     }
 
     @Test
+    void get_teacherVsSchool_synonymHit() {
+        // "teacher" → "school"
+        cache.put("child learning letters at school", IMAGE_A);
+
+        assertThat(cache.get("child learning letters from teacher")).isEqualTo(IMAGE_A);
+    }
+
+    @Test
+    void get_schoolworkVsSchool_synonymHit() {
+        // "schoolwork" → "school"
+        cache.put("child learning letters at school", IMAGE_A);
+
+        assertThat(cache.get("child learning letters with schoolwork")).isEqualTo(IMAGE_A);
+    }
+
+    @Test
+    void get_textbookVsBook_synonymHit() {
+        // "textbook" → "book"
+        cache.put("child reading book at school", IMAGE_A);
+
+        assertThat(cache.get("child reading textbook at school")).isEqualTo(IMAGE_A);
+    }
+
+    @Test
+    void get_explainingVsTalk_synonymHit() {
+        // "explaining" → "talk"
+        cache.put("child talk to friend at school", IMAGE_A);
+
+        assertThat(cache.get("child explaining to friend at school")).isEqualTo(IMAGE_A);
+    }
+
+    @Test
     void get_nurseVsDoctor_synonymHit() {
         // "nurse" → "doctor"
         cache.put("doctor helping child at hospital", IMAGE_A);

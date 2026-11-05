@@ -63,7 +63,8 @@ public class SemanticImageCache {
             "by", "as", "from", "up", "was", "has", "have", "had", "not",
             "about", "after", "into", "over", "down", "through", "their",
             "them", "our", "your", "his", "her", "while", "towards", "toward",
-            "under", "near", "very", "much", "some", "any", "more", "before", "here", "until", "out"
+            "under", "near", "very", "much", "some", "any", "more", "before", "here", "until", "out",
+            "they", "he", "she", "him", "we", "us", "i", "me", "you"
     );
 
     /**
@@ -95,7 +96,8 @@ public class SemanticImageCache {
             "going", "starting", "beginning", "trying", "using",
             "carefully", "nervously", "quickly", "slowly", "narrow", "rear", "back",
             "empty", "free", "day", "time", "arrival", "spot", "space", "sign", "direction",
-            "turn", "convenience", "uniform", "contactless", "successful", "purchase", "open", "distance"
+            "turn", "convenience", "uniform", "contactless", "successful", "purchase", "open", "distance",
+            "permission", "finished", "finish", "nodding", "nod", "leaning", "lean", "word", "sentence"
     );
 
     /** Nouns ending in -er/-or that should not have their suffix stripped to a verb stem. */
@@ -184,6 +186,10 @@ public class SemanticImageCache {
         s.put("assistant", "attendant");
         s.put("cashier",   "attendant");
         s.put("classroom", "school");
+        s.put("schoolwork","school");
+        s.put("teacher",   "school");
+        s.put("teachers",  "school");
+        s.put("textbook",  "book");
         s.put("airport",   "airport");
         s.put("pharmacy",  "pharmacy");
         s.put("chemist",   "pharmacy");
@@ -265,6 +271,9 @@ public class SemanticImageCache {
         s.put("talking",   "talk");
         s.put("talks",     "talk");
         s.put("talked",    "talk");
+        s.put("explaining","talk");
+        s.put("explains",  "talk");
+        s.put("explained", "talk");
         s.put("speaking",  "speak");
         s.put("speaks",    "speak");
         s.put("spoke",     "speak");
