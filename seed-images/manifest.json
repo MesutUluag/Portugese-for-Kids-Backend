@@ -1142,5 +1142,21 @@
     "prompt": "an attendant at a Galp petrol station counter handing a payment receipt to a customer, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
     "destination_blob_image": "image-cache/9086e6682c7531b0108abef555b79ca92d81df5a5a0bba89c7a24f97388ef161/image.jpg",
     "destination_blob_prompt": "image-cache/9086e6682c7531b0108abef555b79ca92d81df5a5a0bba89c7a24f97388ef161/prompt.txt"
+  },
+  {
+    "id": "M-144",
+    "filename": "M-144.jpg",
+    "sha256": "df32b7cce6d54da14edcc20ac72800b79dd03b67c4ac13ed81395e6f1bd76bd0",
+    "prompt": "a driver sitting and waiting inside a parked car at a Portuguese petrol station, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/df32b7cce6d54da14edcc20ac72800b79dd03b67c4ac13ed81395e6f1bd76bd0/image.jpg",
+    "destination_blob_prompt": "image-cache/df32b7cce6d54da14edcc20ac72800b79dd03b67c4ac13ed81395e6f1bd76bd0/prompt.txt"
+  },
+  {
+    "id": "M-145",
+    "filename": "M-145.jpg",
+    "sha256": "1b886f724afad7ea7fd2d1dda5c6f2fefd973bfcb5a7ca552e530ae0b22b51c3",
+    "prompt": "a customer smiling and leaving a Portuguese pharmacy holding a small pharmacy bag, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/1b886f724afad7ea7fd2d1dda5c6f2fefd973bfcb5a7ca552e530ae0b22b51c3/image.jpg",
+    "destination_blob_prompt": "image-cache/1b886f724afad7ea7fd2d1dda5c6f2fefd973bfcb5a7ca552e530ae0b22b51c3/prompt.txt"
   }
 ]
