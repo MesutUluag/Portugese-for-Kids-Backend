@@ -97,7 +97,8 @@ public class SemanticImageCache {
             "carefully", "nervously", "quickly", "slowly", "narrow", "rear", "back",
             "empty", "free", "day", "time", "arrival", "spot", "space", "sign", "direction",
             "turn", "convenience", "uniform", "contactless", "successful", "purchase", "open", "distance",
-            "permission", "finished", "finish", "nodding", "nod", "leaning", "lean", "word", "sentence"
+            "permission", "finished", "finish", "nodding", "nod", "leaning", "lean", "word", "sentence",
+            "room", "math", "away", "fetch", "gestur", "gesture", "gesturing", "taking", "symptom", "symptoms", "start"
     );
 
     /** Nouns ending in -er/-or that should not have their suffix stripped to a verb stem. */
@@ -114,8 +115,8 @@ public class SemanticImageCache {
      * candidate contain domain stems.
      */
     private static final Set<String> DOMAIN_STEMS = Set.of(
-            "school", "playground",
-            "restaurant",
+            "school", "playground", "whiteboard",
+            "restaurant", "waiter",
             "bank", "multibanco", "atm",
             "hospital", "doct",
             "cafeteria", "nata", "terrace",
@@ -150,8 +151,8 @@ public class SemanticImageCache {
         s.put("boy",       "child");
         s.put("girl",      "child");
         s.put("children",  "child");
-        s.put("student",   "child");
-        s.put("pupil",     "child");
+        s.put("student",   "school");
+        s.put("pupil",     "school");
         s.put("baby",      "child");
         s.put("friend",    "child");
         s.put("classmate", "child");
@@ -163,6 +164,7 @@ public class SemanticImageCache {
         s.put("adult",     "person");
         s.put("applicant", "person");
         s.put("customer",  "person");
+        s.put("patient",   "person");
         s.put("parent",    "person");
         s.put("parents",   "person");
         s.put("family",    "person");
@@ -187,9 +189,11 @@ public class SemanticImageCache {
         s.put("cashier",   "attendant");
         s.put("classroom", "school");
         s.put("schoolwork","school");
+        s.put("whiteboard","school");
         s.put("teacher",   "school");
         s.put("teachers",  "school");
         s.put("textbook",  "book");
+        s.put("reception", "receptionist");
         s.put("airport",   "airport");
         s.put("pharmacy",  "pharmacy");
         s.put("chemist",   "pharmacy");
@@ -216,6 +220,8 @@ public class SemanticImageCache {
         s.put("water",     "drink");
         s.put("juice",     "drink");
         s.put("juices",    "drink");
+        s.put("wine",      "drink");
+        s.put("codfish",   "cod");
         // Actions
         s.put("driving",    "drive");
         s.put("drives",     "drive");
@@ -644,7 +650,10 @@ public class SemanticImageCache {
                 .replaceAll("\\b(?:convenience|petrol|gas|galp)\\s+station\\s+(?:convenience\\s+)?(?:shop|store)s?\\b", "petrol counter")
                 .replaceAll("\\b(?:convenience|petrol|gas|galp)\\s+(?:shop|store)s?\\b", "petrol counter")
                 .replaceAll("\\bpencil\\s+cases?\\b", "pencil")
-                .replaceAll("\\bsigns?\\s+showing\\b", "sign");
+                .replaceAll("\\bsigns?\\s+showing\\b", "sign")
+                .replaceAll("\\bmedical\\s+(?:office|room|center|centre)s?\\b", "hospital")
+                .replaceAll("\\bdisplay\\s+screen\\b", "board")
+                .replaceAll("\\bdrink\\s+order\\b", "order");
         return Arrays.stream(ascii.split("[^a-z0-9]+"))
                 .filter(t -> t.length() > 1)
                 .filter(t -> !STOP_WORDS.contains(t))
