@@ -1166,5 +1166,29 @@
     "prompt": "a happy child sitting at a desk with an open notebook and pencil in a bright classroom, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
     "destination_blob_image": "image-cache/9294a2217cd996ea90ab3074ec73dfa4ec0e591e941354c1dc10874ef944f282/image.jpg",
     "destination_blob_prompt": "image-cache/9294a2217cd996ea90ab3074ec73dfa4ec0e591e941354c1dc10874ef944f282/prompt.txt"
+  },
+  {
+    "id": "M-147",
+    "filename": "M-147.jpg",
+    "sha256": "4e8ddd831dfd2646adabca2d76122fca75f8de46ec423c6be499ad857fdef0d2",
+    "prompt": "a friendly waiter bringing a basket of fresh bread to a wooden table in a traditional Portuguese restaurant, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/4e8ddd831dfd2646adabca2d76122fca75f8de46ec423c6be499ad857fdef0d2/image.jpg",
+    "destination_blob_prompt": "image-cache/4e8ddd831dfd2646adabca2d76122fca75f8de46ec423c6be499ad857fdef0d2/prompt.txt"
+  },
+  {
+    "id": "M-148",
+    "filename": "M-148.jpg",
+    "sha256": "5b0788269fc6418179f3176913c3353e5e1bfe6e4dfed95188c0a0d23df7ba08",
+    "prompt": "a family ordering two plates of cod at a traditional Portuguese restaurant table, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/5b0788269fc6418179f3176913c3353e5e1bfe6e4dfed95188c0a0d23df7ba08/image.jpg",
+    "destination_blob_prompt": "image-cache/5b0788269fc6418179f3176913c3353e5e1bfe6e4dfed95188c0a0d23df7ba08/prompt.txt"
+  },
+  {
+    "id": "M-149",
+    "filename": "M-149.jpg",
+    "sha256": "96421e784d753b2bff98b78b3c8592677f53c66f0fe2b3356cce5417f0273f8b",
+    "prompt": "a parent holding a small paper ticket from a machine in a hospital waiting area, colorful cute kids illustration, storybook art, bright colors, simple background, no text",
+    "destination_blob_image": "image-cache/96421e784d753b2bff98b78b3c8592677f53c66f0fe2b3356cce5417f0273f8b/image.jpg",
+    "destination_blob_prompt": "image-cache/96421e784d753b2bff98b78b3c8592677f53c66f0fe2b3356cce5417f0273f8b/prompt.txt"
   }
 ]
