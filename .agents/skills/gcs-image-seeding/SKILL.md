@@ -26,18 +26,19 @@ Use this skill whenever you need to add, inspect, format, or upload story illust
 To add new images to the cache:
 
 ### Step 1: Provide the Image & Prompt
-Choose one of these convenient methods to drop files into [`seed-images/incoming/`](file:///Users/mesutuluag/Documents/codingProjects/practice-portuguese/seed-images/incoming/):
+Choose one of these methods to stage files into [`seed-images/incoming/`](file:///Users/mesutuluag/Documents/codingProjects/practice-portuguese/seed-images/incoming/):
 
-* **Method A (Sidecar `.txt` file - Recommended for custom images):**  
-  Drop `scene_name.png` (or `.jpg` / `.webp`) and a companion `scene_name.txt` containing the exact prompt text.
-* **Method B (Story ID / Code):**  
-  Name the file with a known story code (e.g. `M-01.jpg`, `school-02.png`, `cafe-03.webp`).
+* **Method A (Sequential `M-XXX` ID + Sidecar `.txt` — Recommended):**  
+  1. Name the image with the next sequential ID (e.g. `M-150.jpg`) and place a companion `M-150.txt` in `seed-images/incoming/` containing the exact prompt text.
+  2. Register `"M-150": "<exact prompt>"` in both [`seed-images/prompts.json`](file:///Users/mesutuluag/Documents/codingProjects/practice-portuguese/seed-images/prompts.json) and [`Portugese-for-Kids-Backend/seed-images/prompts.json`](file:///Users/mesutuluag/Documents/codingProjects/practice-portuguese/Portugese-for-Kids-Backend/seed-images/prompts.json).
+* **Method B (Known Story ID / Code in `prompts.json`):**  
+  Name the file with a known ID from `prompts.json` (e.g. `M-01.jpg`, `school-02.png`).
 * **Method C (CLI single file):**  
   ```bash
-  python3 seed-images/process_images.py --image path/to/my_image.png --prompt "exact prompt string" --id "my-scene"
+  python3 seed-images/process_images.py --image path/to/my_image.png --prompt "exact prompt string" --id "M-150"
   ```
 
-### Step 2: Process & Validate Locally
+### Step 2: Process, Validate & Sync Locally
 Run the automated image processing pipeline:
 ```bash
 python3 seed-images/process_images.py
@@ -45,28 +46,43 @@ python3 seed-images/process_images.py
 This automatically:
 1. Flattens transparency onto a solid white background (`#FFFFFF`).
 2. Resizes the image to the standard desktop/mobile ratio: **`768 x 336`** pixels.
-3. Compresses to baseline **JPEG at 60% quality** (`~40–50 KB`).
-4. Generates the exact SHA-256 hash matching the prompt UTF-8 bytes.
+3. Compresses to baseline **JPEG at 60% quality** (`~40–60 KB`).
+4. Generates the exact SHA-256 hash matching `prompt.strip()` UTF-8 bytes.
 5. Stages `image.jpg` and `prompt.txt` in [`seed-images/processed/<sha256>/`](file:///Users/mesutuluag/Documents/codingProjects/practice-portuguese/seed-images/processed/).
 6. Updates [`seed-images/manifest.json`](file:///Users/mesutuluag/Documents/codingProjects/practice-portuguese/seed-images/manifest.json).
 
-### Step 3: Audit Cache Status (Optional)
-Check current GCS coverage against all story prompt templates:
+Then sync the updated manifest (and processed folders) into the Git-tracked backend directory:
 ```bash
-python3 seed-images/audit_cache.py
+cp seed-images/manifest.json Portugese-for-Kids-Backend/seed-images/manifest.json
+cp -R seed-images/processed/* Portugese-for-Kids-Backend/seed-images/processed/
 ```
 
-### Step 4: Upload to Google Cloud Storage
+### Step 3: Simulate or Audit Cache Coverage (Optional)
+* **Simulate natural story prompts** (live rules from `SemanticImageCache.java`):
+  ```bash
+  python3 seed-images/simulate_cache.py
+  ```
+* **Audit canonical story prompt templates**:
+  ```bash
+  python3 seed-images/audit_cache.py
+  ```
+
+### Step 4: Upload to Google Cloud Storage (Requires Explicit User Approval)
 Preview changes first with dry-run:
 ```bash
-python3 seed-images/upload_to_gcs.py --dry-run
+python3 seed-images/upload_to_gcs.py --sha <hash_prefix> --dry-run
 ```
 
-Once confirmed, upload to GCS:
+Once explicitly confirmed by the user, upload to GCS:
 ```bash
-python3 seed-images/upload_to_gcs.py
+python3 seed-images/upload_to_gcs.py --sha <hash_prefix>
 ```
-*(Or upload a specific hash only: `python3 seed-images/upload_to_gcs.py --sha <hash>`)*
+*(Or upload all un-uploaded manifest entries: `python3 seed-images/upload_to_gcs.py`)*
+
+Finally, verify the uploaded object and its `custom_fields.prompt` metadata in GCS:
+```bash
+gcloud storage objects describe "gs://portugese-kids-image-cache/image-cache/<full_sha256>/image.jpg"
+```
 
 ---
 
