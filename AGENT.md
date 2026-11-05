@@ -148,36 +148,17 @@ Key = `LocalDate.now(ZoneOffset.UTC) + ":" + ipAddress`. Limit = **250 per IP pe
 
 ---
 
-## Image Cache Skills & Workflow
+## Image Cache Skills
 
-The backend uses a two-skill system under `.agents/skills/` to manage semantic image caching and illustration seeding:
+When working on illustration caching, prompt matching, or GCS seeding, refer to the dedicated skills under `.agents/skills/`:
 
-### 1. Missing Cache Prompt Analysis (`missing-cache-prompt-analysis`)
-Use when the user provides prompts that missed the cache (e.g. from `non-showing-pictures-prompts.md` or live story generations):
-1. **Run Baseline Simulation:** `python3 seed-images/simulate_cache.py` (dynamically loads current rules directly from `SemanticImageCache.java`).
-2. **Diagnose Failures:**
-   * **Type A (Vocabulary / Logic Gap — Fix in Java Backend, Zero New Images):**
-     * *Domain Stem Contamination (Cross-Domain Lock):* Secondary object triggers another theme's `DOMAIN_STEMS`. Resolve via multi-word regex in `tokenise()`.
-     * *Missing Domain Stems:* Add core anchor stem to `DOMAIN_STEMS`.
-     * *Missing Synonyms:* Map variant words in `SYNONYMS`.
-     * *Non-Visual Filler Words:* Add unhelpful query tokens to `BOILERPLATE_WORDS`.
-     * *Verification:* Run `./mvnw test` and re-run `python3 seed-images/simulate_cache.py`.
-   * **Type B (True Visual Gap — Generate New Seed Images):**
-     * Propose minimal `M-XXX` prompt IDs to the user and obtain approval.
-     * Generate via `image-generator` subagent (Gemini Imagen — **NEVER Pollinations**; verify no visible text/letters).
-     * Stage as `seed-images/incoming/M-XXX.jpg` + companion `M-XXX.txt`, register in `prompts.json`.
-     * Process via `python3 seed-images/process_images.py` (requires Pillow; use host Python or `BypassSandbox: true`).
-     * Verify 100% hit rate with `python3 seed-images/simulate_cache.py`.
-3. **Commit Code & Manifest:** Locally commit `SemanticImageCache.java`, `manifest.json`, and `prompts.json`. **NEVER commit `non-showing-pictures-prompts.md` to Git.**
-4. **Approval & Upload:** Present image previews, get explicit user approval, then run `python3 seed-images/upload_to_gcs.py --sha <hash_prefix>` (requires `BypassSandbox: true` for `gcloud` credentials).
+- **Missing Cache Prompt Analysis ([`.agents/skills/missing-cache-prompt-analysis/SKILL.md`](.agents/skills/missing-cache-prompt-analysis/SKILL.md)):** Use when story prompts miss the cache. Guides running `simulate_cache.py`, fixing vocabulary or domain logic in `SemanticImageCache.java` (Type A), or generating missing seed illustrations via the `image-generator` subagent (Type B).
+- **GCS Image Seeding ([`.agents/skills/gcs-image-seeding/SKILL.md`](.agents/skills/gcs-image-seeding/SKILL.md)):** Use for formatting, resizing (`768x336` 60% JPEG via `process_images.py`), auditing coverage (`audit_cache.py`), and syncing processed illustrations to `gs://portugese-kids-image-cache/` (`upload_to_gcs.py`).
 
-### 2. GCS Image Seeding (`gcs-image-seeding`)
-Use when formatting, resizing, inspecting, or syncing illustration images directly:
-1. Refer to the [`.agents/skills/gcs-image-seeding/SKILL.md`](.agents/skills/gcs-image-seeding/SKILL.md) skill.
-2. Drop raw images into `seed-images/incoming/` with a companion `.txt` prompt file (e.g. `scene.png` + `scene.txt`) or name it after an ID in `prompts.json` (e.g. `M-150.jpg`).
-3. Run `python3 seed-images/process_images.py` to resize to `768x336`, compress to 60% JPEG, and stage under `seed-images/processed/<sha256>/`.
-4. Run `python3 seed-images/audit_cache.py` to verify prompt coverage against GCS.
-5. **STOP AND VERIFY:** Always obtain explicit user confirmation before executing `python3 seed-images/upload_to_gcs.py` to upload to `gs://portugese-kids-image-cache/`. Verify metadata via `gcloud storage objects describe "gs://portugese-kids-image-cache/image-cache/<sha256>/image.jpg"`.
+> [!IMPORTANT]
+> - **Never use Pollinations** to generate seed images (use Gemini Imagen via `image-generator` subagent).
+> - **Never upload to GCS** without explicit user confirmation.
+> - **Never commit `non-showing-pictures-prompts.md`** to Git.
 
 ---
 
