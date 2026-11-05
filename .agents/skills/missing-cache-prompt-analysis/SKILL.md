@@ -71,16 +71,16 @@ Prompts in `non-showing-pictures-prompts.md` typically appear as JSON Lines with
 "content": "{\"pt\":\"Com certeza, trago já o pão.\",\"en\":\"Certainly, I will bring the bread now.\",\"imagePrompt\":\"a friendly waiter bringing a basket of fresh bread to a wooden table, colorful cute kids illustration, storybook art, bright colors, simple background, no text\"}"
 }
 ```
-Ensure `seed-images/manifest.json` and `Portugese-for-Kids-Backend/seed-images/manifest.json` are in sync with the current GCS bucket count before simulating.
+Ensure [`Portugese-for-Kids-Backend/seed-images/manifest.json`](file:///Users/mesutuluag/Documents/codingProjects/practice-portuguese/Portugese-for-Kids-Backend/seed-images/manifest.json) is in sync with the current GCS bucket count before simulating.
 
 ### Step 2: Run the Dynamic Simulation Tool
-Run [`seed-images/simulate_cache.py`](file:///Users/mesutuluag/Documents/codingProjects/practice-portuguese/seed-images/simulate_cache.py), which **dynamically parses** `STOP_WORDS`, `BOILERPLATE_WORDS`, `KEEP_ER_OR_NOUNS`, `DOMAIN_STEMS`, `SYNONYMS`, and `tokenise()` regex rules straight from `SemanticImageCache.java`:
+Run [`Portugese-for-Kids-Backend/seed-images/simulate_cache.py`](file:///Users/mesutuluag/Documents/codingProjects/practice-portuguese/Portugese-for-Kids-Backend/seed-images/simulate_cache.py), which **dynamically parses** `STOP_WORDS`, `BOILERPLATE_WORDS`, `KEEP_ER_OR_NOUNS`, `DOMAIN_STEMS`, `SYNONYMS`, and `tokenise()` regex rules straight from `SemanticImageCache.java`:
 ```bash
 # Default run (auto-detects non-showing-pictures-prompts.md):
-python3 seed-images/simulate_cache.py
+python3 Portugese-for-Kids-Backend/seed-images/simulate_cache.py
 
 # Custom input file:
-python3 seed-images/simulate_cache.py --input path/to/missing_prompts.md
+python3 Portugese-for-Kids-Backend/seed-images/simulate_cache.py --input path/to/missing_prompts.md
 ```
 For every prompt, `simulate_cache.py` outputs:
 * `[HIT]` ($\ge 0.55$) or `[MISS]` ($< 0.55$)
@@ -100,7 +100,7 @@ For every prompt, `simulate_cache.py` outputs:
    ```bash
    cd Portugese-for-Kids-Backend && ./mvnw test
    ```
-7. Re-run `python3 seed-images/simulate_cache.py` (it automatically reloads your `SemanticImageCache.java` changes) to see how many prompts now hit existing cached images.
+7. Re-run `python3 Portugese-for-Kids-Backend/seed-images/simulate_cache.py` (it automatically reloads your `SemanticImageCache.java` changes) to see how many prompts now hit existing cached images.
 
 ### Step 4: Checkpoint #1 — Present Analysis & Ask Before Generating Type B Images
 If all prompts now hit ($\ge 0.55$), commit `SemanticImageCache.java` and present the 100% hit table.
@@ -111,7 +111,7 @@ If **Type B True Visual Gaps** remain (and the user did not already instruct you
 
 ### Step 5: Generate Type B Illustrations via `image-generator` Subagent
 Once confirmed:
-1. Determine the next sequential IDs in [`prompts.json`](file:///Users/mesutuluag/Documents/codingProjects/practice-portuguese/seed-images/prompts.json) (e.g. `M-150`, `M-151`).
+1. Determine the next sequential IDs in [`Portugese-for-Kids-Backend/seed-images/prompts.json`](file:///Users/mesutuluag/Documents/codingProjects/practice-portuguese/Portugese-for-Kids-Backend/seed-images/prompts.json) (e.g. `M-150`, `M-151`).
 2. Draft each prompt with the mandatory style suffix:
    ```text
    "<subject and action in Portuguese setting>, colorful cute kids illustration, storybook art, bright colors, simple background, no text"
@@ -122,20 +122,15 @@ Once confirmed:
 4. Inspect generated images: confirm landscape composition, cute colorful storybook style, and **strictly zero visible letters, words, or numbers**.
 
 ### Step 6: Process, Register & Verify 100% Hit Rate
-1. Copy each generated image into `seed-images/incoming/M-XXX.jpg` (must be named `M-XXX.jpg` with companion `seed-images/incoming/M-XXX.txt` containing the exact prompt so `manifest.json` records `"id": "M-XXX"`).
-2. Add `"M-XXX": "<prompt>"` to **both** [`seed-images/prompts.json`](file:///Users/mesutuluag/Documents/codingProjects/practice-portuguese/seed-images/prompts.json) and [`Portugese-for-Kids-Backend/seed-images/prompts.json`](file:///Users/mesutuluag/Documents/codingProjects/practice-portuguese/Portugese-for-Kids-Backend/seed-images/prompts.json).
+1. Copy each generated image into `Portugese-for-Kids-Backend/seed-images/incoming/M-XXX.jpg` (must be named `M-XXX.jpg` with companion `Portugese-for-Kids-Backend/seed-images/incoming/M-XXX.txt` containing the exact prompt so `manifest.json` records `"id": "M-XXX"`).
+2. Add `"M-XXX": "<prompt>"` to [`Portugese-for-Kids-Backend/seed-images/prompts.json`](file:///Users/mesutuluag/Documents/codingProjects/practice-portuguese/Portugese-for-Kids-Backend/seed-images/prompts.json).
 3. Run the processing pipeline (resizes to `768x336`, flattens alpha to white, compresses to 60% JPEG, writes `processed/<sha256>/image.jpg` + `prompt.txt`, and updates `manifest.json`):
    ```bash
-   python3 seed-images/process_images.py
+   python3 Portugese-for-Kids-Backend/seed-images/process_images.py
    ```
-4. Sync `manifest.json` (and optional processed folders) to the backend directory:
+4. Re-run the simulator and confirm **100.0% Hit Rate (`Misses: 0`)**:
    ```bash
-   cp seed-images/manifest.json Portugese-for-Kids-Backend/seed-images/manifest.json
-   cp -R seed-images/processed/* Portugese-for-Kids-Backend/seed-images/processed/
-   ```
-5. Re-run the simulator and confirm **100.0% Hit Rate (`Misses: 0`)**:
-   ```bash
-   python3 seed-images/simulate_cache.py
+   python3 Portugese-for-Kids-Backend/seed-images/simulate_cache.py
    ```
 
 ### Step 7: Local Git Commits
@@ -160,7 +155,7 @@ git -C Portugese-for-Kids-Backend commit -m "feat(seed): register M-XXX to M-YYY
 2. **STOP and ask for explicit user approval** before uploading to `gs://portugese-kids-image-cache/image-cache/`.
 3. Once approved, upload each new hash via `upload_to_gcs.py` (using `BypassSandbox: true` when `gcloud` requires access to `~/.config/gcloud/credentials.db`):
    ```bash
-   python3 seed-images/upload_to_gcs.py --sha <hash_prefix>
+   python3 Portugese-for-Kids-Backend/seed-images/upload_to_gcs.py --sha <hash_prefix>
    ```
 4. Verify each uploaded object in GCS:
    ```bash
@@ -174,9 +169,9 @@ git -C Portugese-for-Kids-Backend commit -m "feat(seed): register M-XXX to M-YYY
 
 | Action | Command |
 |---|---|
-| Run Live Cache Simulation | `python3 seed-images/simulate_cache.py` |
+| Run Live Cache Simulation | `python3 Portugese-for-Kids-Backend/seed-images/simulate_cache.py` |
 | Run Full Backend Unit Tests | `cd Portugese-for-Kids-Backend && ./mvnw test` |
-| Process Incoming `M-XXX` Images | `python3 seed-images/process_images.py` |
-| Dry-Run GCS Upload | `python3 seed-images/upload_to_gcs.py --sha <hash_prefix> --dry-run` |
-| Upload Specific Hash to GCS | `python3 seed-images/upload_to_gcs.py --sha <hash_prefix>` |
+| Process Incoming `M-XXX` Images | `python3 Portugese-for-Kids-Backend/seed-images/process_images.py` |
+| Dry-Run GCS Upload | `python3 Portugese-for-Kids-Backend/seed-images/upload_to_gcs.py --sha <hash_prefix> --dry-run` |
+| Upload Specific Hash to GCS | `python3 Portugese-for-Kids-Backend/seed-images/upload_to_gcs.py --sha <hash_prefix>` |
 | Verify Uploaded GCS Metadata | `gcloud storage objects describe "gs://portugese-kids-image-cache/image-cache/<sha256>/image.jpg"` |
