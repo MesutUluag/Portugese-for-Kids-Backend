@@ -571,6 +571,13 @@ class SemanticImageCacheTest {
     }
 
     @Test
+    void tokenise_pasteisAndTray_normalisesToPastelAndPlate() {
+        String[] tokens = SemanticImageCache.tokenise("waiter carrying tray with pasteis de nata");
+        assertThat(tokens).contains("pastel", "plate");
+        assertThat(tokens).doesNotContain("pasteis", "tray", "de");
+    }
+
+    @Test
     void gcsWarmup_loadsCappedEntriesAndForwardsPuts() {
         GcsImageStore mockStore = mock(GcsImageStore.class);
         when(mockStore.loadAll(1000)).thenReturn(List.of(

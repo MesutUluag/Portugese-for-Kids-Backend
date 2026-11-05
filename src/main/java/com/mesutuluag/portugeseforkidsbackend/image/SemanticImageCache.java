@@ -64,7 +64,7 @@ public class SemanticImageCache {
             "about", "after", "into", "over", "down", "through", "their",
             "them", "our", "your", "his", "her", "while", "towards", "toward",
             "under", "near", "very", "much", "some", "any", "more", "before", "here", "until", "out",
-            "what", "would", "like",
+            "what", "would", "like", "de",
             "they", "he", "she", "him", "we", "us", "i", "me", "you"
     );
 
@@ -227,6 +227,11 @@ public class SemanticImageCache {
         s.put("dessert",   "cake");
         s.put("desserts",  "cake");
         s.put("dish",      "plate");
+        s.put("dishes",    "plate");
+        s.put("platter",   "plate");
+        s.put("tray",      "plate");
+        s.put("trays",     "plate");
+        s.put("pasteis",   "pastel");
         // Actions
         s.put("driving",    "drive");
         s.put("drives",     "drive");
