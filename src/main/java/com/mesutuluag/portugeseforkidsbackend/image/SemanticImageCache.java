@@ -64,6 +64,7 @@ public class SemanticImageCache {
             "about", "after", "into", "over", "down", "through", "their",
             "them", "our", "your", "his", "her", "while", "towards", "toward",
             "under", "near", "very", "much", "some", "any", "more", "before", "here", "until", "out",
+            "what", "would", "like",
             "they", "he", "she", "him", "we", "us", "i", "me", "you"
     );
 
@@ -98,7 +99,8 @@ public class SemanticImageCache {
             "empty", "free", "day", "time", "arrival", "spot", "space", "sign", "direction",
             "turn", "convenience", "uniform", "contactless", "successful", "purchase", "open", "distance",
             "permission", "finished", "finish", "nodding", "nod", "leaning", "lean", "word", "sentence",
-            "room", "math", "away", "fetch", "gestur", "gesture", "gesturing", "taking", "symptom", "symptoms", "start"
+            "room", "math", "away", "fetch", "gestur", "gesture", "gesturing", "taking", "symptom", "symptoms", "start",
+            "meal", "bottle", "glass", "recommend", "head", "heading"
     );
 
     /** Nouns ending in -er/-or that should not have their suffix stripped to a verb stem. */
@@ -116,7 +118,7 @@ public class SemanticImageCache {
      */
     private static final Set<String> DOMAIN_STEMS = Set.of(
             "school", "playground", "whiteboard",
-            "restaurant", "waiter",
+            "restaurant", "waiter", "notepad", "dessert", "cake", "menu",
             "bank", "multibanco", "atm",
             "hospital", "doct",
             "cafeteria", "nata", "terrace",
@@ -222,6 +224,9 @@ public class SemanticImageCache {
         s.put("juices",    "drink");
         s.put("wine",      "drink");
         s.put("codfish",   "cod");
+        s.put("dessert",   "cake");
+        s.put("desserts",  "cake");
+        s.put("dish",      "plate");
         // Actions
         s.put("driving",    "drive");
         s.put("drives",     "drive");
@@ -653,7 +658,12 @@ public class SemanticImageCache {
                 .replaceAll("\\bsigns?\\s+showing\\b", "sign")
                 .replaceAll("\\bmedical\\s+(?:office|room|center|centre)s?\\b", "hospital")
                 .replaceAll("\\bdisplay\\s+screen\\b", "board")
-                .replaceAll("\\bdrink\\s+order\\b", "order");
+                .replaceAll("\\bdrink\\s+order\\b", "order")
+                .replaceAll("\\basking\\s+(?:the\\s+family\\s+)?what\\s+they\\s+would\\s+like\\s+to\\s+drink\\b", "notepad order")
+                .replaceAll("\\bwaiting\\s+for\\s+(?:their\\s+)?(?:water|drink)s?\\b", "table")
+                .replaceAll("\\bglass\\s+bottle\\s+of\\s+water\\b", "water")
+                .replaceAll("\\basking\\s+for\\s+the\\s+bill\\b", "bill")
+                .replaceAll("\\bbill\\s+folders?\\b", "bill");
         return Arrays.stream(ascii.split("[^a-z0-9]+"))
                 .filter(t -> t.length() > 1)
                 .filter(t -> !STOP_WORDS.contains(t))
