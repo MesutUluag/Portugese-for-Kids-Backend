@@ -74,9 +74,13 @@ Prompts in `non-showing-pictures-prompts.md` typically appear as JSON Lines or e
 The automated simulation tool handles both raw escaped JSON lines and clean JSON objects.
 
 ### Step 2: Run the Simulation Tool
-Run the cache simulator to evaluate every prompt against the current manifest:
+Run the cache simulator to evaluate every prompt against the current manifest (auto-detects `non-showing-pictures-prompts.md` by default):
 ```bash
-python3 seed-images/simulate_cache.py --input Portugese-for-Kids-Backend/.agents/skills/gcs-image-seeding/non-showing-pictures-prompts.md
+# Default run:
+python3 seed-images/simulate_cache.py
+
+# Custom input file:
+python3 seed-images/simulate_cache.py --input path/to/missing_prompts.md
 ```
 The output displays for each prompt:
 * Matched candidate ID (e.g. `M-147`)
@@ -139,7 +143,9 @@ Confirm:
 ### Step 7: Local Git Commits
 Stage and commit code and metadata changes locally:
 ```bash
-git -C Portugese-for-Kids-Backend add src/main/java/.../SemanticImageCache.java src/test/...
+git -C Portugese-for-Kids-Backend add \
+  src/main/java/com/mesutuluag/portugeseforkidsbackend/image/SemanticImageCache.java \
+  src/test/java/com/mesutuluag/portugeseforkidsbackend/image/SemanticImageCacheTest.java
 git -C Portugese-for-Kids-Backend commit -m "fix(cache): update domain stems and synonym normalisation"
 
 git -C Portugese-for-Kids-Backend add seed-images/manifest.json seed-images/prompts.json

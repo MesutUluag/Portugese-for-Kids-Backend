@@ -22,10 +22,35 @@ from pathlib import Path
 from collections import Counter
 
 BASE_DIR = Path(__file__).resolve().parent
-MANIFEST_FILE = BASE_DIR / "manifest.json"
-DEFAULT_INPUT = BASE_DIR.parent / "Portugese-for-Kids-Backend" / ".agents" / "skills" / "gcs-image-seeding" / "non-showing-pictures-prompts.md"
-if not DEFAULT_INPUT.exists():
-    DEFAULT_INPUT = BASE_DIR / ".agents" / "skills" / "gcs-image-seeding" / "non-showing-pictures-prompts.md"
+
+def find_manifest_file() -> Path:
+    candidates = [
+        BASE_DIR / "manifest.json",
+        BASE_DIR.parent / "seed-images" / "manifest.json",
+        Path.cwd() / "seed-images" / "manifest.json"
+    ]
+    for c in candidates:
+        if c.exists():
+            return c
+    return BASE_DIR / "manifest.json"
+
+MANIFEST_FILE = find_manifest_file()
+
+def find_default_input() -> Path:
+    rel = Path(".agents/skills/gcs-image-seeding/non-showing-pictures-prompts.md")
+    candidates = [
+        Path.cwd() / rel,
+        BASE_DIR.parent / rel,
+        BASE_DIR.parent / "Portugese-for-Kids-Backend" / rel,
+        BASE_DIR.parent.parent / "Portugese-for-Kids-Backend" / rel,
+        Path("/Users/mesutuluag/Documents/codingProjects/practice-portuguese/Portugese-for-Kids-Backend") / rel
+    ]
+    for c in candidates:
+        if c.exists():
+            return c
+    return candidates[0]
+
+DEFAULT_INPUT = find_default_input()
 
 STOP_WORDS = {
     "a", "an", "the", "and", "or", "of", "in", "on", "at", "to",
