@@ -13,6 +13,12 @@ metadata:
 
 Use this skill whenever you need to add, inspect, format, or upload story illustration images to the Portuguese for Kids semantic image cache in Google Cloud Storage (`gs://portugese-kids-image-cache/`).
 
+> [!TIP]
+> **Need to analyze missing cache prompts or cache misses?**
+> If you are diagnosing why natural story prompts or entries in `non-showing-pictures-prompts.md` failed to hit cached images, use the companion skill:
+> **[`missing-cache-prompt-analysis`](file:///Users/mesutuluag/Documents/codingProjects/practice-portuguese/Portugese-for-Kids-Backend/.agents/skills/missing-cache-prompt-analysis/SKILL.md)**.
+> It diagnoses whether the gap is in `SemanticImageCache.java` (vocabulary/domain stems) or requires new illustrations.
+
 ---
 
 ## 1. Quick Start Workflow
@@ -82,8 +88,11 @@ All cached images must conform strictly to the backend expectations in [`GcsImag
 ## 3. Directory Layout
 
 ```
-.agents/skills/gcs-image-seeding/
-└── SKILL.md                  # This skill definition
+.agents/skills/
+├── gcs-image-seeding/
+│   └── SKILL.md                  # This skill definition
+└── missing-cache-prompt-analysis/
+    └── SKILL.md                  # Gap analysis, SemanticImageCache fix, and seeding workflow
 
 seed-images/
 ├── incoming/                 # Drop incoming raw files here (.png, .jpg, .webp, .txt)
@@ -94,15 +103,19 @@ seed-images/
 ├── manifest.json             # Registry of processed images & their targets
 ├── prompts.json              # Optional custom ID-to-prompt overrides
 ├── process_images.py         # Automated resizing, conversion & hash staging script
+├── simulate_cache.py         # TF-IDF cosine similarity simulator matching SemanticImageCache
 ├── upload_to_gcs.py          # GCS upload script (supports --dry-run and --sha)
 └── audit_cache.py            # Audit tool verifying coverage against story prompts
 ```
 
 ---
 
-## 4. Safety & Authorization Guardrail
+## 4. Safety & Authorization Guardrails
 
 > [!CAUTION]
-> **NEVER PUSH TO GCS WITHOUT EXPLICIT USER CONFIRMATION.**
-> 
-> Always display the list or manifest of staged files and verify `gcloud` authentication before initiating any upload to `gs://portugese-kids-image-cache/`.
+> 1. **NEVER PUSH TO GCS WITHOUT EXPLICIT USER CONFIRMATION.**
+>    Always display the list or manifest of staged files and verify `gcloud` authentication before initiating any upload to `gs://portugese-kids-image-cache/`.
+> 2. **NEVER USE POLLINATIONS TO GENERATE SEED IMAGES.**
+>    Always use the official `image-generator` subagent (Gemini Imagen) for producing story seed illustrations.
+> 3. **NEVER COMMIT `non-showing-pictures-prompts.md` TO GIT.**
+>    Story prompt test dumps and audit scratchpads must remain untracked.
