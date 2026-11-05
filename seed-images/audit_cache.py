@@ -35,11 +35,8 @@ def run():
             ["gcloud", "storage", "objects", "list", f"{BUCKET}/image-cache/**/image.jpg"],
             text=True
         )
-        cached_shas = {
-            line.split("/")[1]
-            for line in raw_list.splitlines()
-            if line.startswith("name:")
-        }
+        # Matches both gs://bucket/image-cache/<sha>/image.jpg and name: image-cache/<sha>/image.jpg
+        cached_shas = set(re.findall(r'image-cache/([a-f0-9]{64})/image\.jpg', raw_list))
     except Exception as e:
         print(f"Error querying GCS: {e}")
         return

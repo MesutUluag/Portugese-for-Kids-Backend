@@ -50,17 +50,25 @@ def find_java_source() -> Path:
 
 
 def find_default_input() -> Path:
-    rel = Path(".agents/skills/gcs-image-seeding/non-showing-pictures-prompts.md")
-    candidates = [
-        Path.cwd() / rel,
-        BASE_DIR.parent / rel,
-        BASE_DIR.parent / "Portugese-for-Kids-Backend" / rel,
-        BASE_DIR.parent.parent / "Portugese-for-Kids-Backend" / rel,
+    filenames = [
+        "non-showing-pictures-prompts.md",
+        "missing-prompts.md",
     ]
-    for c in candidates:
-        if c.exists():
-            return c
-    return candidates[0]
+    dirs = [
+        Path.cwd() / ".agents" / "skills" / "gcs-image-seeding",
+        Path.cwd() / ".agents" / "skills" / "missing-cache-prompt-analysis",
+        Path.cwd() / "Portugese-for-Kids-Backend" / ".agents" / "skills" / "gcs-image-seeding",
+        Path.cwd() / "Portugese-for-Kids-Backend" / ".agents" / "skills" / "missing-cache-prompt-analysis",
+        BASE_DIR.parent / ".agents" / "skills" / "gcs-image-seeding",
+        BASE_DIR.parent / ".agents" / "skills" / "missing-cache-prompt-analysis",
+        Path.cwd(),
+    ]
+    for d in dirs:
+        for fname in filenames:
+            candidate = d / fname
+            if candidate.exists():
+                return candidate
+    return dirs[0] / filenames[0]
 
 
 MANIFEST_FILE = find_manifest_file()

@@ -124,7 +124,9 @@ Once confirmed:
 ### Step 6: Process, Register & Verify 100% Hit Rate
 1. Copy each generated image into `Portugese-for-Kids-Backend/seed-images/incoming/M-XXX.jpg` (must be named `M-XXX.jpg` with companion `Portugese-for-Kids-Backend/seed-images/incoming/M-XXX.txt` containing the exact prompt so `manifest.json` records `"id": "M-XXX"`).
 2. Add `"M-XXX": "<prompt>"` to [`Portugese-for-Kids-Backend/seed-images/prompts.json`](file:///Users/mesutuluag/Documents/codingProjects/practice-portuguese/Portugese-for-Kids-Backend/seed-images/prompts.json).
-3. Run the processing pipeline (resizes to `768x336`, flattens alpha to white, compresses to 60% JPEG, writes `processed/<sha256>/image.jpg` + `prompt.txt`, and updates `manifest.json`):
+3. Run the processing pipeline (resizes to `768x336`, flattens alpha to white, compresses to 60% JPEG, writes `processed/<sha256>/image.jpg` + `prompt.txt`, and updates `manifest.json`).
+   > [!NOTE]
+   > `process_images.py` requires `Pillow`. When executing in a sandboxed agent environment, run with `BypassSandbox: true` so it accesses the host Python environment where Pillow is installed:
    ```bash
    python3 Portugese-for-Kids-Backend/seed-images/process_images.py
    ```

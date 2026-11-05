@@ -15,6 +15,7 @@ import json
 import subprocess
 import sys
 import os
+import re
 import argparse
 from pathlib import Path
 
@@ -29,11 +30,8 @@ def get_existing_gcs_shas(bucket: str) -> set:
             ["gcloud", "storage", "objects", "list", f"{bucket}/image-cache/**/image.jpg"],
             capture_output=True, text=True, check=True
         )
-        return {
-            line.split("/")[1]
-            for line in res.stdout.splitlines()
-            if line.startswith("name:") and "/" in line
-        }
+        # Matches both gs://bucket/image-cache/<sha>/image.jpg and name: image-cache/<sha>/image.jpg
+        return set(re.findall(r'image-cache/([a-f0-9]{64})/image\.jpg', res.stdout))
     except Exception:
         return set()
 

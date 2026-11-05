@@ -39,7 +39,7 @@ Choose one of these methods to stage files into [`Portugese-for-Kids-Backend/see
   ```
 
 ### Step 2: Process & Validate Locally
-Run the automated image processing pipeline:
+Run the automated image processing pipeline (requires `Pillow`; use host Python or `BypassSandbox: true` if run by a sandboxed agent):
 ```bash
 python3 Portugese-for-Kids-Backend/seed-images/process_images.py
 ```
@@ -67,7 +67,7 @@ Preview changes first with dry-run:
 python3 Portugese-for-Kids-Backend/seed-images/upload_to_gcs.py --sha <hash_prefix> --dry-run
 ```
 
-Once explicitly confirmed by the user, upload to GCS:
+Once explicitly confirmed by the user, upload to GCS (requires `BypassSandbox: true` for `gcloud` credentials access):
 ```bash
 python3 Portugese-for-Kids-Backend/seed-images/upload_to_gcs.py --sha <hash_prefix>
 ```
@@ -104,18 +104,19 @@ All cached images must conform strictly to the backend expectations in [`GcsImag
 └── missing-cache-prompt-analysis/
     └── SKILL.md                  # Gap analysis, SemanticImageCache fix, and seeding workflow
 
-seed-images/
-├── incoming/                 # Drop incoming raw files here (.png, .jpg, .webp, .txt)
-├── processed/                # Auto-generated 768x336 JPEG & prompt.txt folders
-│   └── <sha256>/
-│       ├── image.jpg
-│       └── prompt.txt
-├── manifest.json             # Registry of processed images & their targets
-├── prompts.json              # Optional custom ID-to-prompt overrides
-├── process_images.py         # Automated resizing, conversion & hash staging script
-├── simulate_cache.py         # TF-IDF cosine similarity simulator matching SemanticImageCache
-├── upload_to_gcs.py          # GCS upload script (supports --dry-run and --sha)
-└── audit_cache.py            # Audit tool verifying coverage against story prompts
+Portugese-for-Kids-Backend/
+└── seed-images/
+    ├── incoming/                 # Drop incoming raw files here (.png, .jpg, .webp, .txt)
+    ├── processed/                # Auto-generated 768x336 JPEG & prompt.txt folders
+    │   └── <sha256>/
+    │       ├── image.jpg
+    │       └── prompt.txt
+    ├── manifest.json             # Registry of processed images & their targets
+    ├── prompts.json              # Custom ID-to-prompt overrides (e.g. M-01 to M-151)
+    ├── process_images.py         # Automated resizing, conversion & hash staging script
+    ├── simulate_cache.py         # TF-IDF cosine similarity simulator matching SemanticImageCache
+    ├── upload_to_gcs.py          # GCS upload script (supports --dry-run and --sha)
+    └── audit_cache.py            # Audit tool verifying coverage against story prompts
 ```
 
 ---
