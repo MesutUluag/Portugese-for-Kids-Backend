@@ -54,22 +54,19 @@ class ImageControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getHeaders().getContentType()).isEqualTo(MediaType.IMAGE_JPEG);
         assertThat(response.getBody()).isEqualTo(jpegBytes);
-        verify(rateLimitService).checkAndIncrement(request, null);
     }
 
     @Test
-    void generateImage_withAuthenticatedUser_passesUserIdToRateLimiter() throws Exception {
+    void generateImage_withAuthenticatedUser_succeedsWithoutRateLimiting() throws Exception {
         byte[] jpegBytes = new byte[]{1, 2, 3};
         when(imageService.generateJpeg("classroom scene", 768, 368)).thenReturn(jpegBytes);
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         Jwt jwt = mock(Jwt.class);
-        when(jwt.getSubject()).thenReturn("test-user-456");
 
         ResponseEntity<?> response = controller.generateImage("classroom scene", 768, 368, jwt, request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        verify(rateLimitService).checkAndIncrement(request, "test-user-456");
     }
 
     @Test
@@ -84,19 +81,6 @@ class ImageControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.SERVICE_UNAVAILABLE);
         assertThat(response.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
         assertThat(response.getBody()).isInstanceOf(Map.class);
-        verify(rateLimitService).checkAndIncrement(request, null);
-    }
-
-    @Test
-    void generateImage_rateLimitExceeded_throwsDailyLimitExceededException() {
-        doThrow(new DailyLimitExceededException())
-                .when(rateLimitService).checkAndIncrement(any(HttpServletRequest.class), any());
-
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.addHeader("X-Forwarded-For", "203.0.113.195");
-
-        assertThatThrownBy(() -> controller.generateImage("prompt", 768, 368, request))
-                .isInstanceOf(DailyLimitExceededException.class);
     }
 
     @Test

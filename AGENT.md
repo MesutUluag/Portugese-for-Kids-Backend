@@ -126,10 +126,9 @@ TF-IDF cosine similarity with a threshold of **0.55** (`image.cache.similarity-t
 - When `firestore.enabled=true`, `FirestoreUserStore` persists `UserProfile` documents in the `users` collection using Firestore transactions bounded by a `Semaphore(32)` and closes its client on `@PreDestroy`. If Firestore is disabled or unreachable, `UserStatsService` gracefully falls back to an in-memory `ConcurrentHashMap`.
 
 ### Rate limiting (RateLimitService)
-Tiered per-UID and per-IP daily limits with automatic key eviction on UTC date rollover:
-- Authenticated AI generation (`POST /api/story`, `GET /api/image`): `today + ":uid:" + uid` → **250/day** (`rate-limit.authenticated-daily-limit`).
-- Anonymous fallback: `today + ":ip:" + ipAddress` → **30/day** (`rate-limit.anonymous-daily-limit`).
-- User profile & stats sync (`GET /api/user/me`, `POST /api/user/stats/sync`): `today + ":user-sync:" + uid` → **500/day** (`rate-limit.user-sync-daily-limit`) to protect Firestore free-tier write quotas.
+Rate limiting applies exclusively to story generation (`POST /api/story`) to manage LLM quota while keeping images, profile loading, telemetry sync, and leaderboard free of rate limit constraints:
+- Authenticated story creation (`POST /api/story`): `today + ":uid:" + uid` → **250/day** (`rate-limit.authenticated-daily-limit`).
+- Anonymous story creation: `today + ":ip:" + ipAddress` → **30/day** (`rate-limit.anonymous-daily-limit`).
 Behind Cloud Run reverse proxies (GFE), `server.forward-headers-strategy=native` (Tomcat `RemoteIpValve`) and `RateLimitService.resolveClientIp(HttpServletRequest)` ensure the real client IP from `X-Forwarded-For` is extracted without allowing client-spoofed `X-Forwarded-For` prefixes to bypass the limit. When exceeded, `GlobalExceptionHandler` returns HTTP `429` with a `Retry-After` header (seconds until midnight UTC). Disable for local testing with `rate-limit.enabled=false` in `application-local.properties`.
 
 ### Input validation & error handling

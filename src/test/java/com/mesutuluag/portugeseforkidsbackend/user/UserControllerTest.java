@@ -94,23 +94,22 @@ class UserControllerTest {
     }
 
     @Test
-    void syncStats_exceedingUserSyncLimit_throwsDailyLimitExceededException() {
-        RateLimitService strictRateLimit = new RateLimitService(250, 30, 2, true);
-        UserController strictController = new UserController(userStatsService, strictRateLimit);
+    void syncStats_repeatedCalls_doesNotRateLimit() {
+        UserController userController = new UserController(userStatsService, leaderboardService);
 
         Jwt jwt = mock(Jwt.class);
-        when(jwt.getSubject()).thenReturn("uid-spam");
+        when(jwt.getSubject()).thenReturn("uid-repeat");
         when(jwt.hasClaim("email")).thenReturn(false);
         when(jwt.hasClaim("name")).thenReturn(false);
 
-        UserProfile profile = UserProfile.defaultFor("uid-spam", "user@example.com", "Kid Explorer");
-        when(userStatsService.syncStats(eq("uid-spam"), any(), any(), any())).thenReturn(profile);
+        UserProfile profile = UserProfile.defaultFor("uid-repeat", "user@example.com", "Kid Explorer");
+        when(userStatsService.syncStats(eq("uid-repeat"), any(), any(), any())).thenReturn(profile);
 
-        strictController.syncStats(new StatsSyncRequest(), jwt);
-        strictController.syncStats(new StatsSyncRequest(), jwt);
-
-        assertThatThrownBy(() -> strictController.syncStats(new StatsSyncRequest(), jwt))
-                .isInstanceOf(DailyLimitExceededException.class);
+        // Multiple calls should succeed without throwing DailyLimitExceededException
+        for (int i = 0; i < 5; i++) {
+            ResponseEntity<UserProfile> resp = userController.syncStats(new StatsSyncRequest(), jwt);
+            assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.OK);
+        }
     }
 
     @Test

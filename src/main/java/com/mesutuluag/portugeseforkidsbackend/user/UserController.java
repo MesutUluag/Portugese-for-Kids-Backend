@@ -18,24 +18,28 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserStatsService userStatsService;
-    private final RateLimitService rateLimitService;
     private final LeaderboardService leaderboardService;
 
     public UserController(UserStatsService userStatsService) {
-        this(userStatsService, new RateLimitService(), new LeaderboardService(java.util.Optional.empty(), userStatsService));
+        this(userStatsService, new LeaderboardService(java.util.Optional.empty(), userStatsService));
     }
 
     public UserController(UserStatsService userStatsService, RateLimitService rateLimitService) {
-        this(userStatsService, rateLimitService, new LeaderboardService(java.util.Optional.empty(), userStatsService));
+        this(userStatsService, new LeaderboardService(java.util.Optional.empty(), userStatsService));
+    }
+
+    public UserController(
+            UserStatsService userStatsService,
+            RateLimitService rateLimitService,
+            LeaderboardService leaderboardService) {
+        this(userStatsService, leaderboardService);
     }
 
     @Autowired
     public UserController(
             UserStatsService userStatsService,
-            RateLimitService rateLimitService,
             LeaderboardService leaderboardService) {
         this.userStatsService = userStatsService;
-        this.rateLimitService = rateLimitService;
         this.leaderboardService = leaderboardService;
     }
 
@@ -47,8 +51,6 @@ public class UserController {
     public ResponseEntity<UserProfile> getProfile(
             HttpServletRequest httpRequest,
             @AuthenticationPrincipal Jwt jwt) {
-        rateLimitService.checkAndIncrementUserSync(httpRequest, jwt != null ? jwt.getSubject() : null);
-
         String uid = extractUid(jwt);
         String email = extractEmail(jwt);
         String displayName = extractDisplayName(jwt);
@@ -66,8 +68,6 @@ public class UserController {
             @RequestBody(required = false) StatsSyncRequest request,
             HttpServletRequest httpRequest,
             @AuthenticationPrincipal Jwt jwt) {
-        rateLimitService.checkAndIncrementUserSync(httpRequest, jwt != null ? jwt.getSubject() : null);
-
         String uid = extractUid(jwt);
         String email = extractEmail(jwt);
         String displayName = extractDisplayName(jwt);
@@ -81,8 +81,6 @@ public class UserController {
             @RequestParam(defaultValue = "25") int limit,
             HttpServletRequest httpRequest,
             @AuthenticationPrincipal Jwt jwt) {
-        rateLimitService.checkAndIncrementUserSync(httpRequest, jwt != null ? jwt.getSubject() : null);
-
         String uid = (jwt != null && jwt.getSubject() != null && !jwt.getSubject().isBlank()) ? jwt.getSubject() : null;
         String email = (jwt != null && jwt.hasClaim("email")) ? jwt.getClaimAsString("email") : null;
         String displayName = (jwt != null && jwt.hasClaim("name")) ? jwt.getClaimAsString("name") : null;
