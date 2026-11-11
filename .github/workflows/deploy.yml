@@ -4,16 +4,17 @@ on:
   push:
     branches: [main]
 
-env:
-  PROJECT_ID: project-b933c218-2521-4f77-a37
-  REGION: us-central1
-  VERTEX_LOCATION: us
-  SERVICE: portugese-for-kids-backend
-  IMAGE: gcr.io/project-b933c218-2521-4f77-a37/portugese-for-kids-backend
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
+    env:
+      PROJECT_ID: ${{ secrets.GCP_PROJECT_ID || vars.GCP_PROJECT_ID }}
+      FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID || vars.FIREBASE_PROJECT_ID }}
+      REGION: us-central1
+      VERTEX_LOCATION: us
+      SERVICE: portugese-for-kids-backend
+      IMAGE: gcr.io/${{ secrets.GCP_PROJECT_ID || vars.GCP_PROJECT_ID }}/portugese-for-kids-backend
 
     permissions:
       contents: read
@@ -37,7 +38,7 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: portugese-for-kids-backend@project-b933c218-2521-4f77-a37.iam.gserviceaccount.com
+          service_account: portugese-for-kids-backend@${{ env.PROJECT_ID }}.iam.gserviceaccount.com
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
@@ -64,5 +65,5 @@ jobs:
             --platform managed \
             --region ${{ env.REGION }} \
             --service-account portugese-for-kids-backend@${{ env.PROJECT_ID }}.iam.gserviceaccount.com \
-            --set-env-vars GOOGLE_CLOUD_PROJECT=${{ env.PROJECT_ID }},GOOGLE_CLOUD_LOCATION=${{ env.VERTEX_LOCATION }},SERVER_ADDRESS=0.0.0.0,GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }},GEMINI_IMAGE_ENABLED=${{ vars.GEMINI_IMAGE_ENABLED || 'false' }} \
+            --set-env-vars GOOGLE_CLOUD_PROJECT=${{ env.PROJECT_ID }},FIREBASE_PROJECT_ID=${{ env.FIREBASE_PROJECT_ID }},FIRESTORE_PROJECT_ID=${{ env.PROJECT_ID }},GOOGLE_CLOUD_LOCATION=${{ env.VERTEX_LOCATION }},SERVER_ADDRESS=0.0.0.0,GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }},GEMINI_IMAGE_ENABLED=${{ vars.GEMINI_IMAGE_ENABLED || 'false' }} \
             --project ${{ env.PROJECT_ID }}

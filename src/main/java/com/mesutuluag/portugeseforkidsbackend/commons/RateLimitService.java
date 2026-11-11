@@ -15,20 +15,43 @@ import org.springframework.stereotype.Service;
 @Service
 public class RateLimitService {
 
-	private final int dailyLimit;
+	private final int authenticatedDailyLimit;
+	private final int anonymousDailyLimit;
+	private final int userSyncDailyLimit;
 	private final boolean enabled;
 	private final AtomicReference<LocalDate> currentDate;
 	private final Map<String, Integer> requestCounts = new ConcurrentHashMap<>();
 
 	public RateLimitService() {
-		this(250, true);
+		this(250, 30, 500, true);
+	}
+
+	public RateLimitService(int dailyLimit, boolean enabled) {
+		this(dailyLimit, dailyLimit, dailyLimit, enabled);
+	}
+
+	public RateLimitService(int authenticatedDailyLimit, int anonymousDailyLimit, boolean enabled) {
+		this(authenticatedDailyLimit, anonymousDailyLimit, 500, enabled);
+	}
+
+	public RateLimitService(int authenticatedDailyLimit, int anonymousDailyLimit, int userSyncDailyLimit, boolean enabled) {
+		this.authenticatedDailyLimit = authenticatedDailyLimit;
+		this.anonymousDailyLimit = anonymousDailyLimit;
+		this.userSyncDailyLimit = userSyncDailyLimit;
+		this.enabled = enabled;
+		this.currentDate = new AtomicReference<>(LocalDate.now(ZoneOffset.UTC));
 	}
 
 	@Autowired
 	public RateLimitService(
-			@Value("${rate-limit.daily-limit:250}") int dailyLimit,
-			@Value("${rate-limit.enabled:true}") boolean enabled) {
-		this.dailyLimit = dailyLimit;
+			@Value("${rate-limit.authenticated-daily-limit:${rate-limit.daily-limit:250}}") int authenticatedDailyLimit,
+			@Value("${rate-limit.anonymous-daily-limit:30}") int anonymousDailyLimit,
+			@Value("${rate-limit.user-sync-daily-limit:500}") int userSyncDailyLimit,
+			@Value("${rate-limit.enabled:true}") boolean enabled,
+			@Value("${rate-limit.daily-limit:250}") int fallbackDailyLimit) {
+		this.authenticatedDailyLimit = authenticatedDailyLimit;
+		this.anonymousDailyLimit = anonymousDailyLimit;
+		this.userSyncDailyLimit = userSyncDailyLimit;
 		this.enabled = enabled;
 		this.currentDate = new AtomicReference<>(LocalDate.now(ZoneOffset.UTC));
 	}
@@ -99,10 +122,35 @@ public class RateLimitService {
 	}
 
 	public void checkAndIncrement(HttpServletRequest request) {
-		checkAndIncrement(resolveClientIp(request));
+		checkAndIncrement(request, null);
+	}
+
+	public void checkAndIncrement(HttpServletRequest request, String userId) {
+		if (userId != null && !userId.isBlank()) {
+			checkAndIncrementKey("uid:" + userId.trim(), authenticatedDailyLimit);
+		} else {
+			String clientIp = resolveClientIp(request);
+			String safeIp = (!clientIp.isBlank()) ? clientIp.trim() : "unknown";
+			checkAndIncrementKey("ip:" + safeIp, anonymousDailyLimit);
+		}
+	}
+
+	public void checkAndIncrementUserSync(HttpServletRequest request, String userId) {
+		if (userId != null && !userId.isBlank()) {
+			checkAndIncrementKey("user-sync:" + userId.trim(), userSyncDailyLimit);
+		} else {
+			String clientIp = resolveClientIp(request);
+			String safeIp = (!clientIp.isBlank()) ? clientIp.trim() : "unknown";
+			checkAndIncrementKey("user-sync-ip:" + safeIp, userSyncDailyLimit);
+		}
 	}
 
 	public void checkAndIncrement(String ipAddress) {
+		String safeIp = (ipAddress != null && !ipAddress.isBlank()) ? ipAddress.trim() : "unknown";
+		checkAndIncrementKey(safeIp, authenticatedDailyLimit);
+	}
+
+	private void checkAndIncrementKey(String suffix, int limit) {
 		if (!enabled) {
 			return;
 		}
@@ -114,22 +162,33 @@ public class RateLimitService {
 			requestCounts.keySet().removeIf(k -> !k.startsWith(today.toString()));
 		}
 
-		String safeIp = (ipAddress != null && !ipAddress.isBlank()) ? ipAddress.trim() : "unknown";
-		String key = today + ":" + safeIp;
+		String key = today + ":" + suffix;
 
 		// Bound count increment to avoid integer overflow
 		int count = requestCounts.compute(key, (k, currentVal) -> {
 			int val = (currentVal == null) ? 1 : currentVal + 1;
-			return (val > dailyLimit + 1) ? dailyLimit + 1 : val;
+			return (val > limit + 1) ? limit + 1 : val;
 		});
 
-		if (count > dailyLimit) {
+		if (count > limit) {
 			throw new DailyLimitExceededException();
 		}
 	}
 
-	int getDailyLimit() {
-		return dailyLimit;
+	public int getDailyLimit() {
+		return authenticatedDailyLimit;
+	}
+
+	public int getAuthenticatedDailyLimit() {
+		return authenticatedDailyLimit;
+	}
+
+	public int getAnonymousDailyLimit() {
+		return anonymousDailyLimit;
+	}
+
+	public int getUserSyncDailyLimit() {
+		return userSyncDailyLimit;
 	}
 
 	int getTrackedKeyCount() {

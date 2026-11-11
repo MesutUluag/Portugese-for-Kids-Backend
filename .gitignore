@@ -33,3 +33,5 @@ build/
 .vscode/
 
 .DS_Store
+.env.local
+**/non-showing-pictures-prompts.md

@@ -2,6 +2,8 @@ package com.mesutuluag.portugeseforkidsbackend.story;
 
 import com.mesutuluag.portugeseforkidsbackend.commons.RateLimitService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,8 +24,14 @@ public class StoryController {
     @PostMapping
     public StoryResponse createStory(
             @RequestBody(required = false) StoryRequest request,
+            @AuthenticationPrincipal Jwt jwt,
             HttpServletRequest httpServletRequest) {
-        rateLimitService.checkAndIncrement(RateLimitService.resolveClientIp(httpServletRequest));
+        String userId = (jwt != null) ? jwt.getSubject() : null;
+        rateLimitService.checkAndIncrement(httpServletRequest, userId);
         return storyService.generateStory(request);
+    }
+
+    public StoryResponse createStory(StoryRequest request, HttpServletRequest httpServletRequest) {
+        return createStory(request, null, httpServletRequest);
     }
 }

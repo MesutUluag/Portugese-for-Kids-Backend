@@ -171,4 +171,35 @@ class RateLimitServiceTest {
                 .doesNotThrowAnyException();
         assertThat(customService.getTrackedKeyCount()).isEqualTo(1);
     }
+
+    @Test
+    void checkAndIncrement_authenticatedUser_usesAuthenticatedLimitAndUidKey() {
+        RateLimitService tieredService = new RateLimitService(5, 2, true);
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setRemoteAddr("203.0.113.10");
+
+        // 5 requests with userId succeed
+        for (int i = 0; i < 5; i++) {
+            tieredService.checkAndIncrement(request, "user-abc");
+        }
+
+        // 6th fails
+        assertThatThrownBy(() -> tieredService.checkAndIncrement(request, "user-abc"))
+                .isInstanceOf(DailyLimitExceededException.class);
+    }
+
+    @Test
+    void checkAndIncrement_anonymousUser_usesAnonymousLimitAndIpKey() {
+        RateLimitService tieredService = new RateLimitService(5, 2, true);
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setRemoteAddr("203.0.113.20");
+
+        // Anonymous limit is 2
+        tieredService.checkAndIncrement(request, null);
+        tieredService.checkAndIncrement(request, null);
+
+        // 3rd fails
+        assertThatThrownBy(() -> tieredService.checkAndIncrement(request, null))
+                .isInstanceOf(DailyLimitExceededException.class);
+    }
 }

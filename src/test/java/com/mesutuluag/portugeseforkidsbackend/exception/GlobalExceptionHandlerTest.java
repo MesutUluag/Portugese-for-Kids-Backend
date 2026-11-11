@@ -46,4 +46,12 @@ class GlobalExceptionHandlerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(response.getBody()).containsEntry("error", "invalid_request");
     }
+
+    @Test
+    void handleUserStoreException_returns503() {
+        ResponseEntity<Map<String, Object>> response = handler.handleUserStoreException(new UserStoreException("Firestore timeout"));
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.SERVICE_UNAVAILABLE);
+        assertThat(response.getBody()).containsEntry("error", "user_store_unavailable");
+    }
 }

@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,6 +56,7 @@ public class ImageController {
             @RequestParam(required = false) String imagePrompt,
             @RequestParam(defaultValue = "768") int width,
             @RequestParam(defaultValue = "368") int height,
+            @AuthenticationPrincipal Jwt jwt,
             HttpServletRequest httpServletRequest) {
 
         if (imagePrompt == null || imagePrompt.isBlank()) {
@@ -66,7 +69,8 @@ public class ImageController {
         int clampedWidth = Math.max(minDimension, Math.min(maxDimension, width));
         int clampedHeight = Math.max(minDimension, Math.min(maxDimension, height));
 
-        rateLimitService.checkAndIncrement(RateLimitService.resolveClientIp(httpServletRequest));
+        String userId = (jwt != null) ? jwt.getSubject() : null;
+        rateLimitService.checkAndIncrement(httpServletRequest, userId);
 
         byte[] jpeg = imageService.generateJpeg(imagePrompt, clampedWidth, clampedHeight);
 
@@ -82,5 +86,13 @@ public class ImageController {
         }
 
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(jpeg);
+    }
+
+    public ResponseEntity<?> generateImage(
+            String imagePrompt,
+            int width,
+            int height,
+            HttpServletRequest httpServletRequest) {
+        return generateImage(imagePrompt, width, height, null, httpServletRequest);
     }
 }

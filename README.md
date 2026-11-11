@@ -308,7 +308,7 @@ Deployments are **automated via GitHub Actions** — every push to `main` builds
 Run these once to wire up the CI/CD pipeline:
 
 ```bash
-PROJECT=project-b933c218-2521-4f77-a37
+PROJECT=your-gcp-project-id
 SA=portugese-for-kids-backend@$PROJECT.iam.gserviceaccount.com
 
 # 1. Create Workload Identity Pool

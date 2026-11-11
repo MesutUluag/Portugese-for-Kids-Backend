@@ -50,6 +50,16 @@ public class GlobalExceptionHandler {
 				));
 	}
 
+	@ExceptionHandler(UserStoreException.class)
+	public ResponseEntity<Map<String, Object>> handleUserStoreException(UserStoreException ex) {
+		log.error("[user-store-error] User store operation failed: {}", ex.getMessage());
+		return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+				.body(Map.of(
+						"error", "user_store_unavailable",
+						"message", "User profile service is temporarily unavailable. Please try again later."
+				));
+	}
+
 	@ExceptionHandler(IllegalArgumentException.class)
 	public ResponseEntity<Map<String, Object>> handleIllegalArgument(IllegalArgumentException ex) {
 		log.warn("[bad-request] Invalid request: {}", ex.getMessage());
