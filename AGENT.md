@@ -14,25 +14,35 @@ Spring Boot REST API that serves AI-generated European Portuguese sentences and 
 
 ```
 src/main/java/com/mesutuluag/portugeseforkidsbackend/
-├── commons/RateLimitService.java         # Shared per-IP daily rate limiter (UTC rollover)
-├── config/CorsConfig.java                # Centralised CORS WebMvcConfigurer
+├── commons/RateLimitService.java         # Tiered per-UID / per-IP daily rate limiter (UTC rollover)
+├── config/
+│   ├── CorsConfig.java                   # Centralised CORS WebMvcConfigurer
+│   └── SecurityConfig.java               # OAuth2 Resource Server JWT validation (Firebase Auth)
 ├── exception/
 │   ├── DailyLimitExceededException.java  # 429 exception
 │   ├── StoryGenerationException.java     # 502 exception on LLM failure/malformed output
-│   └── GlobalExceptionHandler.java       # @RestControllerAdvice for 400, 429, 502
+│   ├── UserStoreException.java           # 503 exception on Firestore failure
+│   └── GlobalExceptionHandler.java       # @RestControllerAdvice for 400, 429, 502, 503
 ├── story/
 │   ├── StoryController.java              # POST /api/story — rate limiting + delegates to StoryService
 │   ├── StoryService.java                 # Context routing, validation, prompt assembly, LLM call & parsing
 │   ├── StoryRequest.java                 # Request DTO (prompt, context, previousSentence, conversationHistory)
 │   ├── StoryResponse.java                # Response DTO (single "content" string field)
 │   └── StoryPage.java                    # JSON record (pt, en, mainEmoji, bgLeft, bgRight, imagePrompt)
-└── image/
-    ├── ImageController.java              # GET /api/image — validation + delegates to ImageService
-    ├── ImageService.java                 # Provider chain: cache → Gemini → Pollinations
-    ├── GeminiImageClient.java            # Gemini GenAI image provider (with spend-cap cooldown)
-    ├── PollinationsImageClient.java      # Pollinations fallback (no auth)
-    ├── SemanticImageCache.java           # In-memory LRU + TF-IDF cosine similarity
-    └── GcsImageStore.java                # GCS persistence (optional, conditional bean)
+├── image/
+│   ├── ImageController.java              # GET /api/image — validation + delegates to ImageService
+│   ├── ImageService.java                 # Provider chain: cache → Gemini → Pollinations
+│   ├── GeminiImageClient.java            # Gemini GenAI image provider (with spend-cap cooldown)
+│   ├── PollinationsImageClient.java      # Pollinations fallback (no auth)
+│   ├── SemanticImageCache.java           # In-memory LRU + TF-IDF cosine similarity
+│   └── GcsImageStore.java                # GCS persistence (optional, conditional bean)
+└── user/
+    ├── UserController.java               # GET /api/user/me & POST /api/user/stats/sync
+    ├── UserStatsService.java             # Delta sanitization, streak calculation & in-memory fallback
+    ├── FirestoreUserStore.java           # Cloud Firestore transactional persistence (conditional bean)
+    ├── UserProfile.java                  # Immutable user profile record
+    ├── UserStats.java                    # Immutable user telemetry stats record
+    └── StatsSyncRequest.java             # Request DTO for batched activity deltas
 
 src/main/resources/
 ├── application.properties
@@ -52,8 +62,9 @@ src/main/resources/
     └── story-system-prompt-traffic.md
 
 src/test/
-├── commons/RateLimitServiceTest.java     # Unit (IP resolution, limits, UTC rollover)
-├── exception/GlobalExceptionHandlerTest.java # Unit (400, 429, 502 responses)
+├── commons/RateLimitServiceTest.java     # Unit (IP resolution, per-UID/IP limits, UTC rollover)
+├── config/SecurityConfigTest.java        # Unit (MockMvc JWT auth, 401/200, CORS preflight)
+├── exception/GlobalExceptionHandlerTest.java # Unit (400, 429, 502, 503 responses)
 ├── story/StoryControllerTest.java        # Unit (Mockito, no network)
 ├── story/StoryServiceTest.java           # Unit (Mockito, prompt assembly, validation, JSON parsing)
 ├── story/StoryEvaluatorTest.java         # @Tag("ai-eval") — needs live GCP credentials
@@ -61,7 +72,11 @@ src/test/
 ├── image/ImageServiceTest.java           # Unit (provider fallback chain)
 ├── image/GeminiImageClientTest.java      # Unit (toggle & cooldown)
 ├── image/PollinationsImageClientTest.java # Unit (mocked HttpClient)
-└── image/SemanticImageCacheTest.java     # Unit (no network)
+├── image/SemanticImageCacheTest.java     # Unit (no network)
+└── user/
+    ├── UserControllerTest.java           # Unit (JWT claims extraction, sync rate limiting)
+    ├── UserStatsServiceTest.java         # Unit (streaks, clamping, allowlists, 30-day pruning)
+    └── FirestoreUserStoreTest.java       # Unit (mocked Firestore transactions & profile upgrades)
 
 .agents/skills/
 ├── gcs-image-seeding/
@@ -105,8 +120,17 @@ Resolution order: **semantic cache → Gemini (when enabled via `gemini.image.en
 ### Semantic cache (SemanticImageCache)
 TF-IDF cosine similarity with a threshold of **0.55** (`image.cache.similarity-threshold`) and an incremental $O(1)$ document-frequency (`docFreq`) index. Backed by an access-ordered `LinkedHashMap` with LRU eviction (`MAX_ENTRIES = 1000`, `image.cache.max-entries`). A `synchronized` lock guards map mutations and lookups while pure tokenisation/TF calculation runs outside the lock. When `image.cache.gcs.enabled=true`, `GcsImageStore` is injected as an `Optional<GcsImageStore>` and warmed up asynchronously at startup (`image.cache.gcs.async-warmup=true`, capped at `MAX_ENTRIES` with `image.cache.gcs.max-concurrent-reads=32`); writes are fire-and-forget on a virtual-thread executor (shut down via `@PreDestroy`), storing the prompt in `BlobInfo` custom metadata on `image.jpg`. `GcsImageStore` is a conditional bean — absent when the property is not `true`.
 
+### Authentication & User Telemetry (SecurityConfig, UserStatsService, FirestoreUserStore)
+- `SecurityConfig` configures Spring Security as a stateless OAuth2 Resource Server (`auth.enabled=true`). `NimbusJwtDecoder` verifies Firebase RS256 ID tokens against Google's JWK set (`auth.firebase.jwk-set-uri`) and validates `exp`/`iat` (with 60s clock skew), `iss` (`https://securetoken.google.com/<project-id>`), `aud` (`<project-id>`), and non-blank `sub`.
+- `UserStatsService` sanitizes incoming `StatsSyncRequest` deltas against strict allowlists (`ALLOWED_MODES`, `ALLOWED_CONTEXTS`), clamps deltas to configured bounds, computes consecutive-day streaks (`currentStreakDays`, `longestStreakDays`), and prunes `dailyTimeSeconds` to the most recent 30 days (`stats.sync.max-daily-history-days=30`).
+- When `firestore.enabled=true`, `FirestoreUserStore` persists `UserProfile` documents in the `users` collection using Firestore transactions bounded by a `Semaphore(32)` and closes its client on `@PreDestroy`. If Firestore is disabled or unreachable, `UserStatsService` gracefully falls back to an in-memory `ConcurrentHashMap`.
+
 ### Rate limiting (RateLimitService)
-Key = `LocalDate.now(ZoneOffset.UTC) + ":" + ipAddress`. Limit = **250 per IP per UTC calendar day** (`rate-limit.daily-limit`), with automatic key eviction on UTC date rollover and counter clamping at `dailyLimit + 1`. Shared across both endpoints. Behind Cloud Run reverse proxies (GFE), `server.forward-headers-strategy=native` (Tomcat `RemoteIpValve`) and `RateLimitService.resolveClientIp(HttpServletRequest)` ensure the real client IP from `X-Forwarded-For` is extracted without allowing client-spoofed `X-Forwarded-For` prefixes to bypass the limit. When exceeded, `GlobalExceptionHandler` returns HTTP `429` with a `Retry-After` header (seconds until midnight UTC). Disable for local testing with `rate-limit.enabled=false` in `application-local.properties`.
+Tiered per-UID and per-IP daily limits with automatic key eviction on UTC date rollover:
+- Authenticated AI generation (`POST /api/story`, `GET /api/image`): `today + ":uid:" + uid` → **250/day** (`rate-limit.authenticated-daily-limit`).
+- Anonymous fallback: `today + ":ip:" + ipAddress` → **30/day** (`rate-limit.anonymous-daily-limit`).
+- User profile & stats sync (`GET /api/user/me`, `POST /api/user/stats/sync`): `today + ":user-sync:" + uid` → **500/day** (`rate-limit.user-sync-daily-limit`) to protect Firestore free-tier write quotas.
+Behind Cloud Run reverse proxies (GFE), `server.forward-headers-strategy=native` (Tomcat `RemoteIpValve`) and `RateLimitService.resolveClientIp(HttpServletRequest)` ensure the real client IP from `X-Forwarded-For` is extracted without allowing client-spoofed `X-Forwarded-For` prefixes to bypass the limit. When exceeded, `GlobalExceptionHandler` returns HTTP `429` with a `Retry-After` header (seconds until midnight UTC). Disable for local testing with `rate-limit.enabled=false` in `application-local.properties`.
 
 ### Input validation & error handling
 - `StoryService` enforces length limits on `prompt` (`story.validation.max-prompt-length=300`), `previousSentence` (`story.validation.max-previous-sentence-length=300`), and `conversationHistory` items (`story.validation.max-history-item-length=200`).

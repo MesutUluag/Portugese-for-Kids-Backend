@@ -10,9 +10,11 @@ Spring Boot REST API powering AI-generated story sentences and illustrations for
 |---|---|---|
 | Java | 21 | Runtime |
 | Spring Boot | 3.5.16 | Web framework |
+| Spring Security OAuth2 Resource Server | 6.5.x | Firebase JWT authentication (`RS256`) |
 | Spring AI | 1.1.8 | LLM integration |
 | Google Vertex AI (Agent Platform) | `gemini-3.1-flash-lite` | Story sentence generation |
 | Google GenAI SDK | `1.5.0` | Gemini image generation (`gemini-3.1-flash-lite-image`) |
+| Google Cloud Firestore | `3.30.0` | User profile & study telemetry persistence |
 | Google Cloud Storage | `2.50.0` | GCS-backed persistent image cache |
 | Pollinations (free) | — | Image generation fallback |
 | Maven | Wrapper included | Build tool |
@@ -168,6 +170,32 @@ GET /api/image?imagePrompt=a+child+reading+in+a+classroom&width=768&height=368
 
 ---
 
+### `GET /api/user/me`
+
+Returns the authenticated user's `UserProfile` (creating a default profile on first login). Requires `Authorization: Bearer <Firebase_ID_Token>`.
+
+---
+
+### `POST /api/user/stats/sync`
+
+Applies batched study-time, game-score, and story-practice deltas atomically to the authenticated user's profile in Cloud Firestore and returns the updated `UserProfile`.
+
+**Request body**
+
+```json
+{
+  "activeSecondsDelta": 60,
+  "timeByModeDelta": { "cards": 30, "story": 30 },
+  "gamesCompletedDelta": { "game1": 2 },
+  "storiesByContextDelta": { "school": 2 },
+  "scoreDelta": 20,
+  "speechListenDelta": 4,
+  "clientDate": "2026-11-11"
+}
+```
+
+---
+
 ## Image Provider Chain
 
 `ImageService` resolves images in the following order. Only Gemini results are cached.
@@ -297,11 +325,14 @@ docker run -p 8081:8080 \
 
 Deployments are **automated via GitHub Actions** — every push to `main` builds the Docker image, pushes it to GCR, and deploys to Cloud Run. See [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
 
-### Required GitHub secret
+### Required GitHub secrets
 
 | Secret | Description |
 |---|---|
 | `GCP_WORKLOAD_IDENTITY_PROVIDER` | Workload Identity Federation provider resource name (keyless auth — no JSON key stored) |
+| `GCP_PROJECT_ID` | Google Cloud project ID hosting Cloud Run, Vertex AI, and Firestore |
+| `FIREBASE_PROJECT_ID` | Firebase Authentication project ID used to validate JWT `iss` and `aud` claims |
+| `GEMINI_API_KEY` | Optional Gemini API key for primary image generation |
 
 ### One-time GCP setup
 
