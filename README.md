@@ -28,26 +28,38 @@ Spring Boot REST API powering AI-generated story sentences and illustrations for
 src/main/java/com/mesutuluag/portugeseforkidsbackend/
 ├── PortugeseForKidsBackendApplication.java   # Spring Boot entry point
 ├── commons/
-│   └── RateLimitService.java                 # Per-IP daily rate limiting (UTC rollover)
+│   └── RateLimitService.java                 # Tiered per-UID / per-IP daily rate limiter (UTC rollover)
 ├── config/
-│   └── CorsConfig.java                       # Centralised CORS configuration
+│   ├── CorsConfig.java                       # Centralised CORS configuration
+│   └── SecurityConfig.java                   # OAuth2 Resource Server JWT validation (Firebase Auth)
 ├── exception/
 │   ├── DailyLimitExceededException.java      # Custom 429 exception
 │   ├── StoryGenerationException.java         # Custom 502 exception for LLM failures
-│   └── GlobalExceptionHandler.java           # @RestControllerAdvice error responses
+│   ├── UserStoreException.java               # Custom 503 exception for Firestore failures
+│   └── GlobalExceptionHandler.java           # @RestControllerAdvice error responses (400, 429, 502, 503)
 ├── story/
-│   ├── StoryController.java                  # POST /api/story
+│   ├── StoryController.java                  # POST /api/story (rate-limited)
 │   ├── StoryService.java                     # Prompt management, validation & LLM call
 │   ├── StoryRequest.java                     # Request DTO
 │   ├── StoryResponse.java                    # Response DTO
 │   └── StoryPage.java                        # Story data record
-└── image/
-    ├── ImageController.java                  # GET /api/image
-    ├── ImageService.java                     # Provider orchestration + fallback chain
-    ├── GeminiImageClient.java                # Primary provider (Gemini GenAI API + cooldown)
-    ├── PollinationsImageClient.java          # Fallback (free, no auth)
-    ├── SemanticImageCache.java               # In-memory LRU cache with cosine similarity
-    └── GcsImageStore.java                    # GCS persistence for the semantic cache
+├── image/
+│   ├── ImageController.java                  # GET /api/image
+│   ├── ImageService.java                     # Provider orchestration + fallback chain
+│   ├── GeminiImageClient.java                # Primary provider (Gemini GenAI API + cooldown)
+│   ├── PollinationsImageClient.java          # Fallback (free, no auth)
+│   ├── SemanticImageCache.java               # In-memory LRU cache with cosine similarity
+│   └── GcsImageStore.java                    # GCS persistence for the semantic cache
+└── user/
+    ├── UserController.java                   # GET /api/user/me, POST /api/user/stats/sync & GET /api/user/leaderboard
+    ├── UserStatsService.java                 # Delta sanitization, streak calculation & in-memory fallback
+    ├── LeaderboardService.java               # 60s cached global leaderboard & child-privacy display name sanitizer
+    ├── FirestoreUserStore.java               # Cloud Firestore transactional persistence & top-N leaderboard query
+    ├── UserProfile.java                      # Immutable user profile record
+    ├── UserStats.java                        # Immutable user telemetry stats record (including scoreByMode)
+    ├── StatsSyncRequest.java                 # Request DTO for batched activity deltas
+    ├── LeaderboardResponse.java              # Response record for global leaderboard
+    └── LeaderboardEntry.java                 # Ranked player entry record
 
 src/main/resources/
 ├── application.properties                   # Spring & AI configuration
@@ -68,19 +80,25 @@ src/main/resources/
 
 src/test/java/com/mesutuluag/portugeseforkidsbackend/
 ├── commons/
-│   └── RateLimitServiceTest.java            # Unit tests for IP resolution & rate limiting
+│   └── RateLimitServiceTest.java            # Unit tests for IP resolution & tiered rate limiting
+├── config/
+│   └── SecurityConfigTest.java              # Unit tests for JWT auth & public leaderboard access
 ├── exception/
-│   └── GlobalExceptionHandlerTest.java      # Unit tests for 400, 429, 502 error handling
+│   └── GlobalExceptionHandlerTest.java      # Unit tests for 400, 429, 502, 503 error handling
 ├── story/
-│   ├── StoryControllerTest.java             # Unit tests for StoryController
+│   ├── StoryControllerTest.java             # Unit tests for StoryController & story rate limiting
 │   ├── StoryServiceTest.java                # Unit tests for StoryService (mocked ChatClient)
 │   └── StoryEvaluatorTest.java              # AI evaluator tests (@Tag("ai-eval"))
-└── image/
-    ├── ImageControllerTest.java             # Unit tests for ImageController
-    ├── ImageServiceTest.java                # Unit tests for ImageService fallback chain
-    ├── GeminiImageClientTest.java           # Unit tests for GeminiImageClient toggle & cooldown
-    ├── PollinationsImageClientTest.java     # Unit tests for PollinationsImageClient
-    └── SemanticImageCacheTest.java          # Unit tests for semantic cache logic
+├── image/
+│   ├── ImageControllerTest.java             # Unit tests for ImageController
+│   ├── ImageServiceTest.java                # Unit tests for ImageService fallback chain
+│   ├── GeminiImageClientTest.java           # Unit tests for GeminiImageClient toggle & cooldown
+│   ├── PollinationsImageClientTest.java     # Unit tests for PollinationsImageClient
+│   └── SemanticImageCacheTest.java          # Unit tests for semantic cache logic
+└── user/
+    ├── UserControllerTest.java              # Unit tests for UserController endpoints
+    ├── UserStatsServiceTest.java            # Unit tests for streaks, clamping, allowlists & pruning
+    └── LeaderboardServiceTest.java          # Unit tests for Firestore/in-memory leaderboard & name sanitization
 ```
 
 ---
@@ -161,7 +179,6 @@ GET /api/image?imagePrompt=a+child+reading+in+a+classroom&width=768&height=368
 | Status | Content-Type | Description |
 |---|---|---|
 | `200 OK` | `image/jpeg` | Binary JPEG image |
-| `429 Too Many Requests` | — | Daily per-IP limit exceeded |
 | `503 Service Unavailable` | `application/json` | All image providers failed |
 
 ```json
@@ -178,7 +195,7 @@ Returns the authenticated user's `UserProfile` (creating a default profile on fi
 
 ### `POST /api/user/stats/sync`
 
-Applies batched study-time, game-score, and story-practice deltas atomically to the authenticated user's profile in Cloud Firestore and returns the updated `UserProfile`.
+Applies batched study-time, game-score, per-mode score (`scoreByModeDelta`), and story-practice deltas atomically to the authenticated user's profile in Cloud Firestore and returns the updated `UserProfile`.
 
 **Request body**
 
@@ -188,11 +205,24 @@ Applies batched study-time, game-score, and story-practice deltas atomically to 
   "timeByModeDelta": { "cards": 30, "story": 30 },
   "gamesCompletedDelta": { "game1": 2 },
   "storiesByContextDelta": { "school": 2 },
-  "scoreDelta": 20,
+  "scoreDelta": 12,
+  "scoreByModeDelta": { "game1": 12 },
   "speechListenDelta": 4,
   "clientDate": "2026-11-11"
 }
 ```
+
+---
+
+### `GET /api/user/leaderboard`
+
+Returns the global top-N player standings ordered by `totalScore` descending from Cloud Firestore (cached in-memory for 60s), along with the requesting user's standing if authenticated. Publicly accessible; child privacy is protected by anonymising display names to `FirstName L.` and never exposing email addresses.
+
+**Query parameters**
+
+| Parameter | Required | Default | Description |
+|---|---|---|---|
+| `limit` | ❌ | `25` | Number of top players to return (max `50`) |
 
 ---
 
@@ -220,7 +250,11 @@ Returns `null` (→ `503`) only when all steps fail.
 
 ## Rate Limiting
 
-Both endpoints share a **250 requests per IP address per calendar day** quota tracked in-memory. The counter resets when the server restarts. Rate limiting can be disabled for local testing via `rate-limit.enabled=false`.
+Rate limiting applies **exclusively to story creation (`POST /api/story`)** to protect LLM quota while keeping image rendering, user profile loading, stats synchronisation, and leaderboard queries unrestricted:
+- **Authenticated users (`uid`)**: `250` requests per calendar day (`rate-limit.authenticated-daily-limit`).
+- **Anonymous fallback (`ip`)**: `30` requests per calendar day (`rate-limit.anonymous-daily-limit`).
+
+Counters automatically roll over at midnight UTC and can be disabled for local testing via `rate-limit.enabled=false`.
 
 ---
 

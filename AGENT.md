@@ -37,12 +37,15 @@ src/main/java/com/mesutuluag/portugeseforkidsbackend/
 │   ├── SemanticImageCache.java           # In-memory LRU + TF-IDF cosine similarity
 │   └── GcsImageStore.java                # GCS persistence (optional, conditional bean)
 └── user/
-    ├── UserController.java               # GET /api/user/me & POST /api/user/stats/sync
+    ├── UserController.java               # GET /api/user/me, POST /api/user/stats/sync & GET /api/user/leaderboard
     ├── UserStatsService.java             # Delta sanitization, streak calculation & in-memory fallback
-    ├── FirestoreUserStore.java           # Cloud Firestore transactional persistence (conditional bean)
+    ├── LeaderboardService.java           # 60s cached global leaderboard & child-privacy display name sanitizer
+    ├── FirestoreUserStore.java           # Cloud Firestore transactional persistence & top-N leaderboard query
     ├── UserProfile.java                  # Immutable user profile record
-    ├── UserStats.java                    # Immutable user telemetry stats record
-    └── StatsSyncRequest.java             # Request DTO for batched activity deltas
+    ├── UserStats.java                    # Immutable user telemetry stats record (including scoreByMode)
+    ├── StatsSyncRequest.java             # Request DTO for batched activity deltas
+    ├── LeaderboardResponse.java          # Response record for global leaderboard
+    └── LeaderboardEntry.java             # Ranked player entry record
 
 src/main/resources/
 ├── application.properties
@@ -63,20 +66,20 @@ src/main/resources/
 
 src/test/
 ├── commons/RateLimitServiceTest.java     # Unit (IP resolution, per-UID/IP limits, UTC rollover)
-├── config/SecurityConfigTest.java        # Unit (MockMvc JWT auth, 401/200, CORS preflight)
+├── config/SecurityConfigTest.java        # Unit (MockMvc JWT auth, 401/200, public leaderboard, CORS preflight)
 ├── exception/GlobalExceptionHandlerTest.java # Unit (400, 429, 502, 503 responses)
-├── story/StoryControllerTest.java        # Unit (Mockito, no network)
+├── story/StoryControllerTest.java        # Unit (Mockito, no network, story rate limiting)
 ├── story/StoryServiceTest.java           # Unit (Mockito, prompt assembly, validation, JSON parsing)
 ├── story/StoryEvaluatorTest.java         # @Tag("ai-eval") — needs live GCP credentials
-├── image/ImageControllerTest.java        # Unit (validation, clamping, 200/429/503)
+├── image/ImageControllerTest.java        # Unit (validation, clamping, 200/503)
 ├── image/ImageServiceTest.java           # Unit (provider fallback chain)
 ├── image/GeminiImageClientTest.java      # Unit (toggle & cooldown)
 ├── image/PollinationsImageClientTest.java # Unit (mocked HttpClient)
 ├── image/SemanticImageCacheTest.java     # Unit (no network)
 └── user/
-    ├── UserControllerTest.java           # Unit (JWT claims extraction, sync rate limiting)
+    ├── UserControllerTest.java           # Unit (JWT claims extraction, profile/sync/leaderboard endpoints)
     ├── UserStatsServiceTest.java         # Unit (streaks, clamping, allowlists, 30-day pruning)
-    └── FirestoreUserStoreTest.java       # Unit (mocked Firestore transactions & profile upgrades)
+    └── LeaderboardServiceTest.java       # Unit (Firestore/in-memory leaderboard rankings, child-privacy name sanitization)
 
 .agents/skills/
 ├── gcs-image-seeding/
@@ -120,10 +123,11 @@ Resolution order: **semantic cache → Gemini (when enabled via `gemini.image.en
 ### Semantic cache (SemanticImageCache)
 TF-IDF cosine similarity with a threshold of **0.55** (`image.cache.similarity-threshold`) and an incremental $O(1)$ document-frequency (`docFreq`) index. Backed by an access-ordered `LinkedHashMap` with LRU eviction (`MAX_ENTRIES = 1000`, `image.cache.max-entries`). A `synchronized` lock guards map mutations and lookups while pure tokenisation/TF calculation runs outside the lock. When `image.cache.gcs.enabled=true`, `GcsImageStore` is injected as an `Optional<GcsImageStore>` and warmed up asynchronously at startup (`image.cache.gcs.async-warmup=true`, capped at `MAX_ENTRIES` with `image.cache.gcs.max-concurrent-reads=32`); writes are fire-and-forget on a virtual-thread executor (shut down via `@PreDestroy`), storing the prompt in `BlobInfo` custom metadata on `image.jpg`. `GcsImageStore` is a conditional bean — absent when the property is not `true`.
 
-### Authentication & User Telemetry (SecurityConfig, UserStatsService, FirestoreUserStore)
-- `SecurityConfig` configures Spring Security as a stateless OAuth2 Resource Server (`auth.enabled=true`). `NimbusJwtDecoder` verifies Firebase RS256 ID tokens against Google's JWK set (`auth.firebase.jwk-set-uri`) and validates `exp`/`iat` (with 60s clock skew), `iss` (`https://securetoken.google.com/<project-id>`), `aud` (`<project-id>`), and non-blank `sub`.
-- `UserStatsService` sanitizes incoming `StatsSyncRequest` deltas against strict allowlists (`ALLOWED_MODES`, `ALLOWED_CONTEXTS`), clamps deltas to configured bounds, computes consecutive-day streaks (`currentStreakDays`, `longestStreakDays`), and prunes `dailyTimeSeconds` to the most recent 30 days (`stats.sync.max-daily-history-days=30`).
-- When `firestore.enabled=true`, `FirestoreUserStore` persists `UserProfile` documents in the `users` collection using Firestore transactions bounded by a `Semaphore(32)` and closes its client on `@PreDestroy`. If Firestore is disabled or unreachable, `UserStatsService` gracefully falls back to an in-memory `ConcurrentHashMap`.
+### Authentication, User Telemetry & Leaderboard (SecurityConfig, UserStatsService, LeaderboardService, FirestoreUserStore)
+- `SecurityConfig` configures Spring Security as a stateless OAuth2 Resource Server (`auth.enabled=true`). `NimbusJwtDecoder` verifies Firebase RS256 ID tokens against Google's JWK set (`auth.firebase.jwk-set-uri`) and validates `exp`/`iat` (with 60s clock skew), `iss` (`https://securetoken.google.com/<project-id>`), `aud` (`<project-id>`), and non-blank `sub`. `GET /api/user/leaderboard` is permitted for unauthenticated guests while still parsing optional Bearer tokens to highlight the caller's standing.
+- `UserStatsService` sanitizes incoming `StatsSyncRequest` deltas against strict allowlists (`ALLOWED_MODES`, `ALLOWED_CONTEXTS`), clamps deltas to configured bounds, tracks per-game scores (`scoreByMode`), computes consecutive-day streaks (`currentStreakDays`, `longestStreakDays`), and prunes `dailyTimeSeconds` to the most recent 30 days (`stats.sync.max-daily-history-days=30`).
+- When `firestore.enabled=true`, `FirestoreUserStore` persists `UserProfile` documents in the `users` collection (with a top-level indexed `totalScore` field) using Firestore transactions bounded by a `Semaphore(32)` and closes its client on `@PreDestroy`. If Firestore is disabled or unreachable, `UserStatsService` gracefully falls back to an in-memory `ConcurrentHashMap`.
+- `LeaderboardService` caches top-N user standings (`getTopLeaderboard` and `getTotalUsersCount`) for 60 seconds, sanitizes child display names to `FirstName L.` (never exposing email addresses), and returns an empty list (`topUsers: []`) when no users exist — never fabricated or mock entries.
 
 ### Rate limiting (RateLimitService)
 Rate limiting applies exclusively to story generation (`POST /api/story`) to manage LLM quota while keeping images, profile loading, telemetry sync, and leaderboard free of rate limit constraints:
