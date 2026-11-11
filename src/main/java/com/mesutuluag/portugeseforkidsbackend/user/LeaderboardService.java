@@ -93,8 +93,8 @@ public class LeaderboardService {
                         .toList();
                 totalCount = inMemory.size();
             } else {
-                fetched = createMockLeaderboard();
-                totalCount = fetched.size();
+                fetched = Collections.emptyList();
+                totalCount = 0;
             }
         }
 
@@ -109,7 +109,7 @@ public class LeaderboardService {
                 return i + 1;
             }
         }
-        return Math.max(topProfiles.size() + 1, totalUsers);
+        return Math.max(topProfiles.size() + 1, Math.max(totalUsers, 1));
     }
 
     private LeaderboardEntry toEntry(UserProfile profile, int rank, boolean isCurrentUser) {
@@ -134,8 +134,8 @@ public class LeaderboardService {
     }
 
     private String sanitizeDisplayName(String name) {
-        if (name == null || name.isBlank() || "Kid Explorer".equals(name)) {
-            return "Minik Gezgin";
+        if (name == null || name.isBlank()) {
+            return "Explorer";
         }
         // Protect child privacy: only return first name or sanitized display name
         String[] parts = name.trim().split("\\s+");
@@ -143,24 +143,5 @@ public class LeaderboardService {
             return parts[0] + " " + parts[1].charAt(0) + ".";
         }
         return parts[0];
-    }
-
-    private List<UserProfile> createMockLeaderboard() {
-        return List.of(
-                createMockUser("mock-1", "Sofia P.", 1850, Map.of("game1", 240, "game6", 450, "game8", 720)),
-                createMockUser("mock-2", "Miguel R.", 1520, Map.of("game1", 310, "game5", 420, "game7", 350)),
-                createMockUser("mock-3", "Tiago S.", 1240, Map.of("game2", 210, "game3", 320, "game8", 410)),
-                createMockUser("mock-4", "Leonor M.", 980, Map.of("game1", 180, "game4", 250, "game6", 300)),
-                createMockUser("mock-5", "Lucas C.", 760, Map.of("game2", 150, "game5", 280, "game7", 190))
-        );
-    }
-
-    private UserProfile createMockUser(String uid, String name, int totalScore, Map<String, Integer> scoreByMode) {
-        UserStats stats = new UserStats(
-                totalScore * 4, 3, 5, "2026-11-11",
-                totalScore / 10, totalScore, 10,
-                Map.of(), Map.of(), scoreByMode, Map.of(), Map.of()
-        );
-        return new UserProfile(uid, "explorer@kids.com", name, "FREE", stats, System.currentTimeMillis() - 86400000L, System.currentTimeMillis());
     }
 }
