@@ -1,13 +1,22 @@
 package com.mesutuluag.portugeseforkidsbackend.user;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import com.google.cloud.firestore.AggregateQuerySnapshot;
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.FirestoreOptions;
+import com.google.cloud.firestore.Query;
+import com.google.cloud.firestore.QuerySnapshot;
 import com.mesutuluag.portugeseforkidsbackend.exception.UserStoreException;
 import jakarta.annotation.PreDestroy;
 import org.slf4j.Logger;
@@ -16,11 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.FirestoreOptions;
 
 @Component
 @ConditionalOnProperty(name = "firestore.enabled", havingValue = "true")
@@ -154,6 +158,7 @@ public class FirestoreUserStore {
         map.put("email", profile.email());
         map.put("displayName", profile.displayName());
         map.put("tier", profile.tier());
+        map.put("totalScore", profile.stats().totalScore());
         map.put("createdAt", profile.createdAt());
         map.put("updatedAt", profile.updatedAt());
 
@@ -168,6 +173,7 @@ public class FirestoreUserStore {
         statsMap.put("speechListenCount", stats.speechListenCount());
         statsMap.put("timeByModeSeconds", stats.timeByModeSeconds());
         statsMap.put("gamesCompletedByMode", stats.gamesCompletedByMode());
+        statsMap.put("scoreByMode", stats.scoreByMode());
         statsMap.put("storiesByContext", stats.storiesByContext());
         statsMap.put("dailyTimeSeconds", stats.dailyTimeSeconds());
 
@@ -212,6 +218,7 @@ public class FirestoreUserStore {
 
         Map<String, Integer> timeByMode = getIntegerMap(map, "timeByModeSeconds");
         Map<String, Integer> gamesCompleted = getIntegerMap(map, "gamesCompletedByMode");
+        Map<String, Integer> scoreByMode = getIntegerMap(map, "scoreByMode");
         Map<String, Integer> storiesByCtx = getIntegerMap(map, "storiesByContext");
         Map<String, Integer> dailyTime = getIntegerMap(map, "dailyTimeSeconds");
 
@@ -225,9 +232,56 @@ public class FirestoreUserStore {
                 speechListen,
                 timeByMode,
                 gamesCompleted,
+                scoreByMode,
                 storiesByCtx,
                 dailyTime
         );
+    }
+
+    public List<UserProfile> getTopLeaderboard(int limit) {
+        try {
+            semaphore.acquire();
+            try {
+                int fetchLimit = limit > 0 ? Math.min(limit, 100) : 25;
+                QuerySnapshot querySnapshot = firestore.collection(collectionName)
+                        .orderBy("totalScore", Query.Direction.DESCENDING)
+                        .limit(fetchLimit)
+                        .get()
+                        .get(10, TimeUnit.SECONDS);
+
+                List<UserProfile> result = new ArrayList<>();
+                for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                    result.add(parseProfile(doc, doc.getId(), doc.getString("email"), doc.getString("displayName")));
+                }
+                return result;
+            } finally {
+                semaphore.release();
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new UserStoreException("Interrupted fetching leaderboard", e);
+        } catch (ExecutionException | TimeoutException e) {
+            log.error("[firestore-store] Failed to get leaderboard: {}", e.getMessage());
+            throw new UserStoreException("Failed to get leaderboard", e);
+        }
+    }
+
+    public int getTotalUsersCount() {
+        try {
+            semaphore.acquire();
+            try {
+                AggregateQuerySnapshot snapshot = firestore.collection(collectionName)
+                        .count()
+                        .get()
+                        .get(10, TimeUnit.SECONDS);
+                return (int) snapshot.getCount();
+            } finally {
+                semaphore.release();
+            }
+        } catch (Exception e) {
+            log.warn("[firestore-store] Failed to get user count: {}", e.getMessage());
+            return 0;
+        }
     }
 
     private int getInt(Map<String, Object> map, String key) {

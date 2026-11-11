@@ -27,6 +27,9 @@ class UserControllerTest {
     @Mock
     private UserStatsService userStatsService;
 
+    @Mock
+    private LeaderboardService leaderboardService;
+
     private RateLimitService rateLimitService;
 
     private UserController controller;
@@ -34,7 +37,7 @@ class UserControllerTest {
     @BeforeEach
     void setUp() {
         rateLimitService = new RateLimitService(250, 30, 500, true);
-        controller = new UserController(userStatsService, rateLimitService);
+        controller = new UserController(userStatsService, rateLimitService, leaderboardService);
     }
 
     @Test
@@ -108,5 +111,17 @@ class UserControllerTest {
 
         assertThatThrownBy(() -> strictController.syncStats(new StatsSyncRequest(), jwt))
                 .isInstanceOf(DailyLimitExceededException.class);
+    }
+
+    @Test
+    void getLeaderboard_delegatesToService() {
+        LeaderboardResponse mockResp = new LeaderboardResponse(java.util.List.of(), null, 0, System.currentTimeMillis());
+        when(leaderboardService.getLeaderboard(any(), any(), any(), eq(25))).thenReturn(mockResp);
+
+        ResponseEntity<LeaderboardResponse> response = controller.getLeaderboard(25, null, null);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isSameAs(mockResp);
+        verify(leaderboardService).getLeaderboard(null, null, null, 25);
     }
 }

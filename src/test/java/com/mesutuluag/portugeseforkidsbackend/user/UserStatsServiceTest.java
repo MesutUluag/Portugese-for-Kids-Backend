@@ -101,7 +101,7 @@ class UserStatsServiceTest {
         // Pre-populate profile with an existing streak from 3 days ago
         UserStats previousStats = new UserStats(
                 60, 2, 2, threeDaysAgo.toString(), 0, 0, 0,
-                Map.of(), Map.of(), Map.of(), Map.of(threeDaysAgo.toString(), 60)
+                Map.of(), Map.of(), Map.of(), Map.of(), Map.of(threeDaysAgo.toString(), 60)
         );
         UserProfile previousProfile = new UserProfile("u1", "test@kid.com", "Leo", "FREE", previousStats, 1000L, 1000L);
         org.springframework.test.util.ReflectionTestUtils.invokeMethod(
@@ -134,7 +134,7 @@ class UserStatsServiceTest {
         }
         UserStats statsWithHistory = new UserStats(
                 350, 1, 1, "2026-01-35", 0, 0, 0,
-                Map.of(), Map.of(), Map.of(), historical
+                Map.of(), Map.of(), Map.of(), Map.of(), historical
         );
         service.syncStats("u2", "u2@test.com", "Kid", req); // sets initial
 

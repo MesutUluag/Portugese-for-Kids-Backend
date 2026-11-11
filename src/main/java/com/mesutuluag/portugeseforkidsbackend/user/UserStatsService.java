@@ -41,6 +41,10 @@ public class UserStatsService {
 
     private final Map<String, UserProfile> inMemoryProfiles = new ConcurrentHashMap<>();
 
+    public Map<String, UserProfile> getInMemoryProfiles() {
+        return Collections.unmodifiableMap(inMemoryProfiles);
+    }
+
     public UserStatsService(
             Optional<FirestoreUserStore> firestoreUserStore,
             @Value("${stats.sync.max-seconds-delta:300}") int maxSecondsDelta,
@@ -153,12 +157,16 @@ public class UserStatsService {
         int modeTimeDelta = sanitized.getTimeByModeDelta() != null
                 ? sanitized.getTimeByModeDelta().values().stream().mapToInt(Integer::intValue).sum()
                 : 0;
+        int scoreModeDelta = sanitized.getScoreByModeDelta() != null
+                ? sanitized.getScoreByModeDelta().values().stream().mapToInt(Integer::intValue).sum()
+                : 0;
 
         boolean hasActivity = sanitized.getActiveSecondsDelta() > 0
                 || storiesDelta > 0
                 || gamesDelta > 0
                 || modeTimeDelta > 0
                 || sanitized.getScoreDelta() > 0
+                || scoreModeDelta > 0
                 || sanitized.getSpeechListenDelta() > 0;
 
         int currentStreak = currentStats.currentStreakDays();
@@ -186,7 +194,8 @@ public class UserStatsService {
         }
 
         int totalTime = currentStats.totalTimeSeconds() + sanitized.getActiveSecondsDelta();
-        int totalScore = currentStats.totalScore() + sanitized.getScoreDelta();
+        int totalScoreDelta = Math.max(sanitized.getScoreDelta(), scoreModeDelta);
+        int totalScore = currentStats.totalScore() + totalScoreDelta;
         int speechListen = currentStats.speechListenCount() + sanitized.getSpeechListenDelta();
         int totalStories = currentStats.totalStoriesPracticed() + storiesDelta;
 
@@ -198,6 +207,11 @@ public class UserStatsService {
         Map<String, Integer> gamesCompleted = new HashMap<>(currentStats.gamesCompletedByMode());
         if (sanitized.getGamesCompletedDelta() != null) {
             sanitized.getGamesCompletedDelta().forEach((mode, v) -> gamesCompleted.merge(mode, v, Integer::sum));
+        }
+
+        Map<String, Integer> scoreByMode = new HashMap<>(currentStats.scoreByMode());
+        if (sanitized.getScoreByModeDelta() != null) {
+            sanitized.getScoreByModeDelta().forEach((mode, v) -> scoreByMode.merge(mode, v, Integer::sum));
         }
 
         Map<String, Integer> storiesByCtx = new HashMap<>(currentStats.storiesByContext());
@@ -222,6 +236,7 @@ public class UserStatsService {
                 speechListen,
                 timeByMode,
                 gamesCompleted,
+                scoreByMode,
                 storiesByCtx,
                 prunedDaily
         );
@@ -248,6 +263,7 @@ public class UserStatsService {
 
         sanitized.setActiveSecondsDelta(Math.max(0, Math.min(maxSecondsDelta, raw.getActiveSecondsDelta())));
         sanitized.setScoreDelta(Math.max(0, Math.min(maxScoreDelta, raw.getScoreDelta())));
+        sanitized.setScoreByModeDelta(filterAndClamp(raw.getScoreByModeDelta(), ALLOWED_MODES, maxScoreDelta));
         sanitized.setSpeechListenDelta(Math.max(0, Math.min(maxStoriesDelta * 5, raw.getSpeechListenDelta())));
 
         sanitized.setTimeByModeDelta(filterAndClamp(raw.getTimeByModeDelta(), ALLOWED_MODES, maxSecondsDelta));

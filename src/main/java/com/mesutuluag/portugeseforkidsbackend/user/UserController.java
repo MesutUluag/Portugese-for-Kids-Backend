@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -18,15 +19,24 @@ public class UserController {
 
     private final UserStatsService userStatsService;
     private final RateLimitService rateLimitService;
+    private final LeaderboardService leaderboardService;
 
     public UserController(UserStatsService userStatsService) {
-        this(userStatsService, new RateLimitService());
+        this(userStatsService, new RateLimitService(), new LeaderboardService(java.util.Optional.empty(), userStatsService));
+    }
+
+    public UserController(UserStatsService userStatsService, RateLimitService rateLimitService) {
+        this(userStatsService, rateLimitService, new LeaderboardService(java.util.Optional.empty(), userStatsService));
     }
 
     @Autowired
-    public UserController(UserStatsService userStatsService, RateLimitService rateLimitService) {
+    public UserController(
+            UserStatsService userStatsService,
+            RateLimitService rateLimitService,
+            LeaderboardService leaderboardService) {
         this.userStatsService = userStatsService;
         this.rateLimitService = rateLimitService;
+        this.leaderboardService = leaderboardService;
     }
 
     public ResponseEntity<UserProfile> getProfile(Jwt jwt) {
@@ -64,6 +74,21 @@ public class UserController {
 
         UserProfile profile = userStatsService.syncStats(uid, email, displayName, request);
         return ResponseEntity.ok(profile);
+    }
+
+    @GetMapping("/leaderboard")
+    public ResponseEntity<LeaderboardResponse> getLeaderboard(
+            @RequestParam(defaultValue = "25") int limit,
+            HttpServletRequest httpRequest,
+            @AuthenticationPrincipal Jwt jwt) {
+        rateLimitService.checkAndIncrementUserSync(httpRequest, jwt != null ? jwt.getSubject() : null);
+
+        String uid = (jwt != null && jwt.getSubject() != null && !jwt.getSubject().isBlank()) ? jwt.getSubject() : null;
+        String email = (jwt != null && jwt.hasClaim("email")) ? jwt.getClaimAsString("email") : null;
+        String displayName = (jwt != null && jwt.hasClaim("name")) ? jwt.getClaimAsString("name") : null;
+
+        LeaderboardResponse response = leaderboardService.getLeaderboard(uid, email, displayName, limit);
+        return ResponseEntity.ok(response);
     }
 
     private String extractUid(Jwt jwt) {

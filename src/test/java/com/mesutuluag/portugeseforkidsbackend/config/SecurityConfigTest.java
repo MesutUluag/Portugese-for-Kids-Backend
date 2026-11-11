@@ -6,6 +6,7 @@ import com.mesutuluag.portugeseforkidsbackend.image.ImageService;
 import com.mesutuluag.portugeseforkidsbackend.story.StoryController;
 import com.mesutuluag.portugeseforkidsbackend.story.StoryResponse;
 import com.mesutuluag.portugeseforkidsbackend.story.StoryService;
+import com.mesutuluag.portugeseforkidsbackend.user.LeaderboardService;
 import com.mesutuluag.portugeseforkidsbackend.user.UserController;
 import com.mesutuluag.portugeseforkidsbackend.user.UserProfile;
 import com.mesutuluag.portugeseforkidsbackend.user.UserStatsService;
@@ -46,6 +47,9 @@ class SecurityConfigTest {
 
     @MockitoBean
     private UserStatsService userStatsService;
+
+    @MockitoBean
+    private LeaderboardService leaderboardService;
 
     @MockitoBean
     private RateLimitService rateLimitService;
@@ -99,6 +103,17 @@ class SecurityConfigTest {
                 .content("{\"prompt\":\"hello\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").value("{\"pt\":\"Olá\"}"));
+    }
+
+    @Test
+    void unauthenticatedRequestToLeaderboard_returns200() throws Exception {
+        when(leaderboardService.getLeaderboard(any(), any(), any(), any(int.class)))
+                .thenReturn(new com.mesutuluag.portugeseforkidsbackend.user.LeaderboardResponse(
+                        java.util.List.of(), null, 0, System.currentTimeMillis()
+                ));
+
+        mockMvc.perform(get("/api/user/leaderboard"))
+                .andExpect(status().isOk());
     }
 
     @Test

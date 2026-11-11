@@ -8,6 +8,7 @@ public class StatsSyncRequest {
     private Map<String, Integer> gamesCompletedDelta;
     private Map<String, Integer> storiesByContextDelta;
     private int scoreDelta;
+    private Map<String, Integer> scoreByModeDelta;
     private int speechListenDelta;
     private String clientDate;
 
@@ -51,6 +52,14 @@ public class StatsSyncRequest {
 
     public void setScoreDelta(int scoreDelta) {
         this.scoreDelta = scoreDelta;
+    }
+
+    public Map<String, Integer> getScoreByModeDelta() {
+        return scoreByModeDelta;
+    }
+
+    public void setScoreByModeDelta(Map<String, Integer> scoreByModeDelta) {
+        this.scoreByModeDelta = scoreByModeDelta;
     }
 
     public int getSpeechListenDelta() {
