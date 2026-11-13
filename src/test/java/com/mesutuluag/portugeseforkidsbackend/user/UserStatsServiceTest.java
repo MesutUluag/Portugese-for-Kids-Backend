@@ -221,4 +221,51 @@ class UserStatsServiceTest {
         UserProfile preserved = service.getOrCreateProfile("u7", "maya@test.com", "Kid Explorer");
         assertThat(preserved.displayName()).isEqualTo("Maya");
     }
+
+    @Test
+    void syncStats_duplicateBatchId_isIdempotentAndSkipsDoubleCount() {
+        String today = LocalDate.now(ZoneOffset.UTC).toString();
+        StatsSyncRequest req = new StatsSyncRequest();
+        req.setBatchId("batch-1234-abcd");
+        req.setActiveSecondsDelta(30);
+        req.setScoreDelta(15);
+        req.setClientDate(today);
+
+        UserProfile first = service.syncStats("u-batch", "b@test.com", "BraveOwl", req);
+        UserProfile retry = service.syncStats("u-batch", "b@test.com", "BraveOwl", req);
+
+        assertThat(first.stats().totalTimeSeconds()).isEqualTo(30);
+        assertThat(first.stats().totalScore()).isEqualTo(15);
+        assertThat(retry.stats().totalTimeSeconds()).isEqualTo(30);
+        assertThat(retry.stats().totalScore()).isEqualTo(15);
+
+        StatsSyncRequest nextReq = new StatsSyncRequest();
+        nextReq.setBatchId("batch-5678-efgh");
+        nextReq.setActiveSecondsDelta(20);
+        nextReq.setScoreDelta(10);
+        nextReq.setClientDate(today);
+
+        UserProfile second = service.syncStats("u-batch", "b@test.com", "BraveOwl", nextReq);
+        assertThat(second.stats().totalTimeSeconds()).isEqualTo(50);
+        assertThat(second.stats().totalScore()).isEqualTo(25);
+    }
+
+    @Test
+    void deleteProfile_removesInMemoryProfileAndIsIdempotent() {
+        String today = LocalDate.now(ZoneOffset.UTC).toString();
+        StatsSyncRequest req = new StatsSyncRequest();
+        req.setBatchId("batch-reset-1234");
+        req.setScoreDelta(25);
+        req.setClientDate(today);
+        service.syncStats("u-del", "del@test.com", "BraveOwl", req);
+
+        assertThat(service.getInMemoryProfiles()).containsKey("u-del");
+        service.deleteProfile("u-del");
+        assertThat(service.getInMemoryProfiles()).doesNotContainKey("u-del");
+
+        // Second call is idempotent; re-creating does not fail
+        service.deleteProfile("u-del");
+        UserProfile fresh = service.syncStats("u-del", "del@test.com", "BraveOwl", req);
+        assertThat(fresh.stats().totalScore()).isEqualTo(25);
+    }
 }

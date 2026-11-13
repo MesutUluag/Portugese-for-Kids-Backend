@@ -11,6 +11,7 @@ public class StatsSyncRequest {
     private Map<String, Integer> scoreByModeDelta;
     private int speechListenDelta;
     private String clientDate;
+    private String batchId;
 
     public StatsSyncRequest() {}
 
@@ -76,5 +77,13 @@ public class StatsSyncRequest {
 
     public void setClientDate(String clientDate) {
         this.clientDate = clientDate;
+    }
+
+    public String getBatchId() {
+        return batchId;
+    }
+
+    public void setBatchId(String batchId) {
+        this.batchId = batchId;
     }
 }

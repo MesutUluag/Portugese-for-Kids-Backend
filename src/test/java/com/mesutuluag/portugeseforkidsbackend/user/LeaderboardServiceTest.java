@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -124,6 +125,21 @@ class LeaderboardServiceTest {
         assertThat(response.topUsers().get(0).totalScore()).isEqualTo(600);
         assertThat(response.topUsers().get(1).displayName()).isEqualTo("Mem O.");
         assertThat(response.topUsers().get(1).totalScore()).isEqualTo(200);
+    }
+
+    @Test
+    void evictCache_forcesFreshFirestoreFetchAndPreservesTurkishNicknames() {
+        UserProfile trUser = createUser("uid-tr", "ŞanslıKaplumbağa", 420, Map.of());
+        when(firestoreUserStore.getTopLeaderboard(25)).thenReturn(List.of(trUser));
+        when(firestoreUserStore.getTotalUsersCount()).thenReturn(1);
+
+        LeaderboardResponse first = leaderboardService.getLeaderboard(null, null, null, 25);
+        assertThat(first.topUsers().get(0).displayName()).isEqualTo("ŞanslıKaplumbağa");
+        assertThat(first.topUsers().get(0).avatarInitial()).isEqualTo("Ş");
+
+        leaderboardService.evictCache();
+        leaderboardService.getLeaderboard(null, null, null, 25);
+        verify(firestoreUserStore, times(2)).getTopLeaderboard(25);
     }
 
     private UserProfile createUser(String uid, String name, int score, Map<String, Integer> scoreByMode) {

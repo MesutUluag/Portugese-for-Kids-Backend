@@ -123,4 +123,16 @@ class UserControllerTest {
         assertThat(response.getBody()).isSameAs(mockResp);
         verify(leaderboardService).getLeaderboard(null, null, null, 25);
     }
+
+    @Test
+    void deleteProfile_withJwt_deletesUserAndEvictsLeaderboardCache() {
+        Jwt jwt = mock(Jwt.class);
+        when(jwt.getSubject()).thenReturn("uid-del");
+
+        ResponseEntity<Void> response = controller.deleteProfile(jwt);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        verify(userStatsService).deleteProfile("uid-del");
+        verify(leaderboardService).evictCache();
+    }
 }

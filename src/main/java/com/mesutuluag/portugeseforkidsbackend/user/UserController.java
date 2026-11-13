@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -87,6 +88,14 @@ public class UserController {
 
         LeaderboardResponse response = leaderboardService.getLeaderboard(uid, email, displayName, limit);
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> deleteProfile(@AuthenticationPrincipal Jwt jwt) {
+        String uid = extractUid(jwt);
+        userStatsService.deleteProfile(uid);
+        leaderboardService.evictCache();
+        return ResponseEntity.noContent().build();
     }
 
     private String extractUid(Jwt jwt) {

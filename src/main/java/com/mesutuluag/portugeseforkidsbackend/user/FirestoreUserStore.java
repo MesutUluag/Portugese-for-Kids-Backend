@@ -17,6 +17,7 @@ import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.FirestoreOptions;
 import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.firestore.SetOptions;
 import com.mesutuluag.portugeseforkidsbackend.exception.UserStoreException;
 import jakarta.annotation.PreDestroy;
 import org.slf4j.Logger;
@@ -31,6 +32,7 @@ import org.springframework.stereotype.Component;
 public class FirestoreUserStore {
 
     private static final Logger log = LoggerFactory.getLogger(FirestoreUserStore.class);
+    private static final int MAX_RECENT_BATCH_IDS = 20;
 
     private final Firestore firestore;
     private final String collectionName;
@@ -88,7 +90,11 @@ public class FirestoreUserStore {
                 UserProfile parsed = parseProfile(snapshot, uid, email, displayName);
                 // Persist upgraded email/displayName if the stored document still had a placeholder
                 if (!parsed.email().equals(storedEmail) || !parsed.displayName().equals(storedName)) {
-                    saveProfileSnapshot(docRef, parsed);
+                    Map<String, Object> fields = new HashMap<>();
+                    fields.put("email", parsed.email());
+                    fields.put("displayName", parsed.displayName());
+                    fields.put("updatedAt", parsed.updatedAt());
+                    docRef.set(fields, SetOptions.merge()).get(10, TimeUnit.SECONDS);
                 }
                 return parsed;
             } finally {
@@ -125,10 +131,22 @@ public class FirestoreUserStore {
                             ? parseProfile(snapshot, uid, email, displayName)
                             : UserProfile.defaultFor(uid, email, displayName);
 
+                    List<String> recentBatchIds = snapshot.exists()
+                            ? getStringList(snapshot, "recentBatchIds")
+                            : Collections.emptyList();
+                    String batchId = sanitized.getBatchId();
+                    if (batchId != null && recentBatchIds.contains(batchId)) {
+                        return current;
+                    }
+
                     UserProfile updatedProfile = UserStatsService.applySyncToProfile(
                             current, email, displayName, sanitized, maxDailyHistoryDays);
 
                     Map<String, Object> map = toMap(updatedProfile);
+                    List<String> updatedBatchIds = appendBatchId(recentBatchIds, batchId);
+                    if (!updatedBatchIds.isEmpty()) {
+                        map.put("recentBatchIds", updatedBatchIds);
+                    }
                     // Overwrite full document inside transaction so pruned keys in dailyTimeSeconds
                     // are actually removed rather than deep-merged back by SetOptions.merge().
                     transaction.set(docRef, map);
@@ -145,6 +163,27 @@ public class FirestoreUserStore {
         } catch (ExecutionException | TimeoutException e) {
             log.error("[firestore-store] Failed to sync stats for uid={}: {}", uid, e.getMessage());
             throw new UserStoreException("Failed to sync stats for uid=" + uid, e);
+        }
+    }
+
+    /**
+     * Deletes the Firestore user document for uid (idempotent).
+     */
+    public void deleteProfile(String uid) {
+        try {
+            semaphore.acquire();
+            try {
+                DocumentReference docRef = firestore.collection(collectionName).document(uid);
+                docRef.delete().get(10, TimeUnit.SECONDS);
+            } finally {
+                semaphore.release();
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new UserStoreException("Interrupted deleting profile for uid=" + uid, e);
+        } catch (ExecutionException | TimeoutException e) {
+            log.error("[firestore-store] Failed to delete profile for uid={}: {}", uid, e.getMessage());
+            throw new UserStoreException("Failed to delete profile for uid=" + uid, e);
         }
     }
 
@@ -304,6 +343,31 @@ public class FirestoreUserStore {
             return result;
         }
         return Collections.emptyMap();
+    }
+
+    private List<String> getStringList(DocumentSnapshot snapshot, String field) {
+        Object val = snapshot.get(field);
+        if (val instanceof List<?> rawList) {
+            List<String> result = new ArrayList<>();
+            for (Object item : rawList) {
+                if (item instanceof String s && !s.isBlank()) {
+                    result.add(s);
+                }
+            }
+            return result;
+        }
+        return Collections.emptyList();
+    }
+
+    private List<String> appendBatchId(List<String> existing, String batchId) {
+        List<String> next = new ArrayList<>(existing);
+        if (batchId != null && !batchId.isBlank() && !next.contains(batchId)) {
+            next.add(batchId);
+        }
+        while (next.size() > MAX_RECENT_BATCH_IDS) {
+            next.remove(0);
+        }
+        return next;
     }
 
     static Map<String, Integer> pruneDailyTime(Map<String, Integer> map, int maxDays) {

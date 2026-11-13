@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -77,6 +78,16 @@ class SecurityConfigTest {
         mockMvc.perform(get("/api/user/me"))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.error").value("unauthorized"));
+    }
+
+    @Test
+    void deleteUserMe_requiresAuthAndReturns204WhenAuthenticated() throws Exception {
+        mockMvc.perform(delete("/api/user/me"))
+                .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(delete("/api/user/me")
+                .with(jwt().jwt(j -> j.subject("uid-123"))))
+                .andExpect(status().isNoContent());
     }
 
     @Test

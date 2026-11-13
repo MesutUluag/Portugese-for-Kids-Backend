@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -65,6 +66,13 @@ public class LeaderboardService {
         return new LeaderboardResponse(topEntries, currentUserEntry, totalUsers, currentCache.timestamp());
     }
 
+    /**
+     * Clears the cached leaderboard snapshot (e.g. immediately after user deletion).
+     */
+    public synchronized void evictCache() {
+        this.cachedData = null;
+    }
+
     private synchronized CachedData getOrRefreshCache(int limit) {
         long now = System.currentTimeMillis();
         if (cachedData != null && (now - cachedData.timestamp()) < CACHE_TTL_MS) {
@@ -115,7 +123,7 @@ public class LeaderboardService {
     private LeaderboardEntry toEntry(UserProfile profile, int rank, boolean isCurrentUser) {
         String displayName = sanitizeDisplayName(profile.displayName());
         String avatarInitial = !displayName.isBlank()
-                ? displayName.substring(0, 1).toUpperCase()
+                ? displayName.substring(0, 1).toUpperCase(Locale.ROOT)
                 : "⭐";
 
         int gamesCompleted = profile.stats().gamesCompletedByMode() != null

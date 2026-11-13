@@ -2,7 +2,9 @@ package com.mesutuluag.portugeseforkidsbackend.user;
 
 import java.time.LocalDate;
 import java.time.ZoneOffset;
+import java.util.ArrayDeque;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -22,6 +24,8 @@ public class UserStatsService {
     private static final Logger log = LoggerFactory.getLogger(UserStatsService.class);
 
     private static final Pattern DATE_PATTERN = Pattern.compile("^\\d{4}-\\d{2}-\\d{2}$");
+    private static final Pattern BATCH_ID_PATTERN = Pattern.compile("^[A-Za-z0-9_-]{8,64}$");
+    private static final int MAX_RECENT_BATCH_IDS = 20;
 
     public static final Set<String> ALLOWED_MODES = Set.of(
             "cards", "story", "game1", "game2", "game3", "game4", "game5", "game6", "game7", "game8"
@@ -40,6 +44,7 @@ public class UserStatsService {
     private final int maxDailyHistoryDays;
 
     private final Map<String, UserProfile> inMemoryProfiles = new ConcurrentHashMap<>();
+    private final Map<String, Deque<String>> inMemoryRecentBatchIds = new ConcurrentHashMap<>();
 
     public Map<String, UserProfile> getInMemoryProfiles() {
         return Collections.unmodifiableMap(inMemoryProfiles);
@@ -134,8 +139,33 @@ public class UserStatsService {
 
         return inMemoryProfiles.compute(uid, (k, current) -> {
             UserProfile base = (current != null) ? current : UserProfile.defaultFor(uid, email, displayName);
+            String batchId = sanitized.getBatchId();
+            if (batchId != null) {
+                Deque<String> recent = inMemoryRecentBatchIds.computeIfAbsent(uid, id -> new ArrayDeque<>());
+                synchronized (recent) {
+                    if (recent.contains(batchId)) {
+                        return base;
+                    }
+                    recent.addLast(batchId);
+                    while (recent.size() > MAX_RECENT_BATCH_IDS) {
+                        recent.removeFirst();
+                    }
+                }
+            }
             return applySyncToProfile(base, email, displayName, sanitized, maxDailyHistoryDays);
         });
+    }
+
+    /**
+     * Deletes all persisted and cached profile data for the given user UID (idempotent).
+     */
+    public void deleteProfile(String uid) {
+        if (uid == null || uid.isBlank()) {
+            return;
+        }
+        inMemoryProfiles.remove(uid);
+        inMemoryRecentBatchIds.remove(uid);
+        firestoreUserStore.ifPresent(store -> store.deleteProfile(uid));
     }
 
     static UserProfile applySyncToProfile(
@@ -271,6 +301,12 @@ public class UserStatsService {
         sanitized.setStoriesByContextDelta(filterAndClamp(raw.getStoriesByContextDelta(), ALLOWED_CONTEXTS, maxStoriesDelta));
 
         sanitized.setClientDate(sanitizeClientDate(raw.getClientDate()));
+        if (raw.getBatchId() != null) {
+            String trimmedBatch = raw.getBatchId().trim();
+            if (BATCH_ID_PATTERN.matcher(trimmedBatch).matches()) {
+                sanitized.setBatchId(trimmedBatch);
+            }
+        }
         return sanitized;
     }
 
